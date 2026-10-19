@@ -7,7 +7,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 from amxd_container import frozen_amxd, unpack_frozen
 ROOT = Path(__file__).resolve().parents[1]
-blob = (ROOT/'dist/OctaScenes-v0.1.amxd').read_bytes()
+blob = (ROOT/'dist/OctaScenes-v0.1.1.amxd').read_bytes()
 kind, entries = unpack_frozen(blob)
 assert kind == b'aaaa'
 assert frozen_amxd(entries,kind) == blob
@@ -68,3 +68,26 @@ for bank in patch['parameters']['parameterbanks'].values():
     assert all(p=='-' or p in names for p in bank['parameters'])
 print('PASS frozen Audio Effect, embedded source, 32 ownership/persistence bridges, 16 scene buttons, graph, MIDI banks and presentation bounds')
 print(json.dumps(count,indent=2))
+
+# Follow emitted click/press/release through the actual patch graph to engine.
+# A mouse bang and MIDI note-on must each produce exactly one scene command.
+def scene_events(index, event):
+    queue=[(f'scene_{index}',0,event)]; received=[]
+    while queue:
+        sender,out,value=queue.pop(0)
+        for src,dst in lines:
+            if src!=(sender,out): continue
+            box=boxes[dst[0]]; text=box.get('text','')
+            if dst[0]=='engine': received.append(value)
+            elif text=='route bang': queue.append((dst[0],0 if value=='bang' else 1,value))
+            elif text=='sel 1':
+                if value==1: queue.append((dst[0],0,'bang'))
+            elif box['maxclass']=='message': queue.append((dst[0],0,text))
+            elif text=='deferlow': queue.append((dst[0],0,value))
+            else: raise AssertionError(('Unexpected scene route',dst,text))
+    return received
+for i in range(16):
+    assert scene_events(i,'bang')==[f'scene {i}']
+    assert scene_events(i,1)==[f'scene {i}']
+    assert scene_events(i,0)==[]
+print('PASS 48 scene input routing cases: mouse click, MIDI press and release')

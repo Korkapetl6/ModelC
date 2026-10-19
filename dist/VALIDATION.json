@@ -1,13 +1,13 @@
 {
-  "device": "OctaScenes v0.1",
+  "device": "OctaScenes v0.1.1",
   "target": "Ableton Live 11 Standard 11.3.43 + Max for Live / Max 8",
-  "sha256": "11572e67dc21ba0752eef01dc15efc1ced55b385db3291b2eeb39204ed99ad55",
+  "sha256": "0a44adbcfb77db7860162fe3da06c411398cae83cd3f6eb53bf8187ec1b75c30",
   "scene_core_tests": 15,
-  "controller_tests_simulated_Max_Live_API": 15,
+  "controller_tests_simulated_Max_Live_API": 16,
   "scene_endpoint_pairs_in_core_tests": 256,
   "structural_checks": {
-    "objects": 518,
-    "connections": 572,
+    "objects": 534,
+    "connections": 604,
     "remote_slots": 32,
     "persistent_observers": 32,
     "scene_buttons": 16
@@ -23,5 +23,7 @@
     "No Max or Ableton Live runtime is available in this Linux environment.",
     "Controller tests use a simulated API and do not establish actual scheduler or plugin behavior.",
     "Open/UI/MIDI mapping and save-reopen must be checked in the target Live installation."
-  ]
+  ],
+  "scene_button_routing_model_cases": 48,
+  "change": "Accept bang clicks and numeric MIDI presses; persistent selected scene highlight"
 }

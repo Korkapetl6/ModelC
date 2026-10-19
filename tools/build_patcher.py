@@ -116,9 +116,9 @@ def build():
     p.data.update({"devicewidth": 1100.0, "openrect": [0.0, 0.0, 1100.0, 169.0],
                    "project": {"version": 1, "amxdtype": 1633771873, "hideprojectwindow": 1,
                                "contents": {"patchers": {}}, "searchpath": {}, "autolocalize": 0}, "description": "Sixteen scene locks, direct recall and A/B morph for Live 11.",
-                   "digest": "OctaScenes v0.1", "tags": "Max for Live, scenes, crossfader", "autosave": 0})
+                   "digest": "OctaScenes v0.1.1", "tags": "Max for Live, scenes, crossfader", "autosave": 0})
     p.label("title", "OCTA SCENES", [12.0, 7.0, 135.0, 22.0], fontface=1)
-    p.label("version", "v0.1 · Live 11 / Max 8", [911.0, 7.0, 175.0, 20.0])
+    p.label("version", "v0.1.1 · Live 11 / Max 8", [911.0, 7.0, 175.0, 20.0])
 
     toggle_style = {"textcolor": INK, "textoncolor": BG, "bgcolor": BUTTON, "bgoncolor": ACCENT,
                     "activebgcolor": BUTTON, "activebgoncolor": ACCENT,
@@ -195,9 +195,15 @@ def build():
         p.connect(command, 0, "defer")
     for i in range(16):
         sel, msg = f"scene-press-{i}", f"scene-command-{i}"
+        click = f"scene-click-{i}"
+        # Button-mode live.text clicks emit bang; MIDI can emit 1/0.
+        # Handle click and note-on separately, ignoring note-off.
+        p.box(click, text="route bang", rect=[20.0 + i * 70.0, 505.0, 65.0, 22.0], numinlets=1, numoutlets=2)
         p.box(sel, text="sel 1", rect=[20.0 + i * 70.0, 540.0, 50.0, 22.0], numinlets=2, numoutlets=2)
         p.box(msg, "message", f"scene {i}", [20.0 + i * 70.0, 580.0, 65.0, 22.0], numinlets=2, numoutlets=1)
-        p.connect(f"scene_{i}", 0, sel)
+        p.connect(f"scene_{i}", 0, click)
+        p.connect(click, 0, msg)
+        p.connect(click, 1, sel)
         p.connect(sel, 0, msg)
         p.connect(msg, 0, "defer")
     for i, (ident, _, _) in enumerate(actions):

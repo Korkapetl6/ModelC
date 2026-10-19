@@ -1,4 +1,11 @@
-# OctaScenes v0.1
+# OctaScenes v0.1.1
+
+Pobieranie z tej gałęzi:
+
+- [OctaScenes-v0.1.1.amxd — gotowe urządzenie](https://github.com/Korkapetl6/ModelC/raw/refs/heads/octascenes-v0.1/dist/OctaScenes-v0.1.1.amxd)
+- [OctaScenes-v0.1.1.zip — urządzenie, instrukcja i źródła](https://github.com/Korkapetl6/ModelC/raw/refs/heads/octascenes-v0.1/dist/OctaScenes-v0.1.1.zip)
+- [Raport weryfikacji](dist/VALIDATION.json) · [SHA256](dist/SHA256SUMS.txt)
+
 
 Urządzenie Max for Live inspirowane sposobem pracy ze scenami Octatracka.
 Docelowo: **Ableton Live 11 Standard 11.3.43 z aktywnym Max for Live (Max 8)**.
@@ -8,6 +15,21 @@ Nie używa obiektów `v8` ani funkcji wymagających Live 12 / Max 9.
 symulowanym API oraz struktury pliku przeszły. W tym środowisku nie ma Live ani
 Max, więc uruchomienie, obsługa panelu, zapis/ponowne otwarcie Setu i zachowanie
 konkretnych wtyczek nie zostały jeszcze sprawdzone w aplikacji.
+
+## Poprawka 0.1.1
+
+Poprzednia wersja przepuszczała do wyboru sceny tylko liczbę `1`, choć przycisk
+`live.text` w trybie chwilowym wysyła po kliknięciu `bang`. 0.1.1 obsługuje oba
+sygnały, ignorując zwolnienie przycisku MIDI (`0`). Wybrana scena ma teraz stałe
+zielone podświetlenie, znacznik `>` oraz podpis `Scene N` w wierszu szczegółów.
+
+W starej wersji ustaw **OFF**, usuń ją i wstaw **OctaScenes-v0.1.1.amxd**.
+Nowa instancja wymaga ponownego mapowania parametrów. Przed mapowaniem możesz
+już kliknąć scenę 2: powinny pojawić się `>2` i `Scene 2`.
+
+Testy obejmują dodatkowo 48 przypadków routingu kliknięcia/naciśnięcia/zwolnienia
+oraz trwały wskaźnik wyboru. Potwierdzenie działania poprawki w Live jest jeszcze
+potrzebne; tutaj sprawdzono kod, model komunikatów i strukturę urządzenia.
 
 ## Co zawiera
 
@@ -23,7 +45,7 @@ konkretnych wtyczek nie zostały jeszcze sprawdzone w aplikacji.
 
 ## Instalacja i pierwszy test
 
-1. Przeciągnij **OctaScenes-v0.1.amxd** na ścieżkę audio, grupę, Return lub Master.
+1. Przeciągnij **OctaScenes-v0.1.1.amxd** na ścieżkę audio, grupę, Return lub Master.
    Wystarczy ten jeden plik; pliki źródłowe nie są potrzebne do używania.
 2. Zostaw **OFF**. Wybierz pusty slot w **PARAMETER**, kliknij **MAP**, a następnie
    pokrętło w Live. Powtórz dla drugiego parametru. MAP czeka maksymalnie 20 s.

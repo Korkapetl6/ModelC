@@ -19,6 +19,6 @@ for name in ('octascenes.js', 'scene-core.js'):
 blob = frozen_amxd(entries)
 kind, readback = unpack_frozen(blob)
 assert kind == b'aaaa' and readback == entries
-path = DIST / 'OctaScenes-v0.1.amxd'
+path = DIST / 'OctaScenes-v0.1.1.amxd'
 path.write_bytes(blob)
 print(f'{path}: {len(blob)} bytes, SHA256 {hashlib.sha256(blob).hexdigest()}')

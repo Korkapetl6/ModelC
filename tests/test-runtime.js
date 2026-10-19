@@ -154,4 +154,14 @@ test('data changes notify pattr, teardown cancels tasks and releases all targets
   const h=harness();h.setup();h.c.enable(1);h.advance(60);assert(h.notifications()>0);
   h.c.freebang();h.advance(2000);assert(!h.parameters[101].remote);assert(!h.parameters[102].remote);
 });
+test('scene selection has persistent label and background independent of momentary button value',()=>{
+  const h=harness();h.setup();h.c.scene(1);
+  const last=(name,attribute)=>h.boxes[name].messages.filter(m=>m[0]===attribute).slice(-1)[0];
+  assert.equal(last('scene_1','text')[1],'>2');
+  assert.equal(last('scene_1','texton')[1],'>2');
+  assert.equal(last('scene_0','text')[1],'1');
+  assert.notDeepEqual(last('scene_1','activebgcolor'),last('scene_0','activebgcolor'));
+  assert(last('detail','set')[1].startsWith('Scene 2 |'));
+  h.c.scene(1);assert.equal(last('scene_1','text')[1],'>2');
+});
 console.log('\n'+passed+' controller tests passed (simulated Max/Live API).');

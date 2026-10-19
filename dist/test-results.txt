@@ -1,5 +1,5 @@
 python3 tools/build.py
-/workspace/OctaScenes/dist/OctaScenes-v0.1.amxd: 479185 bytes, SHA256 11572e67dc21ba0752eef01dc15efc1ced55b385db3291b2eeb39204ed99ad55
+/workspace/ModelC-download/dist/OctaScenes-v0.1.1.amxd: 491586 bytes, SHA256 0a44adbcfb77db7860162fe3da06c411398cae83cd3f6eb53bf8187ec1b75c30
 node tests/test-core.js
 PASS blank device has 16 independent sparse scenes and 32 unmapped slots
 PASS sparse morph uses base for missing endpoint and leaves unlocked targets free
@@ -34,13 +34,15 @@ PASS native device bypass releases ownership and resumes without recapturing bas
 PASS MORPH leaving edited but unlocked targets restores base; pending restore cannot overwrite new claim
 PASS remapping a copied slot cannot paste stale values into its new target
 PASS data changes notify pattr, teardown cancels tasks and releases all targets
+PASS scene selection has persistent label and background independent of momentary button value
 
-15 controller tests passed (simulated Max/Live API).
+16 controller tests passed (simulated Max/Live API).
 python3 tests/test-package.py
 PASS frozen Audio Effect, embedded source, 32 ownership/persistence bridges, 16 scene buttons, graph, MIDI banks and presentation bounds
 {
-  "boxes": 518,
-  "lines": 572,
+  "boxes": 534,
+  "lines": 604,
   "remotes": 32,
   "persistent_bindings": 32
 }
+PASS 48 scene input routing cases: mouse click, MIDI press and release

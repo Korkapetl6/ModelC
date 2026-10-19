@@ -1,4 +1,4 @@
-/* OctaScenes v0.1 — Max 8 legacy js / Live 11.
+/* OctaScenes v0.1.1 — Max 8 legacy js / Live 11.
  * All entry messages are deferred by the patch. No Live API writes from
  * observer callbacks. Persistent live.observer objects own binding identity;
  * the hidden pattr blob owns scene/base data. Runtime IDs never enter the blob.
@@ -27,6 +27,12 @@ function ui(name, command, value) {
     try {
         var box = this.patcher.getnamed(name);
         if (box) { box.message(command, value); }
+    } catch (ignore) {}
+}
+function uiColor(name, attribute, color) {
+    try {
+        var box = this.patcher.getnamed(name);
+        if (box) { box.message(attribute, color[0], color[1], color[2], color[3]); }
     } catch (ignore) {}
 }
 function status(text) { outlet(1, String(text)); }
@@ -130,8 +136,15 @@ function refresh() {
     ui("a", "set", state.a + 1); ui("b", "set", state.b + 1);
     ui("xfade", "set", state.x * 127);
     for (slotIndex = 0; slotIndex < 16; slotIndex += 1) {
-        // Momentary buttons remain retriggerable; selection is shown in text.
-        ui("scene_" + slotIndex, "text", (slotIndex === state.scene ? ">" : "") + (slotIndex + 1));
+        // Selection is independent of the button's momentary press/release value.
+        var selected = slotIndex === state.scene;
+        var name = "scene_" + slotIndex;
+        var label = (selected ? ">" : "") + (slotIndex + 1);
+        var background = selected ? [0.27, 0.83, 0.67, 1.0] : [0.22, 0.25, 0.29, 1.0];
+        var foreground = selected ? [0.11, 0.12, 0.14, 1.0] : [0.91, 0.93, 0.94, 1.0];
+        ui(name, "text", label); ui(name, "texton", label);
+        uiColor(name, "bgcolor", background); uiColor(name, "activebgcolor", background);
+        uiColor(name, "textcolor", foreground); uiColor(name, "activetextcolor", foreground);
     }
     locks = core.getScene(state.scene).locks;
     for (slotIndex = 0; slotIndex < 32; slotIndex += 1) { if (locks[slotIndex] !== null) { count += 1; } }
