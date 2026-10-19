@@ -1,0 +1,46 @@
+python3 tools/build.py
+/workspace/OctaScenes/dist/OctaScenes-v0.1.amxd: 479185 bytes, SHA256 11572e67dc21ba0752eef01dc15efc1ced55b385db3291b2eeb39204ed99ad55
+node tests/test-core.js
+PASS blank device has 16 independent sparse scenes and 32 unmapped slots
+PASS sparse morph uses base for missing endpoint and leaves unlocked targets free
+PASS direct switching explicitly restores prior scene-only values to base
+PASS both endpoints, zero locks, identical scenes, and changing shared base
+PASS quantized parameters round in actual Live units, including nonzero min
+PASS same mapping preserves locks/base; new target clears every stale lock
+PASS unmapping releases a slot and removes its base and all locks
+PASS copy creates independent locks and name; clear keeps the scene name
+PASS setter values clamp; invalid base update and invalid mapping are atomic
+PASS persistence roundtrip retains performance and strips runtime IDs at mapping
+PASS exported/getter state cannot mutate engine internals
+PASS invalid saved state is rejected without partial mutation
+PASS scene and slot bounds reject negative, fractional, nonnumeric, and overflow
+PASS global Max include export works without CommonJS
+PASS all 16x16 endpoint pairs preserve exact lock/base rules across full bank
+
+15 scene-core tests passed.
+node tests/test-runtime.js
+PASS DIRECT recall restores previous scene-only parameter; fade ignored in DIRECT
+PASS MORPH sparse interpolation, integer stepping and unowned parameter
+PASS OFF restores native base after ownership release, quick ON does not capture scene
+PASS EDIT initializes selected scene without spurious locks then records knob changes
+PASS EDIT refuses automated parameters without changing their automation or native values
+PASS rapid EDIT scene selection and exit cancels all stale initialization tasks
+PASS clear lock and scene return to base; copy is independent
+PASS persistent observer ID restores same mapping across a changed runtime ID
+PASS saved data rejects corruption atomically and unresolved/mismatched targets remain free
+PASS deleting mapped target releases reference without erasing stored locks
+PASS MAP arms while OFF, excludes own parameters and rejects duplicate mappings
+PASS native device bypass releases ownership and resumes without recapturing base
+PASS MORPH leaving edited but unlocked targets restores base; pending restore cannot overwrite new claim
+PASS remapping a copied slot cannot paste stale values into its new target
+PASS data changes notify pattr, teardown cancels tasks and releases all targets
+
+15 controller tests passed (simulated Max/Live API).
+python3 tests/test-package.py
+PASS frozen Audio Effect, embedded source, 32 ownership/persistence bridges, 16 scene buttons, graph, MIDI banks and presentation bounds
+{
+  "boxes": 518,
+  "lines": 572,
+  "remotes": 32,
+  "persistent_bindings": 32
+}
