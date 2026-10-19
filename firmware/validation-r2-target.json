@@ -1,0 +1,19 @@
+{
+  "published_prototype_d2_corruption_reproduced": true,
+  "fixed_target_cases": 170,
+  "simulated_nested_irq_frames": 166,
+  "callee_saved_registers_and_stack": "passed",
+  "native_code_write_guard": "passed",
+  "engines": [
+    "Beads",
+    "Rings"
+  ],
+  "strum": [
+    0,
+    127
+  ],
+  "chord_shapes": 122,
+  "hardware_crash_confirmed_fixed": false,
+  "emulator": "Unicorn 2.1.4 M68K ANY (includes eMAC-B)",
+  "limitation": "IRQ stack writes and nonzero oscillator steps supplied by harness; no device IRQ timing, native tuning, panel or CPU load test"
+}

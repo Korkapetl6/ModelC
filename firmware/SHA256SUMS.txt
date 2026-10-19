@@ -1,2 +1,4 @@
+e16e2057616230e7613ed1bc84a18f8b7cd75bc4de002287d38c1a363fba0cf4  ModelC-prototype-r2.syx
+a52ea4e5ed1fbf4346e82b1d75a94ecf5d87713a17530bb8bd8b472d0ecf0c51  ModelC-prototype-r2.zip
 f14ebfa0357b6a566820cb875cb6c4ba0bec546fd138f8f1986ffb42ce44539f  ModelC-prototype.syx
 352b07d516dde97e3e199e3d4d88c337d63dd7caae84c34ad082e5756e8eaa70  ModelC-prototype.zip
