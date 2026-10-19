@@ -1,13 +1,13 @@
 {
-  "device": "OctaScenes v0.1.1",
+  "device": "OctaScenes v0.1.2",
   "target": "Ableton Live 11 Standard 11.3.43 + Max for Live / Max 8",
-  "sha256": "0a44adbcfb77db7860162fe3da06c411398cae83cd3f6eb53bf8187ec1b75c30",
+  "sha256": "c67894c7a237fd56b77eb53444e10e1435f71dc0c2b3b713772aa16c84265780",
   "scene_core_tests": 15,
-  "controller_tests_simulated_Max_Live_API": 16,
+  "controller_tests_simulated_Max_Live_API": 17,
   "scene_endpoint_pairs_in_core_tests": 256,
   "structural_checks": {
-    "objects": 534,
-    "connections": 604,
+    "objects": 598,
+    "connections": 668,
     "remote_slots": 32,
     "persistent_observers": 32,
     "scene_buttons": 16
@@ -25,5 +25,6 @@
     "Open/UI/MIDI mapping and save-reopen must be checked in the target Live installation."
   ],
   "scene_button_routing_model_cases": 48,
-  "change": "Accept bang clicks and numeric MIDI presses; persistent selected scene highlight"
+  "change": "Continuous parameter signal, stable remote binding and target/Live value readout",
+  "signal_bridge_model_slots": 32
 }

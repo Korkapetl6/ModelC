@@ -7,7 +7,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 from amxd_container import frozen_amxd, unpack_frozen
 ROOT = Path(__file__).resolve().parents[1]
-blob = (ROOT/'dist/OctaScenes-v0.1.1.amxd').read_bytes()
+blob = (ROOT/'dist/OctaScenes-v0.1.2.amxd').read_bytes()
 kind, entries = unpack_frozen(blob)
 assert kind == b'aaaa'
 assert frozen_amxd(entries,kind) == blob
@@ -49,10 +49,13 @@ for i in range(16):
 for i in range(32):
     p=boxes[f'remote-slot-{i}']['patcher']
     lines2=[(tuple(l['patchline']['source']),tuple(l['patchline']['destination'])) for l in p['lines']]
-    assert (('target-unpack',1),('remote',0)) in lines2
+    assert (('target-unpack',1),('value-signal',0)) in lines2
+    assert (('value-signal',0),('remote',0)) in lines2
+    assert (('target-unpack',0),('id-change',0)) in lines2
+    assert (('id-change',0),('target-id',0)) in lines2
     assert (('target-id',0),('remote',1)) in lines2
     assert (('map-id',0),('identity',1)) in lines2
-    assert (('release-id',0),('remote',1)) in lines2
+    assert (('release-id',0),('id-change',0)) in lines2
     assert not any(src[0]=='release-id' and dst[0]=='identity' for src,dst in lines2)
 pattr=boxes['scene-data']['saved_object_attributes']
 assert pattr['parameter_enable']==1
@@ -91,3 +94,39 @@ for i in range(16):
     assert scene_events(i,1)==[f'scene {i}']
     assert scene_events(i,0)==[]
 print('PASS 48 scene input routing cases: mouse click, MIDI press and release')
+
+# Execute the generated bridge's message graph against a remote that resets its
+# control when bound. DSP samples then read the signal source. This intentionally
+# models adverse binding order; it is not a claim of running Max itself.
+for index in range(32):
+    p=boxes[f'remote-slot-{index}']['patcher']
+    bs={x['box']['id']:x['box'] for x in p['boxes']}
+    edges=[(tuple(x['patchline']['source']),tuple(x['patchline']['destination'])) for x in p['lines']]
+    assert bs['value-signal']['text']=='sig~ 0.'
+    assert bs['id-change']['text']=='change 0'
+    state={'id':0,'previous':0,'signal':0.,'value':0.,'bindings':0}
+    def emit(sender,out,value):
+        for src,dst in edges:
+            if src!=(sender,out): continue
+            name,port=dst; text=bs[name].get('text','')
+            if text=='unpack i f':
+                emit(name,1,float(value[1])); emit(name,0,int(value[0]))
+            elif text=='sig~ 0.': state['signal']=value
+            elif text=='change 0':
+                if value!=state['previous']:
+                    state['previous']=value; emit(name,0,value)
+            elif text=='prepend id': emit(name,0,('id',value))
+            elif name=='release-id': emit(name,0,0)
+            elif name=='remote' and port==1:
+                state['id']=value[1];state['value']=0.;state['bindings']+=1
+            else: raise AssertionError((name,port,text))
+    for value in (0.,5.,0.,-12.,48.,-48.,5.):
+        emit('target-in',0,(101,value))
+        # First DSP block after the whole message transaction.
+        if state['id']:state['value']=state['signal']
+        assert state['value']==value
+        assert state['bindings']==1, 'Value updates must not rebind the target'
+    emit('release-in',0,'bang');assert state['id']==0
+    emit('target-in',0,(101,7.))
+    assert state['id']==101 and state['bindings']==3 and state['signal']==7.
+print('PASS 32 signal bridges: bipolar Transpose values, no repeated binding, OFF/ON reattachment')

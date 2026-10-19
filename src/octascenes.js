@@ -1,4 +1,4 @@
-/* OctaScenes v0.1.1 — Max 8 legacy js / Live 11.
+/* OctaScenes v0.1.2 — Max 8 legacy js / Live 11.
  * All entry messages are deferred by the patch. No Live API writes from
  * observer callbacks. Persistent live.observer objects own binding identity;
  * the hidden pattr blob owns scene/base data. Runtime IDs never enter the blob.
@@ -150,6 +150,14 @@ function refresh() {
     for (slotIndex = 0; slotIndex < 32; slotIndex += 1) { if (locks[slotIndex] !== null) { count += 1; } }
     detail = "Scene " + (state.scene + 1) + " | " + count + " locks | ";
     detail += meta ? meta.label + " | " + (locks[state.slot] === null ? "BASE" : "LOCK " + Math.round(locks[state.slot] * 1000) / 10 + "%") : "MAP then click a parameter in Live.";
+    if (meta && refs[state.slot]) {
+        var desired = editing || !state.mode ? core.evaluateDirect(state.scene) : core.evaluateMorph(state.a, state.b, state.x);
+        if (desired[state.slot] !== null) {
+            detail += " | Target " + Math.round(actualValue(state.slot, desired[state.slot]) * 1000) / 1000;
+        }
+        try { detail += " | Live " + Math.round(apiNumber(refs[state.slot].api, "value") * 1000) / 1000; }
+        catch (ignore) { detail += " | Live unavailable"; }
+    }
     ui("detail", "set", detail);
 }
 function validateBinding(slotIndex) {
@@ -441,6 +449,7 @@ function poll() {
     if (editing) { pollEdits(); }
     updateCount += 1;
     if (updateCount % 20 === 0) {
+        refresh();
         for (var j = 0; j < 32; j += 1) {
             if (refs[j] && !refs[j].api.id) {
                 releaseSlot(j, false); refs[j] = null; refreshMenus();

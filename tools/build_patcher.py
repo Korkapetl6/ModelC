@@ -86,8 +86,10 @@ def remote_slot(index):
     p.box("release-in", "inlet", rect=[210.0, 20.0, 30.0, 30.0], index=2, comment="release parameter ownership")
     p.box("map-in", "inlet", rect=[380.0, 20.0, 30.0, 30.0], index=3, comment="persistent mapping ID")
     p.box("target-unpack", text="unpack i f", rect=[20.0, 75.0, 90.0, 22.0], numinlets=1, numoutlets=2, outlettype=["int", "float"])
+    p.box("value-signal", text="sig~ 0.", rect=[120.0, 120.0, 65.0, 22.0], numinlets=1, numoutlets=1, outlettype=["signal"])
+    p.box("id-change", text="change 0", rect=[20.0, 100.0, 65.0, 22.0], numinlets=1, numoutlets=3, outlettype=["int", "int", "int"])
     p.box("target-id", text="prepend id", rect=[20.0, 120.0, 80.0, 22.0], numinlets=1, numoutlets=1)
-    p.box("release-id", "message", "id 0", [210.0, 120.0, 50.0, 22.0], numinlets=2, numoutlets=1)
+    p.box("release-id", "message", "0", [210.0, 120.0, 50.0, 22.0], numinlets=2, numoutlets=1)
     p.box("remote", text="live.remote~", rect=[120.0, 185.0, 90.0, 22.0], numinlets=2, numoutlets=0,
           varname=f"remote_{index}")
     p.box("map-id", text="prepend id", rect=[380.0, 75.0, 80.0, 22.0], numinlets=1, numoutlets=1)
@@ -97,12 +99,15 @@ def remote_slot(index):
     p.box("binding", text=f"prepend binding {index}", rect=[380.0, 210.0, 140.0, 22.0], numinlets=1, numoutlets=1)
     p.box("binding-out", "outlet", rect=[380.0, 270.0, 30.0, 30.0], index=1, comment="persistent mapping: binding SLOT ID")
     p.connect("target-in", 0, "target-unpack")
-    # unpack outputs right-to-left: preload value before attaching the target.
-    p.connect("target-unpack", 1, "remote", 0)
-    p.connect("target-unpack", 0, "target-id")
+    # Continuous signal survives initial attachment and asynchronous Live binding.
+    # Do not reassign the same target after every value (that can reset control).
+    p.connect("target-unpack", 1, "value-signal")
+    p.connect("value-signal", 0, "remote", 0)
+    p.connect("target-unpack", 0, "id-change")
+    p.connect("id-change", 0, "target-id")
     p.connect("target-id", 0, "remote", 1)
     p.connect("release-in", 0, "release-id")
-    p.connect("release-id", 0, "remote", 1)
+    p.connect("release-id", 0, "id-change")
     p.connect("map-in", 0, "map-id")
     p.connect("map-id", 0, "identity", 1)
     p.connect("identity", 0, "strip-id")
@@ -116,9 +121,9 @@ def build():
     p.data.update({"devicewidth": 1100.0, "openrect": [0.0, 0.0, 1100.0, 169.0],
                    "project": {"version": 1, "amxdtype": 1633771873, "hideprojectwindow": 1,
                                "contents": {"patchers": {}}, "searchpath": {}, "autolocalize": 0}, "description": "Sixteen scene locks, direct recall and A/B morph for Live 11.",
-                   "digest": "OctaScenes v0.1.1", "tags": "Max for Live, scenes, crossfader", "autosave": 0})
+                   "digest": "OctaScenes v0.1.2", "tags": "Max for Live, scenes, crossfader", "autosave": 0})
     p.label("title", "OCTA SCENES", [12.0, 7.0, 135.0, 22.0], fontface=1)
-    p.label("version", "v0.1.1 · Live 11 / Max 8", [911.0, 7.0, 175.0, 20.0])
+    p.label("version", "v0.1.2 · Live 11 / Max 8", [911.0, 7.0, 175.0, 20.0])
 
     toggle_style = {"textcolor": INK, "textoncolor": BG, "bgcolor": BUTTON, "bgoncolor": ACCENT,
                     "activebgcolor": BUTTON, "activebgoncolor": ACCENT,

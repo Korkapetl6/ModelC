@@ -1,9 +1,9 @@
-# OctaScenes v0.1.1
+# OctaScenes v0.1.2
 
 Pobieranie z tej gałęzi:
 
-- [OctaScenes-v0.1.1.amxd — gotowe urządzenie](https://github.com/Korkapetl6/ModelC/raw/refs/heads/octascenes-v0.1/dist/OctaScenes-v0.1.1.amxd)
-- [OctaScenes-v0.1.1.zip — urządzenie, instrukcja i źródła](https://github.com/Korkapetl6/ModelC/raw/refs/heads/octascenes-v0.1/dist/OctaScenes-v0.1.1.zip)
+- [OctaScenes-v0.1.2.amxd — gotowe urządzenie](https://github.com/Korkapetl6/ModelC/raw/refs/heads/octascenes-v0.1/dist/OctaScenes-v0.1.2.amxd)
+- [OctaScenes-v0.1.2.zip — urządzenie, instrukcja i źródła](https://github.com/Korkapetl6/ModelC/raw/refs/heads/octascenes-v0.1/dist/OctaScenes-v0.1.2.zip)
 - [Raport weryfikacji](dist/VALIDATION.json) · [SHA256](dist/SHA256SUMS.txt)
 
 
@@ -16,6 +16,27 @@ symulowanym API oraz struktury pliku przeszły. W tym środowisku nie ma Live an
 Max, więc uruchomienie, obsługa panelu, zapis/ponowne otwarcie Setu i zachowanie
 konkretnych wtyczek nie zostały jeszcze sprawdzone w aplikacji.
 
+## Poprawka 0.1.2
+
+Po poprawieniu wyboru scen użytkownik potwierdził zapis locka Transpose, ale
+parametr nie reagował na przełączanie scen. Poprzedni mostek wysyłał pojedynczą
+wartość przed przypisaniem celu i powtarzał przypisanie przy każdej aktualizacji.
+Nowy mostek podaje wartość przez `sig~` do `live.remote~`, a `change 0` ogranicza
+przypisywanie celu do rzeczywistej zmiany ID lub ponownego ON po zwolnieniu.
+OFF nadal zwalnia parametr, bez kasowania trwałego mapowania.
+
+Wiersz PARAMETER pokazuje teraz **Target** i **Live** w jednostkach liczbowych
+parametru, np. Transpose 0 i 5. Odczyt Live odświeża się raz na sekundę. Przy OFF
+urządzenie nie narzuca pokazanej wartości Target; pokazuje ona cel wybranej sceny.
+
+Test modelu mostka obejmuje wartości Transpose 0, 5, -12, 48 i -48 oraz powrót
+OFF/ON dla 32 slotów. Nie jest to wykonanie obiektów w Max. Poprawka wymaga
+potwierdzenia na rzeczywistym Live; silnik audio Live musi być włączony.
+
+Przed podmianą ustaw stare urządzenie na **OFF** i usuń je. Nowa instancja wymaga
+ponownego mapowania. Test: baza Transpose 0, scena 1 pusta, scena 2 z lockiem +5.
+Po przełączeniu scen porównaj pola Target/Live i dźwięk po zagraniu sampla.
+
 ## Poprawka 0.1.1
 
 Poprzednia wersja przepuszczała do wyboru sceny tylko liczbę `1`, choć przycisk
@@ -23,7 +44,7 @@ Poprzednia wersja przepuszczała do wyboru sceny tylko liczbę `1`, choć przyci
 sygnały, ignorując zwolnienie przycisku MIDI (`0`). Wybrana scena ma teraz stałe
 zielone podświetlenie, znacznik `>` oraz podpis `Scene N` w wierszu szczegółów.
 
-W starej wersji ustaw **OFF**, usuń ją i wstaw **OctaScenes-v0.1.1.amxd**.
+W starej wersji ustaw **OFF**, usuń ją i wstaw **OctaScenes-v0.1.2.amxd**.
 Nowa instancja wymaga ponownego mapowania parametrów. Przed mapowaniem możesz
 już kliknąć scenę 2: powinny pojawić się `>2` i `Scene 2`.
 
@@ -45,7 +66,7 @@ potrzebne; tutaj sprawdzono kod, model komunikatów i strukturę urządzenia.
 
 ## Instalacja i pierwszy test
 
-1. Przeciągnij **OctaScenes-v0.1.1.amxd** na ścieżkę audio, grupę, Return lub Master.
+1. Przeciągnij **OctaScenes-v0.1.2.amxd** na ścieżkę audio, grupę, Return lub Master.
    Wystarczy ten jeden plik; pliki źródłowe nie są potrzebne do używania.
 2. Zostaw **OFF**. Wybierz pusty slot w **PARAMETER**, kliknij **MAP**, a następnie
    pokrętło w Live. Powtórz dla drugiego parametru. MAP czeka maksymalnie 20 s.

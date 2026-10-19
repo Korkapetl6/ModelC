@@ -164,4 +164,9 @@ test('scene selection has persistent label and background independent of momenta
   assert(last('detail','set')[1].startsWith('Scene 2 |'));
   h.c.scene(1);assert.equal(last('scene_1','text')[1],'>2');
 });
+test('selected parameter detail shows target and observed Live value in actual units',()=>{
+  const h=harness();h.setup();h.c.enable(1);h.c.scene(1);
+  const detail=h.boxes.detail.messages.filter(m=>m[0]==='set').slice(-1)[0][1];
+  assert(detail.includes('Target 0.8'));assert(detail.includes('Live 0.8'));
+});
 console.log('\n'+passed+' controller tests passed (simulated Max/Live API).');
