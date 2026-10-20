@@ -2,6 +2,8 @@
 
 Pobieranie z tej gałęzi:
 
+- [OctaScenes-v0.1.2-complete.zip — aktualny komplet z pełnym kodem i README](https://github.com/Korkapetl6/ModelC/raw/refs/heads/octascenes-v0.1/dist/OctaScenes-v0.1.2-complete.zip)
+
 - [OctaScenes-v0.1.2.amxd — gotowe urządzenie](https://github.com/Korkapetl6/ModelC/raw/refs/heads/octascenes-v0.1/dist/OctaScenes-v0.1.2.amxd)
 - [OctaScenes-v0.1.2.zip — urządzenie, instrukcja i źródła](https://github.com/Korkapetl6/ModelC/raw/refs/heads/octascenes-v0.1/dist/OctaScenes-v0.1.2.zip)
 - [Raport weryfikacji](dist/VALIDATION.json) · [SHA256](dist/SHA256SUMS.txt)
@@ -155,3 +157,18 @@ są w ukrytym parametrze `pattr` typu blob powiązanym z `getvalueof/setvalueof`
 Nie polegamy na zapisanych numerach Live API ani na indeksach ścieżek jako
 trwałej tożsamości parametru. Niedostępny lub zmieniony zakres parametru pozostaje
 nieaktywny. Nie ma komunikacji sieciowej, odczytu bibliotek sampli ani zmian klipów.
+
+## Zawartość kompletnego ZIP-a
+
+Archiwum `OctaScenes-v0.1.2-complete.zip` zawiera aktualną wersję 0.1.2, z poprawkami wyboru scen i sterowania parametrami:
+
+- `README.md` — instrukcja obsługi, ograniczenia i sposób budowania.
+- `src/` — pełny kod JavaScript silnika scen i kontrolera Live API.
+- `tools/` — generator patchera i kontenera AMXD.
+- `tests/` oraz `Makefile` — testy i polecenia budowania.
+- `dist/OctaScenes-v0.1.2.amxd` — gotowe urządzenie do przeciągnięcia do Live.
+- `dist/OctaScenes.maxpat`, `dist/octascenes.js`, `dist/scene-core.js` — patcher i jego zależności do edycji w Max; pozostaw je razem w jednym folderze.
+- `dist/INSTRUKCJA.md`, `dist/VALIDATION.json`, `dist/test-results.txt` — instrukcja i wyniki weryfikacji.
+- `PACKAGE-SHA256SUMS.txt` — sumy kontrolne plików archiwum.
+
+To komplet aktualnych plików wersji 0.1.2, bez starszych wydań i zagnieżdżonych ZIP-ów. Samo przepakowanie nie zmienia działania urządzenia ani statusu testów w Live. Aby odtworzyć urządzenie ze źródeł, uruchom `make test` w katalogu rozpakowanego projektu (wymagane Node.js i Python 3).
