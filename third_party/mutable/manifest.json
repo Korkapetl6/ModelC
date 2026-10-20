@@ -1,0 +1,29 @@
+{
+  "eurorack_commit": "f4cfa7697095a28d292bff758beb51deb49b5a86",
+  "stmlib_commit": "e3bd7c9cc00e4364166f9905c0509b6ffd0535ec",
+  "files": {
+    "beads/dsp/frame.h": "1bcde0345cad55f8fbb080d0594dcc19ff735947543ab226cdeba66db2a79302",
+    "beads/dsp/grain.h": "d04b369f97dd10fb673448a1b7d1124f130862e9e703719ec549d620b5c4bc2d",
+    "beads/dsp/grain_envelope.h": "060d2ab2692b4498e362e283bd83357eada84f71a42f01c379658618b74679dc",
+    "beads/dsp/granular_player.h": "97e7b6680b08d738af519700b2853ff845d928e383d287541116d4f64dc83e71",
+    "beads/dsp/randomized_parameter.h": "120d95508ab8e8dd9ba9a2592409832f1890f24c001044397ec4b5bd5515d4dc",
+    "beads/dsp/trigger_generator.h": "6742a15825fc41986af7b13d8924baa069489274793bf516b41701b91df6fc2c",
+    "beads/dsp/voice_stealing_envelope.h": "e3b4afe4359207e456ab4e8a4ba47351390137c709c70bd30cd0a9486800181e",
+    "beads/dsp/wavetable_grain.h": "5d228f7197a70904da92e61d451d6e89ef15aa41c341de3f98a6056130d11db2",
+    "beads/dsp/wavetable_voice.h": "cd24cfba7542ad472f0ad5d82cd26bf683c1a78bfa7960a3bcd1876802864a65",
+    "beads/resources.cc": "65bd67ca50cbed0b45939d0f02b4932964d211abc4723e58544676b9315618d7",
+    "beads/resources.h": "82b77b6b9f069981fbff13d01f9e8a6e3a0d5dc510e1638dbb73d228a72e225b",
+    "stmlib/dsp/dsp.h": "98b42900c4accbe9fbb2cfe2ec6fada024b57ec9a1becff008b0f35bd4fd8ddb",
+    "stmlib/dsp/hysteresis_quantizer.h": "06032c1ec2e21cb7e904544f839a2a59b4c4a9f3f391918e6adfac7f68ecc243",
+    "stmlib/dsp/parameter_interpolator.h": "4b05028c320e6946418a36e9662a4e5a142e5bfab0423835a77d074d9c7fc217",
+    "stmlib/dsp/units.cc": "0acbe230ffaa2d181ba285fce54f2fd0b2339b3ec163a1dd00c946e6bf82ea4a",
+    "stmlib/dsp/units.h": "70cf104c06f0e34ada90416f121417a13d17b6736116f0fc07063c1cd2084877",
+    "stmlib/stmlib.h": "3afc8589a951e882d9eea16b3eda8623dd6fb0079dd11dfbce817e65be6cfba9",
+    "stmlib/utils/gate_flags.h": "548608ba37ee125903db4ba36507a678d1cdcdecddad30b11998b19d6ad00ca3",
+    "stmlib/utils/random.cc": "145c4d7a30e373d001fd664ce6f97a475458f7dc8286252d24ca6f592e0cdb93",
+    "stmlib/utils/random.h": "423f01e905fa279864878f34e42136ad1eb37a33dad58739affaaab06b793e5d",
+    "stmlib/dsp/filter.h": "f4bbf97ac8dfdea255b8a37e179ba0286978c01a12ad8d3362eaa5862cf7c326",
+    "stmlib/dsp/delay_line.h": "d6d1bb8e33dedf80bfca976ca1d544fc6ef01bcb1d71a45f3946a0682fd68dcb",
+    "stmlib/dsp/cosine_oscillator.h": "a7f6429e8bca85aa19ce91e3f1908fd7fb1fdf378a61fe2c87717a94d6f30a97"
+  }
+}
