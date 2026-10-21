@@ -2,7 +2,7 @@ import json,sys
 from pathlib import Path
 root=Path(__file__).resolve().parents[1];sys.path.insert(0,str(root/'tools'))
 from amxd_container import unpack_frozen
-kind,entries=unpack_frozen((root/'dist/Barcode-for-Simpler-v0.1.2.amxd').read_bytes())
+kind,entries=unpack_frozen((root/'dist/Barcode-for-Simpler-v0.1.3.amxd').read_bytes())
 assert kind==b'aaaa'
 assert [e.name for e in entries]==['Barcode-for-Simpler.amxd','barcode.js','barcode-core.js','barcode-display.js']
 for e in entries[1:]:assert e.data==(root/'src'/e.name).read_bytes()
@@ -31,7 +31,7 @@ assert 'parameter_type' in boxes['data']['saved_attribute_attributes']['valueof'
 assert boxes['data']['saved_attribute_attributes']['valueof']['parameter_type']==3
 for b in objects:
  if b.get('presentation'):
-  x,y,w,h=b['presentation_rect'];assert x>=0 and y>=0 and x+w<=1100 and y+h<=169,(b['id'],x,y,w,h)
+  x,y,w,h=b['presentation_rect'];assert x>=0 and y>=0 and x+w<=1480 and y+h<=169,(b['id'],x,y,w,h)
 print('PASS AMXD readback, embedded sources, all patch connections/ports, six stereo players, mono duplication, instance-local buffer, presentation bounds and persistent state')
 print('Max/MSP runtime and Live UI/audio have NOT been executed by this test.')
 
@@ -51,3 +51,13 @@ for ch in range(2):
  assert any(e['patchline']['source']==['limit'+str(ch),0] and e['patchline']['destination']==['output',ch] for e in patch['lines'])
 assert any(e['patchline']['source']==['filter0',0] and e['patchline']['destination']==['filtermeter',0] for e in patch['lines'])
 print('PASS native clip~ output in both channels; reject expr~ and verify filter meter connection')
+
+for i in range(6):
+ b=boxes['gain'+str(i)];assert b['maxclass']=='live.dial' and b['parameter_enable']==1
+ spec=b['saved_attribute_attributes']['valueof'];assert spec['parameter_initial']==[100] and spec['parameter_mmax']==200
+ assert any(e['patchline']['source']==['trim-route',i] and e['patchline']['destination']==['voice'+str(i),8] for e in patch['lines'])
+ sub=boxes['voice'+str(i)]['patcher']
+ assert any(e['patchline']['source']==['trim',0] and e['patchline']['destination']==['effective-level',1] for e in sub['lines'])
+assert boxes['volume']['saved_attribute_attributes']['valueof']['parameter_initial']==[0]
+assert boxes['volume']['saved_attribute_attributes']['valueof']['parameter_unitstyle']==4
+print('PASS six persistent automatable gain knobs, independent smoothed DSP trims, dB master and layout bounds')

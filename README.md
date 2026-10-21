@@ -1,11 +1,21 @@
-# Barcode for Simpler v0.1.2
+# Barcode for Simpler v0.1.3
 
 Urządzenie Max for Live dla Ableton Live 11 / Max 8, oparte na **[barcode v0.12.0 autorstwa Zachary'ego Scholla](https://github.com/schollz/barcode)**. Sześć głosów odtwarza sample z najbliższego poprzedzającego Simplera. 36 LFO zmienia poziom, panoramę, prędkość, kierunek oraz początek i koniec pętli. **Bez nagrywania.**
 
-- [Pobierz gotowy AMXD](https://github.com/Korkapetl6/ModelC/raw/refs/heads/barcode-m4l/dist/Barcode-for-Simpler-v0.1.2.amxd)
-- [Pobierz ZIP: urządzenie, patcher, źródła i README](https://github.com/Korkapetl6/ModelC/raw/refs/heads/barcode-m4l/dist/Barcode-for-Simpler-v0.1.2-complete.zip)
+- [Pobierz gotowy AMXD](https://github.com/Korkapetl6/ModelC/raw/refs/heads/barcode-m4l/dist/Barcode-for-Simpler-v0.1.3.amxd)
+- [Pobierz ZIP: urządzenie, patcher, źródła i README](https://github.com/Korkapetl6/ModelC/raw/refs/heads/barcode-m4l/dist/Barcode-for-Simpler-v0.1.3-complete.zip)
 
 **Status: prototyp do testu w Live.** Testy logiki i kontrolera z symulowanym Live API oraz walidacja struktury AMXD przeszły. Nie uruchamiano urządzenia w Max/Live: dźwięk, odczyt przez `buffer~`, działanie panelu i rzeczywiste odtworzenie Setu wymagają sprawdzenia w aplikacji. Nie jest to potwierdzona emulacja softcut 1:1.
+
+## Poprawka 0.1.3 — poziom wyjścia i sześć pokręteł głosów
+
+Użytkownik potwierdził działający dźwięk w 0.1.2, ale poziom był zbyt niski. Usunięto stały mnożnik 0,25 oraz startowe 0,7: wyjście domyślnie ma teraz **0 dB / gain 1**, około 15,1 dB więcej niż w poprzedniej wersji. Pole **Output dB** ma zakres od −60 dB (wyciszenie) do +12 dB. Poprawiono także formatowanie wartości ułamkowych w pozostałych polach.
+
+Po prawej dodano **Voice 1–6**, sześć osobnych pokręteł poziomu. 0% wycisza głos, 100% zachowuje jego poziom wynikający z oryginalnego Barcode, 200% mnoży go przez dwa (+6 dB). To dodatkowe mnożniki za modulacją Level; nie zmieniają biasu, faz ani okresów LFO. Reagują z niezależnym wygładzeniem 30 ms, również przy FROZEN. Można je mapować MIDI, automatyzować i zapisywać w Secie jako parametry Live. Reset voices nie resetuje tych pokręteł.
+
+Wstaw nową wersję zamiast poprzedniej. Jeśli za Barcode dodano wcześniej Utility z dodatnim Gain, wyzeruj ten dodatkowy boost przed odsłuchem. Ogranicznik ±0,98 nadal działa; duże sumy głosów mogą się przesterować — wtedy zmniejsz Output dB. Panel jest szerszy, aby wszystkie sześć pokręteł było widocznych równocześnie.
+
+Testy obejmują domyślne gain 1, przeliczanie dB, mute, niezależność sześciu pokręteł od LFO, połączenia DSP i zapis parametrów w strukturze patchera. Nowy panel wymaga jeszcze sprawdzenia w rzeczywistym Live/Max.
 
 ## Poprawka 0.1.2 — usunięcie nieobsługiwanego obiektu wyjściowego
 
@@ -25,7 +35,7 @@ Podmień poprzednie urządzenie na nowy plik, pozostawiając Simpler. Kliknij FR
 
 1. Utwórz ścieżkę MIDI i wstaw **Simpler**.
 2. Wczytaj do niego zwykły plik WAV lub AIFF z dysku.
-3. Przeciągnij **Barcode-for-Simpler-v0.1.2.amxd bezpośrednio ZA Simpler**, jako efekt audio w tym samym łańcuchu.
+3. Przeciągnij **Barcode-for-Simpler-v0.1.3.amxd bezpośrednio ZA Simpler**, jako efekt audio w tym samym łańcuchu.
 4. Poczekaj na nazwę sampla w górnym wierszu. Domyślnie aktywne są **ON** i **LIVE PLAY**.
 5. Uruchom transport Live. Barcode zapętli sample bez potrzeby grania nut MIDI. Dla odsłuchu przy zatrzymanym transporcie przełącz **LIVE PLAY → FREE PLAY**.
 6. Podmień sample w Simplerze — Barcode wykryje zmianę automatycznie, zwykle w ciągu około sekundy. **Reload** wymusza ponowny odczyt.
@@ -44,12 +54,13 @@ W Instrument Rack wstaw oba urządzenia wewnątrz **tej samej chain**. Wyszukiwa
 - Lista **Level / Pan / Rate / Direction / Loop start / Loop end** — wybór modulowanego parametru.
 - **Bias** — przesunięcie wyniku modulacji. Dla Rate przesuwa indeks prędkości; Start/End używają ułamka długości sampla.
 - **LFO period** — okres wybranego LFO; 0 wyłącza jego oscylację, zgodnie ze stałą wartością z oryginalnego skryptu.
-- **Output** — poziom końcowy z zapasem na sumowanie sześciu głosów.
+- **Output dB** — poziom końcowy w decybelach, domyślnie 0 dB; −60 dB wycisza wyjście.
+- **Voice 1–6** — sześć pokręteł poziomu głosów 0–200%, domyślnie 100%.
 - **Filter Hz / Resonance** — wspólny filtr dolnoprzepustowy stereo.
 - **Rate / Pan / Level slew s** — wygładzanie zmian w sekundach, 0,01–30 s.
 - **Reset voices** — usuwa własne biasy/okresy i inicjalizuje nowy zestaw faz oraz okresów LFO.
 
-Pola liczbowe zmienia się przeciąganiem w pionie lub wpisywaniem wartości. Ustawienia globalne są parametrami Live; ustawienia wybranego głosu są zapisywane w ukrytym `pattr`, ale nie mają osobnych ścieżek automatyki. Kopia urządzenia ma własny bufor audio i stan.
+Pola liczbowe zmienia się przeciąganiem w pionie lub wpisywaniem wartości. Ustawienia globalne są parametrami Live; biasy i okresy LFO wybranego głosu są zapisywane w ukrytym `pattr`, ale nie mają osobnych ścieżek automatyki. Sześć pokręteł poziomu głosów ma osobną automatykę i zapis jako parametry Live. Kopia urządzenia ma własny bufor audio i stan.
 
 ## Co zachowano i co zmieniono
 

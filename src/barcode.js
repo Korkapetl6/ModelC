@@ -3,7 +3,8 @@ autowatch=0;inlets=1;outlets=2;
 include('barcode-core.js');
 var core=new BarcodeCore(Math.floor(Math.random()*4294967296)),ready=false,active=true,enabled=1,freeze=0,reverse=1,sync=0,follow=1;
 var hostRate=48000;
-var master=.7,cutoff=18000,resonance=.2,rateSlew=1,panSlew=1,levelSlew=1;
+var master=1,cutoff=18000,resonance=.2,rateSlew=1,panSlew=1,levelSlew=1;
+var voiceGains=[1,1,1,1,1,1];
 var selectedVoice=0,selectedParam=0,tempo=120,playing=false;
 var sampleReady=false,loading=false,signature='',pending=null,desired=null,seconds=1,startOffset=0;
 var scanTask=null,tickTask=null,loadTask=null,timeoutTask=null,apiOwn=null,apiSong=null;
@@ -18,7 +19,7 @@ function status(s){text('status',s);}
 function cancel(t){if(t)t.cancel();}
 function audioState(){
  var wet=enabled&&active&&sampleReady&&!loading&&(!follow||playing);
- outlet(0,'master',wet?master*.25:0,30);
+ outlet(0,'master',wet?master:0,30);
  outlet(0,'dry',!enabled||!active?1:0,30);
  diagnostic();
 }
@@ -88,15 +89,16 @@ function loaded(){
  }catch(e){loading=false;sampleReady=false;signature='';status('Load error: '+e.message);audioState();}
 }
 function sendRows(){
- var draw=[master,selectedVoice];
+ var draw=[Math.min(1,master),selectedVoice];
  for(var i=0;i<lastRows.length;i++){
   var v=lastRows[i],angle=(v.pan+1)*Math.PI/4;
   outlet(0,'bounds',i,v.start*1000,v.end*1000);
   outlet(0,'rate',i,(enabled&&active&&(!follow||playing))?v.rate:0,rateSlew*1000);
   // Independent level/pan ramps are applied separately in the audio patch.
   outlet(0,'level',i,v.level,levelSlew*1000);
+  outlet(0,'trim',i,voiceGains[i],30);
   outlet(0,'pan',i,Math.cos(angle),Math.sin(angle),panSlew*1000);
-  draw.push(v.level,v.pan,v.rate,v.start/seconds,v.end/seconds,0);
+  draw.push(Math.min(1,v.level*voiceGains[i]),v.pan,v.rate,v.start/seconds,v.end/seconds,0);
  }
  outlet(1,['data'].concat(draw));
 }
@@ -116,7 +118,7 @@ function rawmeter(x){rawPeak=Number(x)||0;diagnostic();}
 function filtermeter(x){filterPeak=Number(x)||0;diagnostic();}
 function outmeter(x){outPeak=Number(x)||0;diagnostic();}
 function db(x){return x>0.00001?(20*Math.log(x)/Math.LN10).toFixed(1)+' dB':'silence';}
-function diagnostic(){var gain=(enabled&&active&&sampleReady&&!loading&&(!follow||playing))?master*.25:0;text('diagnostic','DSP '+(dspOn?'ON':'OFF')+' | Active '+(active?'YES':'NO')+' | Voices '+db(rawPeak)+' | Filter '+db(filterPeak)+' | Gain '+gain.toFixed(3)+' | Output '+db(outPeak));}
+function diagnostic(){var gain=(enabled&&active&&sampleReady&&!loading&&(!follow||playing))?master:0;text('diagnostic','DSP '+(dspOn?'ON':'OFF')+' | Active '+(active?'YES':'NO')+' | Voices '+db(rawPeak)+' | Filter '+db(filterPeak)+' | Gain '+gain.toFixed(3)+' | Output '+db(outPeak));}
 function samplerate(x){if(isFinite(Number(x))&&Number(x)>=8000){hostRate=Number(x);updateFilter();}}
 function updateFilter(){
  var f=Math.min(cutoff,hostRate*.45),q=.5+12*resonance*resonance;
@@ -130,7 +132,8 @@ function lfofreeze(x){freeze=Number(x)!==0;tick();}
 function allowreverse(x){reverse=Number(x)!==0;tick();}
 function bpmsync(x){sync=Number(x)!==0;tick();}
 function transport(x){follow=Number(x)!==0;tick();if(sampleReady&&pending)status(pending.path.split(/[\\/]/).pop()+' | '+seconds.toFixed(2)+' s | '+(follow?'Follows Live transport':'Free playback'));}
-function volume(x){master=Math.max(0,Math.min(1,Number(x)||0));audioState();}
+function volume(x){var d=Number(x);if(!isFinite(d))return;d=Math.max(-60,Math.min(12,d));master=d<=-60?0:Math.pow(10,d/20);audioState();}
+function voicegain(i,x){i=Number(i);x=Number(x);if(i!==Math.floor(i)||i<0||i>5||!isFinite(x))return;voiceGains[i]=Math.max(0,Math.min(200,x))/100;outlet(0,'trim',i,voiceGains[i],30);refreshValues();}
 function filterfreq(x){cutoff=Math.max(20,Math.min(20000,Number(x)||20));updateFilter();}
 function filterres(x){resonance=Math.max(0,Math.min(.85,Number(x)||0));updateFilter();}
 function rateslew(x){rateSlew=Math.max(.01,Math.min(30,Number(x)||.01));}

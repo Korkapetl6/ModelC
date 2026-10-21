@@ -12,5 +12,5 @@ for name in ['barcode.js','barcode-core.js','barcode-display.js']:
  data=(ROOT/'src'/name).read_bytes();entries.append(Entry(name,data));(dist/name).write_bytes(data)
 blob=frozen_amxd(entries)
 assert unpack_frozen(blob)==(b'aaaa',entries)
-name='Barcode-for-Simpler-v0.1.2.amxd';(dist/name).write_bytes(blob)
+name='Barcode-for-Simpler-v0.1.3.amxd';(dist/name).write_bytes(blob)
 print(name,len(blob),'bytes SHA256',hashlib.sha256(blob).hexdigest())

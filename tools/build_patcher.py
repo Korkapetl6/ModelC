@@ -62,13 +62,13 @@ class Patch:
             "parameter_mmax": maximum,
             "parameter_initial": [initial],
             "parameter_initial_enable": 1,
-            "parameter_unitstyle": 0,
+            "parameter_unitstyle": attrs.pop("unitstyle", 1),
         }
         if enum:
             valueof["parameter_enum"] = enum
         self.box(ident, cls, rect=rect, varname=ident, numinlets=1,
-                 numoutlets=2 if cls in ("live.text", "live.numbox", "live.slider") else 1,
-                 outlettype=["", ""] if cls in ("live.text", "live.numbox", "live.slider") else [""],
+                 numoutlets=2 if cls in ("live.text", "live.numbox", "live.slider", "live.dial") else 1,
+                 outlettype=["", ""] if cls in ("live.text", "live.numbox", "live.slider", "live.dial") else [""],
                  parameter_enable=1, presentation=1, presentation_rect=rect,
                  saved_attribute_attributes={"valueof": valueof}, **attrs)
         self.params[ident] = [label, label, 0]
@@ -77,13 +77,16 @@ class Patch:
 
 def voice_patch():
     p=Patch(750,500)
-    for n in range(8):p.box(f'in{n}','inlet',rect=[30+n*130,20,30,30],index=n+1)
+    for n in range(9):p.box(f'in{n}','inlet',rect=[30+n*130,20,30,30],index=n+1)
     p.box('speed',text='line~ 0.',numinlets=2,numoutlets=2)
     p.box('groove',text='groove~ #1 2 @loop 1 @loopinterp 1',numinlets=3,numoutlets=3,outlettype=['signal','signal','signal'])
     p.box('bounds',text='unpack f f',numinlets=1,numoutlets=2)
     p.connect('in0',0,'speed');p.connect('speed',0,'groove')
     p.connect('in1',0,'bounds');p.connect('bounds',0,'groove',1);p.connect('bounds',1,'groove',2)
+    p.box('trim',text='line~ 1.',numinlets=2,numoutlets=2);p.connect('in8',0,'trim')
+    p.box('effective-level',text='*~',numinlets=2,numoutlets=1)
     p.box('level',text='line~ 0.',numinlets=2,numoutlets=2);p.connect('in2',0,'level')
+    p.connect('level',0,'effective-level');p.connect('trim',0,'effective-level',1)
     p.box('pan',text='unpack f f f',numinlets=1,numoutlets=3);p.connect('in3',0,'pan')
     for ch in range(2):
         p.box(f'pack{ch}',text='pack 0. 1000.',numinlets=2,numoutlets=1)
@@ -93,7 +96,7 @@ def voice_patch():
         p.box(f'out{ch}','outlet',rect=[100+ch*150,440,30,30],index=ch+1)
         p.connect('pan',ch,f'pack{ch}');p.connect('pan',2,f'pack{ch}',1)
         p.connect(f'pack{ch}',0,f'panline{ch}')
-        p.connect('groove',ch,f'amp{ch}');p.connect('level',0,f'amp{ch}',1)
+        p.connect('groove',ch,f'amp{ch}');p.connect('effective-level',0,f'amp{ch}',1)
         p.connect(f'amp{ch}',0,f'panned{ch}');p.connect(f'panline{ch}',0,f'panned{ch}',1)
         p.connect(f'panned{ch}',0,f'out{ch}')
     p.connect('in4',0,'groove')
@@ -107,11 +110,11 @@ def voice_patch():
     return p.data
 
 def build():
-    p=Patch(1100,169,True)
-    p.data.update({'devicewidth':1100.,'openrect':[0.,0.,1100.,169.],
+    p=Patch(1480,169,True)
+    p.data.update({'devicewidth':1480.,'openrect':[0.,0.,1480.,169.],
       'project':{'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},
       'description':'Barcode six-voice sample playback following the preceding Simpler. No recording.',
-      'digest':'Barcode for Simpler v0.1.2','autosave':0})
+      'digest':'Barcode for Simpler v0.1.3','autosave':0})
     p.label('title','BARCODE / SIMPLER',[12.,6.,250.,20.],fontface=1)
     p.label('status','Place directly after Simpler. Drop a sample in Simpler.',[280.,6.,805.,22.],varname='status')
     p.box('display','jsui',rect=[10.,30.,256.,128.],filename='barcode-display.js',numinlets=1,numoutlets=0,
@@ -139,12 +142,19 @@ def build():
     for ident in ['voice','parameter','bias','period']:
         p.box(ident+'cmd',text='prepend '+ident,numinlets=1,numoutlets=1);p.connect(ident,0,ident+'cmd');p.connect(ident+'cmd',0,'defer')
     for i,(ident,label,lo,hi,val) in enumerate([
-      ('volume','Output',0,1,.7),('filterfreq','Filter Hz',20,20000,18000),('filterres','Resonance',0,.85,.2),
+      ('volume','Output dB',-60,12,0),('filterfreq','Filter Hz',20,20000,18000),('filterres','Resonance',0,.85,.2),
       ('rateslew','Rate slew s',.01,30,1),('panslew','Pan slew s',.01,30,1),('levelslew','Level slew s',.01,30,1)]):
         x=280.+i*132
         p.label(ident+'label',label,[x,103.,125.,18.])
-        p.control(ident,'live.numbox',label,[x,124.,115.,24.],minimum=lo,maximum=hi,initial=val)
+        p.control(ident,'live.numbox',label,[x,124.,115.,24.],minimum=lo,maximum=hi,initial=val,unitstyle=4 if ident=='volume' else 1)
         p.box(ident+'cmd',text='prepend '+ident,numinlets=1,numoutlets=1);p.connect(ident,0,ident+'cmd');p.connect(ident+'cmd',0,'defer')
+    p.label('mixer-title','VOICE LEVELS',[1110.,12.,350.,20.],fontface=1)
+    p.label('mixer-hint','0% = mute  /  100% = original  /  200% = +6 dB',[1110.,135.,360.,20.],fontsize=10)
+    for i in range(6):
+        ident='gain'+str(i)
+        p.control(ident,'live.dial','Voice '+str(i+1),[1110.+i*60,48.,54.,70.],minimum=0,maximum=200,initial=100,unitstyle=5)
+        p.box(ident+'cmd',text='prepend voicegain '+str(i),numinlets=1,numoutlets=1)
+        p.connect(ident,0,ident+'cmd');p.connect(ident+'cmd',0,'defer')
     p.label('diagnostic','DSP: waiting for initialization',[280.,151.,800.,16.],varname='diagnostic',fontsize=10)
     p.box('ready',text='live.thisdevice',numinlets=1,numoutlets=3)
     p.box('init','message','initialize',numinlets=2,numoutlets=1);p.connect('ready',0,'init');p.connect('init',0,'defer')
@@ -153,20 +163,22 @@ def build():
       saved_object_attributes={'parameter_enable':1,'parameter_mappable':0},
       saved_attribute_attributes={'valueof':{'parameter_type':3,'parameter_invisible':1,'parameter_longname':'BarcodeData','parameter_shortname':'BarcodeData'}})
     p.params['data']=['BarcodeData','BarcodeData',0]
-    p.box('protocol',text='route load bounds rate level pan seek master dry filter channels bind start',numinlets=1,numoutlets=13);p.connect('engine',0,'protocol')
+    p.box('protocol',text='route load bounds rate level pan seek master dry filter channels bind start trim',numinlets=1,numoutlets=14);p.connect('engine',0,'protocol')
     p.box('replace',text='prepend replace',numinlets=1,numoutlets=1)
     p.box('buffer',text='buffer~ #0-barcode',numinlets=1,numoutlets=2,outlettype=['float','bang'])
     p.connect('protocol',0,'replace');p.connect('replace',0,'buffer')
     p.box('loaded','message','loaded',numinlets=2,numoutlets=1);p.connect('buffer',1,'loaded');p.connect('loaded',0,'defer')
     for out,name in enumerate(['bounds','rate','level','pan','seek'],1):
         p.box(name+'route',text='route 0 1 2 3 4 5',numinlets=1,numoutlets=7);p.connect('protocol',out,name+'route')
+    p.box('trim-route',text='route 0 1 2 3 4 5',numinlets=1,numoutlets=7);p.connect('protocol',12,'trim-route')
     p.box('start-route',text='route 0 1 2 3 4 5',numinlets=1,numoutlets=7);p.connect('protocol',11,'start-route')
     for i in range(6):
         # Embedded subpatchers share the parent #0 symbol directly; no abstraction argument lookup.
         sub=voice_patch()
         for entry in sub['boxes']:
             if entry['box']['id']=='groove':entry['box']['text']='groove~ #0-barcode 2 @loop 1 @loopinterp 1'
-        p.box('voice'+str(i),text='p voice_'+str(i+1),numinlets=8,numoutlets=2,outlettype=['signal','signal'],patcher=sub)
+        p.box('voice'+str(i),text='p voice_'+str(i+1),numinlets=9,numoutlets=2,outlettype=['signal','signal'],patcher=sub)
+        p.connect('trim-route',i,'voice'+str(i),8)
         p.connect('protocol',10,'voice'+str(i),6)
         p.connect('start-route',i,'voice'+str(i),7)
         p.connect('protocol',9,'voice'+str(i),5)
@@ -195,6 +207,6 @@ def build():
         p.box('dryamp'+str(ch),text='*~',numinlets=2,numoutlets=1);p.connect('input',ch,'dryamp'+str(ch));p.connect('dry',0,'dryamp'+str(ch),1)
         p.connect('limit'+str(ch),0,'output',ch);p.connect('dryamp'+str(ch),0,'output',ch)
     p.connect('sum0',0,'rawmeter');p.connect('filter0',0,'filtermeter');p.connect('limit0',0,'outmeter')
-    p.data['parameters']={**p.params,'parameterbanks':{'0':{'index':0,'name':'Barcode','parameters':['Barcode On','Output','Freeze LFO','Reverse Allowed','LFO Tempo Sync','Follow Transport','Filter Hz','Resonance']}},'inherited_shortname':1}
+    p.data['parameters']={**p.params,'parameterbanks':{'0':{'index':0,'name':'Barcode','parameters':['Barcode On','Output dB','Freeze LFO','Reverse Allowed','LFO Tempo Sync','Follow Transport','Filter Hz','Resonance']}},'inherited_shortname':1}
     p.data['dependency_cache']=[{'name':name,'type':'TEXT','implicit':1} for name in ['barcode.js','barcode-core.js','barcode-display.js']]
     return {'patcher':p.data}

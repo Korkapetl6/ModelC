@@ -75,4 +75,19 @@ test('every reload explicitly binds the instance buffer before starting players'
  const b=s.output.findIndex(x=>x[1]==='bind'),start=s.output.findIndex(x=>x[1]==='start');
  assert(b>=0&&start>b);assert.equal(s.output[b][2],'test-buffer');
 });
+test('output unity default, decibel mapping and silence at minimum',()=>{
+ const s=setup();s.ctx.initialize();s.ctx.loaded();s.ctx.transport(0);
+ const gain=()=>s.output.filter(x=>x[1]==='master').slice(-1)[0][2];
+ assert.equal(gain(),1);s.ctx.volume(6);assert(Math.abs(gain()-Math.pow(10,6/20))<1e-10);
+ s.ctx.volume(-60);assert.equal(gain(),0);s.ctx.volume(0);assert.equal(gain(),1);
+});
+test('voice knobs mute/boost independently and preserve LFO configuration',()=>{
+ const s=setup();s.ctx.initialize();s.ctx.loaded();s.ctx.transport(0);s.ctx.lfofreeze(1);
+ const before=JSON.stringify(s.ctx.core.exportState());
+ s.ctx.voicegain(2,0);s.ctx.voicegain(5,200);s.ctx.tick();
+ const trim=s.output.filter(x=>x[1]==='trim').slice(-6);
+ assert.deepStrictEqual(trim.map(x=>x[3]),[1,1,0,1,1,2]);
+ assert(trim.every(x=>x[4]===30));assert.equal(JSON.stringify(s.ctx.core.exportState()),before);
+ s.ctx.voicegain(5,Infinity);assert.equal(s.ctx.voiceGains[5],2);
+});
 console.log(n+' controller tests passed (mock Live API; not Max runtime)');

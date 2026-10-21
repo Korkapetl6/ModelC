@@ -1,2 +1,2 @@
-cda0afc0c1dfbc4d4c4e1736820ecf449cc71bfa58032270b154ff203e0a3fcb  Barcode-for-Simpler-v0.1.2-complete.zip
-0403ebfb66a645811620ce04147e3ad014285b115a682a3dfebc11b4aa8d6636  Barcode-for-Simpler-v0.1.2.amxd
+e3fbeffb54c152ee48ac0a4c41eb4eeb1596cea00e6f85f252951af09cdc7e46  Barcode-for-Simpler-v0.1.3-complete.zip
+e1c34d05e6d27ef18d993ddb53f955c2bb678463f8cdd43907a9b211af8b201b  Barcode-for-Simpler-v0.1.3.amxd

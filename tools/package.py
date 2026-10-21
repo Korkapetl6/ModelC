@@ -3,11 +3,13 @@
 from pathlib import Path
 import json,zipfile,hashlib,shutil
 root=Path(__file__).resolve().parents[1]
-version='0.1.2'
+version='0.1.3'
 p=root/'dist/VALIDATION.json';v=json.loads(p.read_text());v['version']=version
 v['tests']['native_clip_output_and_filter_meter']='passed'
-v['observed_in_previous_version']='0.1.1 screenshot: DSP ON, Active YES, Sample READY, Voices -15.4 dB, Output silence.'
-v['remaining']=['Audition native clip~ output fix in Live','Actual Live Set save and reopen']
+v['observed_in_previous_version']='User confirmed audio in 0.1.2; gain 0.175 was too quiet.'
+v['tests']['controller_mock_live_api']=16
+v['tests']['six_voice_trims_and_db_output']='passed'
+v['remaining']=['Verify new gain controls and expanded panel in Live','Actual Live Set save and reopen']
 p.write_text(json.dumps(v,indent=2)+'\n')
 names=['README.md','LICENSE','Makefile','.gitignore']
 for d in ['src','tools','tests','upstream']:

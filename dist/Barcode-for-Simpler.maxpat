@@ -12,7 +12,7 @@
     "rect": [
       0.0,
       0.0,
-      1100.0,
+      1480.0,
       169.0
     ],
     "openinpresentation": 1,
@@ -186,7 +186,7 @@
                 1
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 0,
+              "parameter_unitstyle": 1,
               "parameter_enum": [
                 "OFF",
                 "ON"
@@ -297,7 +297,7 @@
                 0
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 0,
+              "parameter_unitstyle": 1,
               "parameter_enum": [
                 "LFO RUN",
                 "FROZEN"
@@ -408,7 +408,7 @@
                 1
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 0,
+              "parameter_unitstyle": 1,
               "parameter_enum": [
                 "FORWARD",
                 "REVERSE"
@@ -519,7 +519,7 @@
                 0
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 0,
+              "parameter_unitstyle": 1,
               "parameter_enum": [
                 "LFO SEC",
                 "LFO BEATS"
@@ -630,7 +630,7 @@
                 1
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 0,
+              "parameter_unitstyle": 1,
               "parameter_enum": [
                 "FREE PLAY",
                 "LIVE PLAY"
@@ -1080,7 +1080,7 @@
             125.0,
             18.0
           ],
-          "text": "Output",
+          "text": "Output dB",
           "numinlets": 1,
           "numoutlets": 0,
           "presentation": 1,
@@ -1127,16 +1127,16 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Output",
-              "parameter_shortname": "Output",
+              "parameter_longname": "Output dB",
+              "parameter_shortname": "Output dB",
               "parameter_type": 0,
-              "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmin": -60,
+              "parameter_mmax": 12,
               "parameter_initial": [
-                0.7
+                0
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 0
+              "parameter_unitstyle": 4
             }
           }
         }
@@ -1222,7 +1222,7 @@
                 18000
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 0
+              "parameter_unitstyle": 1
             }
           }
         }
@@ -1308,7 +1308,7 @@
                 0.2
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 0
+              "parameter_unitstyle": 1
             }
           }
         }
@@ -1394,7 +1394,7 @@
                 1
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 0
+              "parameter_unitstyle": 1
             }
           }
         }
@@ -1480,7 +1480,7 @@
                 1
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 0
+              "parameter_unitstyle": 1
             }
           }
         }
@@ -1566,7 +1566,7 @@
                 1
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 0
+              "parameter_unitstyle": 1
             }
           }
         }
@@ -1582,6 +1582,403 @@
             22.0
           ],
           "text": "prepend levelslew",
+          "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "mixer-title",
+          "maxclass": "comment",
+          "patching_rect": [
+            1110.0,
+            12.0,
+            350.0,
+            20.0
+          ],
+          "text": "VOICE LEVELS",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1110.0,
+            12.0,
+            350.0,
+            20.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 11.0,
+          "fontface": 1
+        }
+      },
+      {
+        "box": {
+          "id": "mixer-hint",
+          "maxclass": "comment",
+          "patching_rect": [
+            1110.0,
+            135.0,
+            360.0,
+            20.0
+          ],
+          "text": "0% = mute  /  100% = original  /  200% = +6 dB",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1110.0,
+            135.0,
+            360.0,
+            20.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 10
+        }
+      },
+      {
+        "box": {
+          "id": "gain0",
+          "maxclass": "live.dial",
+          "patching_rect": [
+            1110.0,
+            48.0,
+            54.0,
+            70.0
+          ],
+          "varname": "gain0",
+          "numinlets": 1,
+          "numoutlets": 2,
+          "outlettype": [
+            "",
+            ""
+          ],
+          "parameter_enable": 1,
+          "presentation": 1,
+          "presentation_rect": [
+            1110.0,
+            48.0,
+            54.0,
+            70.0
+          ],
+          "saved_attribute_attributes": {
+            "valueof": {
+              "parameter_longname": "Voice 1",
+              "parameter_shortname": "Voice 1",
+              "parameter_type": 0,
+              "parameter_mmin": 0,
+              "parameter_mmax": 200,
+              "parameter_initial": [
+                100
+              ],
+              "parameter_initial_enable": 1,
+              "parameter_unitstyle": 5
+            }
+          }
+        }
+      },
+      {
+        "box": {
+          "id": "gain0cmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend voicegain 0",
+          "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "gain1",
+          "maxclass": "live.dial",
+          "patching_rect": [
+            1170.0,
+            48.0,
+            54.0,
+            70.0
+          ],
+          "varname": "gain1",
+          "numinlets": 1,
+          "numoutlets": 2,
+          "outlettype": [
+            "",
+            ""
+          ],
+          "parameter_enable": 1,
+          "presentation": 1,
+          "presentation_rect": [
+            1170.0,
+            48.0,
+            54.0,
+            70.0
+          ],
+          "saved_attribute_attributes": {
+            "valueof": {
+              "parameter_longname": "Voice 2",
+              "parameter_shortname": "Voice 2",
+              "parameter_type": 0,
+              "parameter_mmin": 0,
+              "parameter_mmax": 200,
+              "parameter_initial": [
+                100
+              ],
+              "parameter_initial_enable": 1,
+              "parameter_unitstyle": 5
+            }
+          }
+        }
+      },
+      {
+        "box": {
+          "id": "gain1cmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend voicegain 1",
+          "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "gain2",
+          "maxclass": "live.dial",
+          "patching_rect": [
+            1230.0,
+            48.0,
+            54.0,
+            70.0
+          ],
+          "varname": "gain2",
+          "numinlets": 1,
+          "numoutlets": 2,
+          "outlettype": [
+            "",
+            ""
+          ],
+          "parameter_enable": 1,
+          "presentation": 1,
+          "presentation_rect": [
+            1230.0,
+            48.0,
+            54.0,
+            70.0
+          ],
+          "saved_attribute_attributes": {
+            "valueof": {
+              "parameter_longname": "Voice 3",
+              "parameter_shortname": "Voice 3",
+              "parameter_type": 0,
+              "parameter_mmin": 0,
+              "parameter_mmax": 200,
+              "parameter_initial": [
+                100
+              ],
+              "parameter_initial_enable": 1,
+              "parameter_unitstyle": 5
+            }
+          }
+        }
+      },
+      {
+        "box": {
+          "id": "gain2cmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend voicegain 2",
+          "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "gain3",
+          "maxclass": "live.dial",
+          "patching_rect": [
+            1290.0,
+            48.0,
+            54.0,
+            70.0
+          ],
+          "varname": "gain3",
+          "numinlets": 1,
+          "numoutlets": 2,
+          "outlettype": [
+            "",
+            ""
+          ],
+          "parameter_enable": 1,
+          "presentation": 1,
+          "presentation_rect": [
+            1290.0,
+            48.0,
+            54.0,
+            70.0
+          ],
+          "saved_attribute_attributes": {
+            "valueof": {
+              "parameter_longname": "Voice 4",
+              "parameter_shortname": "Voice 4",
+              "parameter_type": 0,
+              "parameter_mmin": 0,
+              "parameter_mmax": 200,
+              "parameter_initial": [
+                100
+              ],
+              "parameter_initial_enable": 1,
+              "parameter_unitstyle": 5
+            }
+          }
+        }
+      },
+      {
+        "box": {
+          "id": "gain3cmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend voicegain 3",
+          "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "gain4",
+          "maxclass": "live.dial",
+          "patching_rect": [
+            1350.0,
+            48.0,
+            54.0,
+            70.0
+          ],
+          "varname": "gain4",
+          "numinlets": 1,
+          "numoutlets": 2,
+          "outlettype": [
+            "",
+            ""
+          ],
+          "parameter_enable": 1,
+          "presentation": 1,
+          "presentation_rect": [
+            1350.0,
+            48.0,
+            54.0,
+            70.0
+          ],
+          "saved_attribute_attributes": {
+            "valueof": {
+              "parameter_longname": "Voice 5",
+              "parameter_shortname": "Voice 5",
+              "parameter_type": 0,
+              "parameter_mmin": 0,
+              "parameter_mmax": 200,
+              "parameter_initial": [
+                100
+              ],
+              "parameter_initial_enable": 1,
+              "parameter_unitstyle": 5
+            }
+          }
+        }
+      },
+      {
+        "box": {
+          "id": "gain4cmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend voicegain 4",
+          "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "gain5",
+          "maxclass": "live.dial",
+          "patching_rect": [
+            1410.0,
+            48.0,
+            54.0,
+            70.0
+          ],
+          "varname": "gain5",
+          "numinlets": 1,
+          "numoutlets": 2,
+          "outlettype": [
+            "",
+            ""
+          ],
+          "parameter_enable": 1,
+          "presentation": 1,
+          "presentation_rect": [
+            1410.0,
+            48.0,
+            54.0,
+            70.0
+          ],
+          "saved_attribute_attributes": {
+            "valueof": {
+              "parameter_longname": "Voice 6",
+              "parameter_shortname": "Voice 6",
+              "parameter_type": 0,
+              "parameter_mmin": 0,
+              "parameter_mmax": 200,
+              "parameter_initial": [
+                100
+              ],
+              "parameter_initial_enable": 1,
+              "parameter_unitstyle": 5
+            }
+          }
+        }
+      },
+      {
+        "box": {
+          "id": "gain5cmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend voicegain 5",
           "numinlets": 1,
           "numoutlets": 1
         }
@@ -1700,9 +2097,9 @@
             100.0,
             22.0
           ],
-          "text": "route load bounds rate level pan seek master dry filter channels bind start",
+          "text": "route load bounds rate level pan seek master dry filter channels bind start trim",
           "numinlets": 1,
-          "numoutlets": 13
+          "numoutlets": 14
         }
       },
       {
@@ -1831,6 +2228,21 @@
       },
       {
         "box": {
+          "id": "trim-route",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "route 0 1 2 3 4 5",
+          "numinlets": 1,
+          "numoutlets": 7
+        }
+      },
+      {
+        "box": {
           "id": "start-route",
           "maxclass": "newobj",
           "patching_rect": [
@@ -1855,7 +2267,7 @@
             22.0
           ],
           "text": "p voice_1",
-          "numinlets": 8,
+          "numinlets": 9,
           "numoutlets": 2,
           "outlettype": [
             "signal",
@@ -2000,6 +2412,19 @@
               },
               {
                 "box": {
+                  "id": "in8",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    1070,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 9
+                }
+              },
+              {
+                "box": {
                   "id": "speed",
                   "maxclass": "newobj",
                   "patching_rect": [
@@ -2046,6 +2471,36 @@
                   "text": "unpack f f",
                   "numinlets": 1,
                   "numoutlets": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "trim",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "line~ 1.",
+                  "numinlets": 2,
+                  "numoutlets": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "effective-level",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "*~",
+                  "numinlets": 2,
+                  "numoutlets": 1
                 }
               },
               {
@@ -2319,12 +2774,48 @@
               {
                 "patchline": {
                   "source": [
+                    "in8",
+                    0
+                  ],
+                  "destination": [
+                    "trim",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
                     "in2",
                     0
                   ],
                   "destination": [
                     "level",
                     0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "level",
+                    0
+                  ],
+                  "destination": [
+                    "effective-level",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "trim",
+                    0
+                  ],
+                  "destination": [
+                    "effective-level",
+                    1
                   ]
                 }
               },
@@ -2391,7 +2882,7 @@
               {
                 "patchline": {
                   "source": [
-                    "level",
+                    "effective-level",
                     0
                   ],
                   "destination": [
@@ -2475,7 +2966,7 @@
               {
                 "patchline": {
                   "source": [
-                    "level",
+                    "effective-level",
                     0
                   ],
                   "destination": [
@@ -2631,7 +3122,7 @@
             22.0
           ],
           "text": "p voice_2",
-          "numinlets": 8,
+          "numinlets": 9,
           "numoutlets": 2,
           "outlettype": [
             "signal",
@@ -2776,6 +3267,19 @@
               },
               {
                 "box": {
+                  "id": "in8",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    1070,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 9
+                }
+              },
+              {
+                "box": {
                   "id": "speed",
                   "maxclass": "newobj",
                   "patching_rect": [
@@ -2822,6 +3326,36 @@
                   "text": "unpack f f",
                   "numinlets": 1,
                   "numoutlets": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "trim",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "line~ 1.",
+                  "numinlets": 2,
+                  "numoutlets": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "effective-level",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "*~",
+                  "numinlets": 2,
+                  "numoutlets": 1
                 }
               },
               {
@@ -3095,12 +3629,48 @@
               {
                 "patchline": {
                   "source": [
+                    "in8",
+                    0
+                  ],
+                  "destination": [
+                    "trim",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
                     "in2",
                     0
                   ],
                   "destination": [
                     "level",
                     0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "level",
+                    0
+                  ],
+                  "destination": [
+                    "effective-level",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "trim",
+                    0
+                  ],
+                  "destination": [
+                    "effective-level",
+                    1
                   ]
                 }
               },
@@ -3167,7 +3737,7 @@
               {
                 "patchline": {
                   "source": [
-                    "level",
+                    "effective-level",
                     0
                   ],
                   "destination": [
@@ -3251,7 +3821,7 @@
               {
                 "patchline": {
                   "source": [
-                    "level",
+                    "effective-level",
                     0
                   ],
                   "destination": [
@@ -3407,7 +3977,7 @@
             22.0
           ],
           "text": "p voice_3",
-          "numinlets": 8,
+          "numinlets": 9,
           "numoutlets": 2,
           "outlettype": [
             "signal",
@@ -3552,6 +4122,19 @@
               },
               {
                 "box": {
+                  "id": "in8",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    1070,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 9
+                }
+              },
+              {
+                "box": {
                   "id": "speed",
                   "maxclass": "newobj",
                   "patching_rect": [
@@ -3598,6 +4181,36 @@
                   "text": "unpack f f",
                   "numinlets": 1,
                   "numoutlets": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "trim",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "line~ 1.",
+                  "numinlets": 2,
+                  "numoutlets": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "effective-level",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "*~",
+                  "numinlets": 2,
+                  "numoutlets": 1
                 }
               },
               {
@@ -3871,12 +4484,48 @@
               {
                 "patchline": {
                   "source": [
+                    "in8",
+                    0
+                  ],
+                  "destination": [
+                    "trim",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
                     "in2",
                     0
                   ],
                   "destination": [
                     "level",
                     0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "level",
+                    0
+                  ],
+                  "destination": [
+                    "effective-level",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "trim",
+                    0
+                  ],
+                  "destination": [
+                    "effective-level",
+                    1
                   ]
                 }
               },
@@ -3943,7 +4592,7 @@
               {
                 "patchline": {
                   "source": [
-                    "level",
+                    "effective-level",
                     0
                   ],
                   "destination": [
@@ -4027,7 +4676,7 @@
               {
                 "patchline": {
                   "source": [
-                    "level",
+                    "effective-level",
                     0
                   ],
                   "destination": [
@@ -4183,7 +4832,7 @@
             22.0
           ],
           "text": "p voice_4",
-          "numinlets": 8,
+          "numinlets": 9,
           "numoutlets": 2,
           "outlettype": [
             "signal",
@@ -4328,6 +4977,19 @@
               },
               {
                 "box": {
+                  "id": "in8",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    1070,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 9
+                }
+              },
+              {
+                "box": {
                   "id": "speed",
                   "maxclass": "newobj",
                   "patching_rect": [
@@ -4374,6 +5036,36 @@
                   "text": "unpack f f",
                   "numinlets": 1,
                   "numoutlets": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "trim",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "line~ 1.",
+                  "numinlets": 2,
+                  "numoutlets": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "effective-level",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "*~",
+                  "numinlets": 2,
+                  "numoutlets": 1
                 }
               },
               {
@@ -4647,12 +5339,48 @@
               {
                 "patchline": {
                   "source": [
+                    "in8",
+                    0
+                  ],
+                  "destination": [
+                    "trim",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
                     "in2",
                     0
                   ],
                   "destination": [
                     "level",
                     0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "level",
+                    0
+                  ],
+                  "destination": [
+                    "effective-level",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "trim",
+                    0
+                  ],
+                  "destination": [
+                    "effective-level",
+                    1
                   ]
                 }
               },
@@ -4719,7 +5447,7 @@
               {
                 "patchline": {
                   "source": [
-                    "level",
+                    "effective-level",
                     0
                   ],
                   "destination": [
@@ -4803,7 +5531,7 @@
               {
                 "patchline": {
                   "source": [
-                    "level",
+                    "effective-level",
                     0
                   ],
                   "destination": [
@@ -4959,7 +5687,7 @@
             22.0
           ],
           "text": "p voice_5",
-          "numinlets": 8,
+          "numinlets": 9,
           "numoutlets": 2,
           "outlettype": [
             "signal",
@@ -5104,6 +5832,19 @@
               },
               {
                 "box": {
+                  "id": "in8",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    1070,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 9
+                }
+              },
+              {
+                "box": {
                   "id": "speed",
                   "maxclass": "newobj",
                   "patching_rect": [
@@ -5150,6 +5891,36 @@
                   "text": "unpack f f",
                   "numinlets": 1,
                   "numoutlets": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "trim",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "line~ 1.",
+                  "numinlets": 2,
+                  "numoutlets": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "effective-level",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "*~",
+                  "numinlets": 2,
+                  "numoutlets": 1
                 }
               },
               {
@@ -5423,12 +6194,48 @@
               {
                 "patchline": {
                   "source": [
+                    "in8",
+                    0
+                  ],
+                  "destination": [
+                    "trim",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
                     "in2",
                     0
                   ],
                   "destination": [
                     "level",
                     0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "level",
+                    0
+                  ],
+                  "destination": [
+                    "effective-level",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "trim",
+                    0
+                  ],
+                  "destination": [
+                    "effective-level",
+                    1
                   ]
                 }
               },
@@ -5495,7 +6302,7 @@
               {
                 "patchline": {
                   "source": [
-                    "level",
+                    "effective-level",
                     0
                   ],
                   "destination": [
@@ -5579,7 +6386,7 @@
               {
                 "patchline": {
                   "source": [
-                    "level",
+                    "effective-level",
                     0
                   ],
                   "destination": [
@@ -5735,7 +6542,7 @@
             22.0
           ],
           "text": "p voice_6",
-          "numinlets": 8,
+          "numinlets": 9,
           "numoutlets": 2,
           "outlettype": [
             "signal",
@@ -5880,6 +6687,19 @@
               },
               {
                 "box": {
+                  "id": "in8",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    1070,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 9
+                }
+              },
+              {
+                "box": {
                   "id": "speed",
                   "maxclass": "newobj",
                   "patching_rect": [
@@ -5926,6 +6746,36 @@
                   "text": "unpack f f",
                   "numinlets": 1,
                   "numoutlets": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "trim",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "line~ 1.",
+                  "numinlets": 2,
+                  "numoutlets": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "effective-level",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "*~",
+                  "numinlets": 2,
+                  "numoutlets": 1
                 }
               },
               {
@@ -6199,12 +7049,48 @@
               {
                 "patchline": {
                   "source": [
+                    "in8",
+                    0
+                  ],
+                  "destination": [
+                    "trim",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
                     "in2",
                     0
                   ],
                   "destination": [
                     "level",
                     0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "level",
+                    0
+                  ],
+                  "destination": [
+                    "effective-level",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "trim",
+                    0
+                  ],
+                  "destination": [
+                    "effective-level",
+                    1
                   ]
                 }
               },
@@ -6271,7 +7157,7 @@
               {
                 "patchline": {
                   "source": [
-                    "level",
+                    "effective-level",
                     0
                   ],
                   "destination": [
@@ -6355,7 +7241,7 @@
               {
                 "patchline": {
                   "source": [
-                    "level",
+                    "effective-level",
                     0
                   ],
                   "destination": [
@@ -7286,6 +8172,150 @@
       {
         "patchline": {
           "source": [
+            "gain0",
+            0
+          ],
+          "destination": [
+            "gain0cmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "gain0cmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "gain1",
+            0
+          ],
+          "destination": [
+            "gain1cmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "gain1cmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "gain2",
+            0
+          ],
+          "destination": [
+            "gain2cmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "gain2cmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "gain3",
+            0
+          ],
+          "destination": [
+            "gain3cmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "gain3cmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "gain4",
+            0
+          ],
+          "destination": [
+            "gain4cmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "gain4cmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "gain5",
+            0
+          ],
+          "destination": [
+            "gain5cmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "gain5cmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
             "ready",
             0
           ],
@@ -7455,6 +8485,18 @@
         "patchline": {
           "source": [
             "protocol",
+            12
+          ],
+          "destination": [
+            "trim-route",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "protocol",
             11
           ],
           "destination": [
@@ -7466,6 +8508,18 @@
       {
         "patchline": {
           "source": [
+            "trim-route",
+            0
+          ],
+          "destination": [
+            "voice0",
+            8
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
             "protocol",
             10
           ],
@@ -7562,6 +8616,18 @@
       {
         "patchline": {
           "source": [
+            "trim-route",
+            1
+          ],
+          "destination": [
+            "voice1",
+            8
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
             "protocol",
             10
           ],
@@ -7658,6 +8724,18 @@
       {
         "patchline": {
           "source": [
+            "trim-route",
+            2
+          ],
+          "destination": [
+            "voice2",
+            8
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
             "protocol",
             10
           ],
@@ -7754,6 +8832,18 @@
       {
         "patchline": {
           "source": [
+            "trim-route",
+            3
+          ],
+          "destination": [
+            "voice3",
+            8
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
             "protocol",
             10
           ],
@@ -7850,6 +8940,18 @@
       {
         "patchline": {
           "source": [
+            "trim-route",
+            4
+          ],
+          "destination": [
+            "voice4",
+            8
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
             "protocol",
             10
           ],
@@ -7940,6 +9042,18 @@
           "destination": [
             "voice4",
             4
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "trim-route",
+            5
+          ],
+          "destination": [
+            "voice5",
+            8
           ]
         }
       },
@@ -8592,11 +9706,11 @@
         }
       }
     ],
-    "devicewidth": 1100.0,
+    "devicewidth": 1480.0,
     "openrect": [
       0.0,
       0.0,
-      1100.0,
+      1480.0,
       169.0
     ],
     "project": {
@@ -8610,7 +9724,7 @@
       "autolocalize": 0
     },
     "description": "Barcode six-voice sample playback following the preceding Simpler. No recording.",
-    "digest": "Barcode for Simpler v0.1.2",
+    "digest": "Barcode for Simpler v0.1.3",
     "autosave": 0,
     "parameters": {
       "enable": [
@@ -8639,8 +9753,8 @@
         0
       ],
       "volume": [
-        "Output",
-        "Output",
+        "Output dB",
+        "Output dB",
         0
       ],
       "filterfreq": [
@@ -8668,6 +9782,36 @@
         "Level slew s",
         0
       ],
+      "gain0": [
+        "Voice 1",
+        "Voice 1",
+        0
+      ],
+      "gain1": [
+        "Voice 2",
+        "Voice 2",
+        0
+      ],
+      "gain2": [
+        "Voice 3",
+        "Voice 3",
+        0
+      ],
+      "gain3": [
+        "Voice 4",
+        "Voice 4",
+        0
+      ],
+      "gain4": [
+        "Voice 5",
+        "Voice 5",
+        0
+      ],
+      "gain5": [
+        "Voice 6",
+        "Voice 6",
+        0
+      ],
       "data": [
         "BarcodeData",
         "BarcodeData",
@@ -8679,7 +9823,7 @@
           "name": "Barcode",
           "parameters": [
             "Barcode On",
-            "Output",
+            "Output dB",
             "Freeze LFO",
             "Reverse Allowed",
             "LFO Tempo Sync",
