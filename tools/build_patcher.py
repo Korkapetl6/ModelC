@@ -77,7 +77,7 @@ class Patch:
 
 def voice_patch():
     p=Patch(750,500)
-    for n in range(6):p.box(f'in{n}','inlet',rect=[30+n*130,20,30,30],index=n+1)
+    for n in range(8):p.box(f'in{n}','inlet',rect=[30+n*130,20,30,30],index=n+1)
     p.box('speed',text='line~ 0.',numinlets=2,numoutlets=2)
     p.box('groove',text='groove~ #1 2 @loop 1 @loopinterp 1',numinlets=3,numoutlets=3,outlettype=['signal','signal','signal'])
     p.box('bounds',text='unpack f f',numinlets=1,numoutlets=2)
@@ -97,6 +97,9 @@ def voice_patch():
         p.connect(f'amp{ch}',0,f'panned{ch}');p.connect(f'panline{ch}',0,f'panned{ch}',1)
         p.connect(f'panned{ch}',0,f'out{ch}')
     p.connect('in4',0,'groove')
+    p.box('set-buffer',text='prepend set',numinlets=1,numoutlets=1)
+    p.connect('in6',0,'set-buffer');p.connect('set-buffer',0,'groove')
+    p.connect('in7',0,'groove')
     p.box('right-select',text='selector~ 2 1',numinlets=3,numoutlets=1)
     p.connect('in5',0,'right-select');p.connect('groove',0,'right-select',1);p.connect('groove',1,'right-select',2)
     p.data['lines']=[line for line in p.data['lines'] if not (line['patchline']['source']==['groove',1] and line['patchline']['destination']==['amp1',0])]
@@ -108,7 +111,7 @@ def build():
     p.data.update({'devicewidth':1100.,'openrect':[0.,0.,1100.,169.],
       'project':{'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},
       'description':'Barcode six-voice sample playback following the preceding Simpler. No recording.',
-      'digest':'Barcode for Simpler v0.1.0','autosave':0})
+      'digest':'Barcode for Simpler v0.1.1','autosave':0})
     p.label('title','BARCODE / SIMPLER',[12.,6.,250.,20.],fontface=1)
     p.label('status','Place directly after Simpler. Drop a sample in Simpler.',[280.,6.,805.,22.],varname='status')
     p.box('display','jsui',rect=[10.,30.,256.,128.],filename='barcode-display.js',numinlets=1,numoutlets=0,
@@ -142,7 +145,7 @@ def build():
         p.label(ident+'label',label,[x,103.,125.,18.])
         p.control(ident,'live.numbox',label,[x,124.,115.,24.],minimum=lo,maximum=hi,initial=val)
         p.box(ident+'cmd',text='prepend '+ident,numinlets=1,numoutlets=1);p.connect(ident,0,ident+'cmd');p.connect(ident+'cmd',0,'defer')
-    p.label('hint','Edit numbers by dragging vertically. LIVE PLAY follows transport; FREE PLAY runs while stopped.',[280.,151.,800.,16.],fontsize=10)
+    p.label('diagnostic','DSP: waiting for initialization',[280.,151.,800.,16.],varname='diagnostic',fontsize=10)
     p.box('ready',text='live.thisdevice',numinlets=1,numoutlets=3)
     p.box('init','message','initialize',numinlets=2,numoutlets=1);p.connect('ready',0,'init');p.connect('init',0,'defer')
     p.box('active',text='prepend deviceactive',numinlets=1,numoutlets=1);p.connect('ready',1,'active');p.connect('active',0,'defer')
@@ -150,19 +153,22 @@ def build():
       saved_object_attributes={'parameter_enable':1,'parameter_mappable':0},
       saved_attribute_attributes={'valueof':{'parameter_type':3,'parameter_invisible':1,'parameter_longname':'BarcodeData','parameter_shortname':'BarcodeData'}})
     p.params['data']=['BarcodeData','BarcodeData',0]
-    p.box('protocol',text='route load bounds rate level pan seek master dry filter channels',numinlets=1,numoutlets=11);p.connect('engine',0,'protocol')
+    p.box('protocol',text='route load bounds rate level pan seek master dry filter channels bind start',numinlets=1,numoutlets=13);p.connect('engine',0,'protocol')
     p.box('replace',text='prepend replace',numinlets=1,numoutlets=1)
     p.box('buffer',text='buffer~ #0-barcode',numinlets=1,numoutlets=2,outlettype=['float','bang'])
     p.connect('protocol',0,'replace');p.connect('replace',0,'buffer')
     p.box('loaded','message','loaded',numinlets=2,numoutlets=1);p.connect('buffer',1,'loaded');p.connect('loaded',0,'defer')
     for out,name in enumerate(['bounds','rate','level','pan','seek'],1):
         p.box(name+'route',text='route 0 1 2 3 4 5',numinlets=1,numoutlets=7);p.connect('protocol',out,name+'route')
+    p.box('start-route',text='route 0 1 2 3 4 5',numinlets=1,numoutlets=7);p.connect('protocol',11,'start-route')
     for i in range(6):
         # Embedded subpatchers share the parent #0 symbol directly; no abstraction argument lookup.
         sub=voice_patch()
         for entry in sub['boxes']:
             if entry['box']['id']=='groove':entry['box']['text']='groove~ #0-barcode 2 @loop 1 @loopinterp 1'
-        p.box('voice'+str(i),text='p voice_'+str(i+1),numinlets=6,numoutlets=2,outlettype=['signal','signal'],patcher=sub)
+        p.box('voice'+str(i),text='p voice_'+str(i+1),numinlets=8,numoutlets=2,outlettype=['signal','signal'],patcher=sub)
+        p.connect('protocol',10,'voice'+str(i),6)
+        p.connect('start-route',i,'voice'+str(i),7)
         p.connect('protocol',9,'voice'+str(i),5)
         for inlet,name in enumerate(['rate','bounds','level','pan','seek']):p.connect(name+'route',i,'voice'+str(i),inlet)
     p.box('wet',text='line~ 0.',numinlets=2,numoutlets=2);p.connect('protocol',6,'wet')
@@ -171,6 +177,12 @@ def build():
     p.box('samplerate',text='prepend samplerate',numinlets=1,numoutlets=1)
     p.connect('dspstate',1,'samplerate');p.connect('samplerate',0,'defer')
     p.connect('ready',0,'dspstate')
+    p.box('dspstatecmd',text='prepend dspstate',numinlets=1,numoutlets=1)
+    p.connect('dspstate',0,'dspstatecmd');p.connect('dspstatecmd',0,'defer')
+    for name in ['rawmeter','outmeter']:
+        p.box(name,text='peakamp~ 200',numinlets=2,numoutlets=1)
+        p.box(name+'cmd',text='prepend '+name,numinlets=1,numoutlets=1)
+        p.connect(name,0,name+'cmd');p.connect(name+'cmd',0,'defer')
     p.box('input',text='plugin~',numinlets=1,numoutlets=2,outlettype=['signal','signal'])
     p.box('output',text='plugout~',numinlets=2,numoutlets=0)
     for ch in range(2):
@@ -182,6 +194,7 @@ def build():
         p.box('limit'+str(ch),text='expr~ tanh($v1)',numinlets=1,numoutlets=1);p.connect('amp'+str(ch),0,'limit'+str(ch))
         p.box('dryamp'+str(ch),text='*~',numinlets=2,numoutlets=1);p.connect('input',ch,'dryamp'+str(ch));p.connect('dry',0,'dryamp'+str(ch),1)
         p.connect('limit'+str(ch),0,'output',ch);p.connect('dryamp'+str(ch),0,'output',ch)
+    p.connect('sum0',0,'rawmeter');p.connect('limit0',0,'outmeter')
     p.data['parameters']={**p.params,'parameterbanks':{'0':{'index':0,'name':'Barcode','parameters':['Barcode On','Output','Freeze LFO','Reverse Allowed','LFO Tempo Sync','Follow Transport','Filter Hz','Resonance']}},'inherited_shortname':1}
     p.data['dependency_cache']=[{'name':name,'type':'TEXT','implicit':1} for name in ['barcode.js','barcode-core.js','barcode-display.js']]
     return {'patcher':p.data}

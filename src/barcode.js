@@ -8,6 +8,7 @@ var selectedVoice=0,selectedParam=0,tempo=120,playing=false;
 var sampleReady=false,loading=false,signature='',pending=null,desired=null,seconds=1,startOffset=0;
 var scanTask=null,tickTask=null,loadTask=null,timeoutTask=null,apiOwn=null,apiSong=null;
 var bufferName=jsarguments[1],buffer=new Buffer(bufferName),lastRows=[];
+var dspOn=false,rawPeak=0,outPeak=0,lastRunning=false;
 function scalar(api,key){var a=api.get(key);return a instanceof Array?a[0]:a;}
 function objectId(a){for(var i=0;i<a.length-1;i++)if(a[i]==='id')return Number(a[i+1]);return Number(a[0])||0;}
 function ids(a){var r=[];for(var i=0;i<a.length-1;i++)if(a[i]==='id')r.push(Number(a[++i]));return r;}
@@ -19,12 +20,13 @@ function audioState(){
  var wet=enabled&&active&&sampleReady&&!loading&&(!follow||playing);
  outlet(0,'master',wet?master*.25:0,30);
  outlet(0,'dry',!enabled||!active?1:0,30);
+ diagnostic();
 }
 function initialize(){
  if(ready)return;
  try{apiOwn=new LiveAPI(null,'this_device');apiSong=new LiveAPI(null,'live_set');}
  catch(e){status('Live API unavailable. Open this device in Live 11.');return;}
- ready=true;audioState();editor();
+ ready=true;outlet(0,'bind',String(bufferName));audioState();editor();
  tickTask=new Task(tick,this);tickTask.interval=250;tickTask.repeat();
  scanTask=new Task(scan,this);scanTask.interval=1000;scanTask.repeat();
  scan();updateFilter();
@@ -72,12 +74,14 @@ function loaded(){
   if(!isFinite(frames)||frames<2)throw Error('Empty or unsupported audio file.');
   // buffer~ preserves the source sample rate; we loaded only the requested region.
   seconds=Math.min(pending.duration,frames/pending.rate);
+  outlet(0,'bind',String(bufferName));
   outlet(0,'channels',Number(buffer.channelcount())>1?2:1);
   startOffset=0;signature=pending.signature;loading=false;
   sampleReady=!!desired&&desired.signature===signature;
   core.time=0;
   lastRows=core.tick(seconds,tempo,sync,freeze,reverse,false);sendRows();
-  for(var i=0;i<6;i++)outlet(0,'seek',i,lastRows[i].start*1000);
+  for(var i=0;i<6;i++)outlet(0,'start',i,'startloop');
+  lastRunning=!!(enabled&&active&&sampleReady&&(!follow||playing));
   if(sampleReady)status(pending.path.split(/[\\/]/).pop()+' | '+seconds.toFixed(2)+' s | '+(follow?'Follows Live transport':'Free playback'));
   audioState();
   if(desired&&desired.signature!==signature)loadSample(desired);
@@ -101,9 +105,17 @@ function tick(){
  try{tempo=Number(scalar(apiSong,'tempo'))||120;playing=Number(scalar(apiSong,'is_playing'))!==0;}catch(e){playing=false;}
  if(sampleReady&&!loading){
   lastRows=core.tick(seconds,tempo,sync,freeze||!active||!enabled||(follow&&!playing),reverse,true);sendRows();
+  var running=!!(enabled&&active&&(!follow||playing));
+  if(running&&!lastRunning)for(var i=0;i<6;i++)outlet(0,'start',i,'startloop');
+  lastRunning=running;
  }
  audioState();
 }
+function dspstate(x){dspOn=Number(x)!==0;diagnostic();}
+function rawmeter(x){rawPeak=Number(x)||0;diagnostic();}
+function outmeter(x){outPeak=Number(x)||0;diagnostic();}
+function db(x){return x>0.00001?(20*Math.log(x)/Math.LN10).toFixed(1)+' dB':'silence';}
+function diagnostic(){text('diagnostic','DSP '+(dspOn?'ON':'OFF')+' | Active '+(active?'YES':'NO')+' | Sample '+(sampleReady?'READY':'WAIT')+' | Voices '+db(rawPeak)+' | Output '+db(outPeak));}
 function samplerate(x){if(isFinite(Number(x))&&Number(x)>=8000){hostRate=Number(x);updateFilter();}}
 function updateFilter(){
  var f=Math.min(cutoff,hostRate*.45),q=.5+12*resonance*resonance;
@@ -116,7 +128,7 @@ function deviceactive(x){active=Number(x)!==0;audioState();}
 function lfofreeze(x){freeze=Number(x)!==0;tick();}
 function allowreverse(x){reverse=Number(x)!==0;tick();}
 function bpmsync(x){sync=Number(x)!==0;tick();}
-function transport(x){follow=Number(x)!==0;audioState();}
+function transport(x){follow=Number(x)!==0;tick();}
 function volume(x){master=Math.max(0,Math.min(1,Number(x)||0));audioState();}
 function filterfreq(x){cutoff=Math.max(20,Math.min(20000,Number(x)||20));updateFilter();}
 function filterres(x){resonance=Math.max(0,Math.min(.85,Number(x)||0));updateFilter();}

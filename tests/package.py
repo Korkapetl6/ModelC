@@ -2,7 +2,7 @@ import json,sys
 from pathlib import Path
 root=Path(__file__).resolve().parents[1];sys.path.insert(0,str(root/'tools'))
 from amxd_container import unpack_frozen
-kind,entries=unpack_frozen((root/'dist/Barcode-for-Simpler-v0.1.0.amxd').read_bytes())
+kind,entries=unpack_frozen((root/'dist/Barcode-for-Simpler-v0.1.1.amxd').read_bytes())
 assert kind==b'aaaa'
 assert [e.name for e in entries]==['Barcode-for-Simpler.amxd','barcode.js','barcode-core.js','barcode-display.js']
 for e in entries[1:]:assert e.data==(root/'src'/e.name).read_bytes()
@@ -34,3 +34,10 @@ for b in objects:
   x,y,w,h=b['presentation_rect'];assert x>=0 and y>=0 and x+w<=1100 and y+h<=169,(b['id'],x,y,w,h)
 print('PASS AMXD readback, embedded sources, all patch connections/ports, six stereo players, mono duplication, instance-local buffer, presentation bounds and persistent state')
 print('Max/MSP runtime and Live UI/audio have NOT been executed by this test.')
+
+for i in range(6):
+ assert any(e['patchline']['source']==['protocol',10] and e['patchline']['destination']==['voice'+str(i),6] for e in patch['lines'])
+ assert any(e['patchline']['source']==['start-route',i] and e['patchline']['destination']==['voice'+str(i),7] for e in patch['lines'])
+ sub=boxes['voice'+str(i)]['patcher']
+ assert any(e['patchline']['source']==['set-buffer',0] and e['patchline']['destination']==['groove',0] for e in sub['lines'])
+print('PASS explicit parent buffer binding and startloop command routes for all six voices')

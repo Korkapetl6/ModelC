@@ -1,11 +1,12 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "target": "Ableton Live 11.3.43 with Max for Live / Max 8",
   "upstream_barcode_commit": "8287bfec137f1bdb7b06090d0ef0b1b6c2245fa7",
   "tests": {
     "core": 9,
-    "controller_mock_live_api": 12,
-    "package_structure": "passed"
+    "controller_mock_live_api": 14,
+    "package_structure": "passed",
+    "explicit_buffer_binding_and_startloop_routes": "passed"
   },
   "tested_in_max": false,
   "tested_in_ableton_live": false,
@@ -14,5 +15,6 @@
     "Max buffer file decoding",
     "DSP playback and UI in Live",
     "Actual Live Set save and reopen"
-  ]
+  ],
+  "observed_in_previous_version": "User confirmed sample metadata and animated UI; no audio in 0.1.0."
 }

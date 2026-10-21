@@ -20,7 +20,7 @@ test('nearest preceding Simpler and exact path including spaces',()=>{
 });
 test('sample completion enables six voices, stereo channel selection and seeks',()=>{
  const {ctx,output}=setup();ctx.initialize();ctx.loaded();ctx.tick();assert(ctx.sampleReady);
- assert.equal(output.filter(x=>x[1]==='seek').length,6);assert(output.some(x=>x[1]==='channels'&&x[2]===2));assert(output.some(x=>x[1]==='master'&&x[2]>0));
+ assert.equal(output.filter(x=>x[1]==='start').length,12);assert(output.some(x=>x[1]==='bind'&&x[2]==='test-buffer'));assert(output.some(x=>x[1]==='channels'&&x[2]===2));assert(output.some(x=>x[1]==='master'&&x[2]>0));
 });
 test('mono uses channel one for both output paths',()=>{const s=setup();s.setChannels(1);s.ctx.initialize();s.ctx.loaded();assert(s.output.some(x=>x[1]==='channels'&&x[2]===1));});
 test('trim markers and 60-second import cap',()=>{
@@ -63,4 +63,16 @@ test('low-pass coefficients stay stable at all UI extremes and sample rates',()=
  }
 });
 
+test('free play starts loops immediately, without restarting each LFO tick',()=>{
+ const s=setup();s.db[99].is_playing=[0];s.ctx.initialize();s.ctx.loaded();s.ctx.tick();
+ let count=s.output.filter(x=>x[1]==='start').length;s.ctx.transport(0);
+ assert.equal(s.output.filter(x=>x[1]==='start').length,count+6);
+ count+=6;for(let i=0;i<10;i++)s.ctx.tick();assert.equal(s.output.filter(x=>x[1]==='start').length,count);
+ assert(s.output.filter(x=>x[1]==='rate').slice(-6).every(x=>x[3]!==0));
+});
+test('every reload explicitly binds the instance buffer before starting players',()=>{
+ const s=setup();s.ctx.initialize();s.output.length=0;s.ctx.loaded();
+ const b=s.output.findIndex(x=>x[1]==='bind'),start=s.output.findIndex(x=>x[1]==='start');
+ assert(b>=0&&start>b);assert.equal(s.output[b][2],'test-buffer');
+});
 console.log(n+' controller tests passed (mock Live API; not Max runtime)');

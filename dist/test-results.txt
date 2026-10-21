@@ -1,5 +1,5 @@
 python3 tools/build.py
-Barcode-for-Simpler-v0.1.0.amxd 191952 bytes SHA256 7269bba5129db8d32f14623613d8496e9b29f32f0a9a6403a8597ccd59d9e429
+Barcode-for-Simpler-v0.1.1.amxd 210573 bytes SHA256 190c0918a6dba68a9502726fa421fdca3bd8f76952d9335c3071154267199fea
 node tests/core.js
 PASS same seed reproduces all 36 LFOs
 PASS default rate distribution matches barcode
@@ -24,7 +24,10 @@ PASS transport, free playback and bypass are distinct
 PASS pattr state restores bias and phase without persisting Live IDs
 PASS device inactive mutes wet and does not advance LFO time
 PASS low-pass coefficients stay stable at all UI extremes and sample rates
-12 controller tests passed (mock Live API; not Max runtime)
+PASS free play starts loops immediately, without restarting each LFO tick
+PASS every reload explicitly binds the instance buffer before starting players
+14 controller tests passed (mock Live API; not Max runtime)
 python3 tests/package.py
 PASS AMXD readback, embedded sources, all patch connections/ports, six stereo players, mono duplication, instance-local buffer, presentation bounds and persistent state
 Max/MSP runtime and Live UI/audio have NOT been executed by this test.
+PASS explicit parent buffer binding and startloop command routes for all six voices

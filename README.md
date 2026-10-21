@@ -1,17 +1,25 @@
-# Barcode for Simpler v0.1.0
+# Barcode for Simpler v0.1.1
 
 Urządzenie Max for Live dla Ableton Live 11 / Max 8, oparte na **[barcode v0.12.0 autorstwa Zachary'ego Scholla](https://github.com/schollz/barcode)**. Sześć głosów odtwarza sample z najbliższego poprzedzającego Simplera. 36 LFO zmienia poziom, panoramę, prędkość, kierunek oraz początek i koniec pętli. **Bez nagrywania.**
 
-- [Pobierz gotowy AMXD](https://github.com/Korkapetl6/ModelC/raw/refs/heads/barcode-m4l/dist/Barcode-for-Simpler-v0.1.0.amxd)
-- [Pobierz ZIP: urządzenie, patcher, źródła i README](https://github.com/Korkapetl6/ModelC/raw/refs/heads/barcode-m4l/dist/Barcode-for-Simpler-v0.1.0-complete.zip)
+- [Pobierz gotowy AMXD](https://github.com/Korkapetl6/ModelC/raw/refs/heads/barcode-m4l/dist/Barcode-for-Simpler-v0.1.1.amxd)
+- [Pobierz ZIP: urządzenie, patcher, źródła i README](https://github.com/Korkapetl6/ModelC/raw/refs/heads/barcode-m4l/dist/Barcode-for-Simpler-v0.1.1-complete.zip)
 
 **Status: prototyp do testu w Live.** Testy logiki i kontrolera z symulowanym Live API oraz walidacja struktury AMXD przeszły. Nie uruchamiano urządzenia w Max/Live: dźwięk, odczyt przez `buffer~`, działanie panelu i rzeczywiste odtworzenie Setu wymagają sprawdzenia w aplikacji. Nie jest to potwierdzona emulacja softcut 1:1.
+
+## Poprawka 0.1.1 — uruchamianie głosów i diagnostyka
+
+W 0.1.0 użytkownik potwierdził poprawne odczytanie sampla i działanie pasków LFO, ale nie było dźwięku także przy FREE PLAY. W 0.1.1 każdy odtwarzacz otrzymuje jawne `set <nazwa bufora>` z nadrzędnego patchera oraz `startloop` po odczycie i przy rozpoczęciu odtwarzania. FREE PLAY aktualizuje odtwarzacze od razu. Nie opieramy przypisania głosów wyłącznie na rozwinięciu `#0` w zagnieżdżonych patcherach.
+
+Dolny wiersz pokazuje **DSP**, **Active**, **Sample**, **Voices** i **Output**. Mierniki obserwują lewy kanał przed filtrem i po wyjściowym ograniczniku. Paski pokazują modulację, a nie obecność sygnału audio.
+
+Podmień poprzednie urządzenie na nowy plik, pozostawiając Simpler. Kliknij FREE PLAY. Jeśli nadal jest cisza, zrzut dolnego wiersza pozwoli rozróżnić wyłączony DSP, nieaktywny efekt i brak sygnału z głosów. Nie potwierdzono jeszcze odsłuchu tej poprawki w Live.
 
 ## Pierwsze uruchomienie
 
 1. Utwórz ścieżkę MIDI i wstaw **Simpler**.
 2. Wczytaj do niego zwykły plik WAV lub AIFF z dysku.
-3. Przeciągnij **Barcode-for-Simpler-v0.1.0.amxd bezpośrednio ZA Simpler**, jako efekt audio w tym samym łańcuchu.
+3. Przeciągnij **Barcode-for-Simpler-v0.1.1.amxd bezpośrednio ZA Simpler**, jako efekt audio w tym samym łańcuchu.
 4. Poczekaj na nazwę sampla w górnym wierszu. Domyślnie aktywne są **ON** i **LIVE PLAY**.
 5. Uruchom transport Live. Barcode zapętli sample bez potrzeby grania nut MIDI. Dla odsłuchu przy zatrzymanym transporcie przełącz **LIVE PLAY → FREE PLAY**.
 6. Podmień sample w Simplerze — Barcode wykryje zmianę automatycznie, zwykle w ciągu około sekundy. **Reload** wymusza ponowny odczyt.

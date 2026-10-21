@@ -1588,7 +1588,7 @@
       },
       {
         "box": {
-          "id": "hint",
+          "id": "diagnostic",
           "maxclass": "comment",
           "patching_rect": [
             280.0,
@@ -1596,7 +1596,7 @@
             800.0,
             16.0
           ],
-          "text": "Edit numbers by dragging vertically. LIVE PLAY follows transport; FREE PLAY runs while stopped.",
+          "text": "DSP: waiting for initialization",
           "numinlets": 1,
           "numoutlets": 0,
           "presentation": 1,
@@ -1613,7 +1613,8 @@
             1.0
           ],
           "fontname": "Arial",
-          "fontsize": 10
+          "fontsize": 10,
+          "varname": "diagnostic"
         }
       },
       {
@@ -1699,9 +1700,9 @@
             100.0,
             22.0
           ],
-          "text": "route load bounds rate level pan seek master dry filter channels",
+          "text": "route load bounds rate level pan seek master dry filter channels bind start",
           "numinlets": 1,
-          "numoutlets": 11
+          "numoutlets": 13
         }
       },
       {
@@ -1830,6 +1831,21 @@
       },
       {
         "box": {
+          "id": "start-route",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "route 0 1 2 3 4 5",
+          "numinlets": 1,
+          "numoutlets": 7
+        }
+      },
+      {
+        "box": {
           "id": "voice0",
           "maxclass": "newobj",
           "patching_rect": [
@@ -1839,7 +1855,7 @@
             22.0
           ],
           "text": "p voice_1",
-          "numinlets": 6,
+          "numinlets": 8,
           "numoutlets": 2,
           "outlettype": [
             "signal",
@@ -1954,6 +1970,32 @@
                     30
                   ],
                   "index": 6
+                }
+              },
+              {
+                "box": {
+                  "id": "in6",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    810,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 7
+                }
+              },
+              {
+                "box": {
+                  "id": "in7",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    940,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 8
                 }
               },
               {
@@ -2180,6 +2222,21 @@
                     30
                   ],
                   "index": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "set-buffer",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "prepend set",
+                  "numinlets": 1,
+                  "numoutlets": 1
                 }
               },
               {
@@ -2467,6 +2524,42 @@
                 "patchline": {
                   "source": [
                     "in4",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in6",
+                    0
+                  ],
+                  "destination": [
+                    "set-buffer",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "set-buffer",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in7",
                     0
                   ],
                   "destination": [
@@ -2538,7 +2631,7 @@
             22.0
           ],
           "text": "p voice_2",
-          "numinlets": 6,
+          "numinlets": 8,
           "numoutlets": 2,
           "outlettype": [
             "signal",
@@ -2653,6 +2746,32 @@
                     30
                   ],
                   "index": 6
+                }
+              },
+              {
+                "box": {
+                  "id": "in6",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    810,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 7
+                }
+              },
+              {
+                "box": {
+                  "id": "in7",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    940,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 8
                 }
               },
               {
@@ -2879,6 +2998,21 @@
                     30
                   ],
                   "index": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "set-buffer",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "prepend set",
+                  "numinlets": 1,
+                  "numoutlets": 1
                 }
               },
               {
@@ -3166,6 +3300,42 @@
                 "patchline": {
                   "source": [
                     "in4",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in6",
+                    0
+                  ],
+                  "destination": [
+                    "set-buffer",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "set-buffer",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in7",
                     0
                   ],
                   "destination": [
@@ -3237,7 +3407,7 @@
             22.0
           ],
           "text": "p voice_3",
-          "numinlets": 6,
+          "numinlets": 8,
           "numoutlets": 2,
           "outlettype": [
             "signal",
@@ -3352,6 +3522,32 @@
                     30
                   ],
                   "index": 6
+                }
+              },
+              {
+                "box": {
+                  "id": "in6",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    810,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 7
+                }
+              },
+              {
+                "box": {
+                  "id": "in7",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    940,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 8
                 }
               },
               {
@@ -3578,6 +3774,21 @@
                     30
                   ],
                   "index": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "set-buffer",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "prepend set",
+                  "numinlets": 1,
+                  "numoutlets": 1
                 }
               },
               {
@@ -3865,6 +4076,42 @@
                 "patchline": {
                   "source": [
                     "in4",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in6",
+                    0
+                  ],
+                  "destination": [
+                    "set-buffer",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "set-buffer",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in7",
                     0
                   ],
                   "destination": [
@@ -3936,7 +4183,7 @@
             22.0
           ],
           "text": "p voice_4",
-          "numinlets": 6,
+          "numinlets": 8,
           "numoutlets": 2,
           "outlettype": [
             "signal",
@@ -4051,6 +4298,32 @@
                     30
                   ],
                   "index": 6
+                }
+              },
+              {
+                "box": {
+                  "id": "in6",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    810,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 7
+                }
+              },
+              {
+                "box": {
+                  "id": "in7",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    940,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 8
                 }
               },
               {
@@ -4277,6 +4550,21 @@
                     30
                   ],
                   "index": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "set-buffer",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "prepend set",
+                  "numinlets": 1,
+                  "numoutlets": 1
                 }
               },
               {
@@ -4564,6 +4852,42 @@
                 "patchline": {
                   "source": [
                     "in4",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in6",
+                    0
+                  ],
+                  "destination": [
+                    "set-buffer",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "set-buffer",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in7",
                     0
                   ],
                   "destination": [
@@ -4635,7 +4959,7 @@
             22.0
           ],
           "text": "p voice_5",
-          "numinlets": 6,
+          "numinlets": 8,
           "numoutlets": 2,
           "outlettype": [
             "signal",
@@ -4750,6 +5074,32 @@
                     30
                   ],
                   "index": 6
+                }
+              },
+              {
+                "box": {
+                  "id": "in6",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    810,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 7
+                }
+              },
+              {
+                "box": {
+                  "id": "in7",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    940,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 8
                 }
               },
               {
@@ -4976,6 +5326,21 @@
                     30
                   ],
                   "index": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "set-buffer",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "prepend set",
+                  "numinlets": 1,
+                  "numoutlets": 1
                 }
               },
               {
@@ -5263,6 +5628,42 @@
                 "patchline": {
                   "source": [
                     "in4",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in6",
+                    0
+                  ],
+                  "destination": [
+                    "set-buffer",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "set-buffer",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in7",
                     0
                   ],
                   "destination": [
@@ -5334,7 +5735,7 @@
             22.0
           ],
           "text": "p voice_6",
-          "numinlets": 6,
+          "numinlets": 8,
           "numoutlets": 2,
           "outlettype": [
             "signal",
@@ -5449,6 +5850,32 @@
                     30
                   ],
                   "index": 6
+                }
+              },
+              {
+                "box": {
+                  "id": "in6",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    810,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 7
+                }
+              },
+              {
+                "box": {
+                  "id": "in7",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    940,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 8
                 }
               },
               {
@@ -5675,6 +6102,21 @@
                     30
                   ],
                   "index": 2
+                }
+              },
+              {
+                "box": {
+                  "id": "set-buffer",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "prepend set",
+                  "numinlets": 1,
+                  "numoutlets": 1
                 }
               },
               {
@@ -5962,6 +6404,42 @@
                 "patchline": {
                   "source": [
                     "in4",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in6",
+                    0
+                  ],
+                  "destination": [
+                    "set-buffer",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "set-buffer",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in7",
                     0
                   ],
                   "destination": [
@@ -6078,6 +6556,81 @@
             22.0
           ],
           "text": "prepend samplerate",
+          "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "dspstatecmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend dspstate",
+          "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "rawmeter",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "peakamp~ 200",
+          "numinlets": 2,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "rawmetercmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend rawmeter",
+          "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "outmeter",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "peakamp~ 200",
+          "numinlets": 2,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "outmetercmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend outmeter",
           "numinlets": 1,
           "numoutlets": 1
         }
@@ -6872,6 +7425,42 @@
         "patchline": {
           "source": [
             "protocol",
+            11
+          ],
+          "destination": [
+            "start-route",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "protocol",
+            10
+          ],
+          "destination": [
+            "voice0",
+            6
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "start-route",
+            0
+          ],
+          "destination": [
+            "voice0",
+            7
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "protocol",
             9
           ],
           "destination": [
@@ -6937,6 +7526,30 @@
           "destination": [
             "voice0",
             4
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "protocol",
+            10
+          ],
+          "destination": [
+            "voice1",
+            6
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "start-route",
+            1
+          ],
+          "destination": [
+            "voice1",
+            7
           ]
         }
       },
@@ -7016,6 +7629,30 @@
         "patchline": {
           "source": [
             "protocol",
+            10
+          ],
+          "destination": [
+            "voice2",
+            6
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "start-route",
+            2
+          ],
+          "destination": [
+            "voice2",
+            7
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "protocol",
             9
           ],
           "destination": [
@@ -7081,6 +7718,30 @@
           "destination": [
             "voice2",
             4
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "protocol",
+            10
+          ],
+          "destination": [
+            "voice3",
+            6
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "start-route",
+            3
+          ],
+          "destination": [
+            "voice3",
+            7
           ]
         }
       },
@@ -7160,6 +7821,30 @@
         "patchline": {
           "source": [
             "protocol",
+            10
+          ],
+          "destination": [
+            "voice4",
+            6
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "start-route",
+            4
+          ],
+          "destination": [
+            "voice4",
+            7
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "protocol",
             9
           ],
           "destination": [
@@ -7225,6 +7910,30 @@
           "destination": [
             "voice4",
             4
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "protocol",
+            10
+          ],
+          "destination": [
+            "voice5",
+            6
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "start-route",
+            5
+          ],
+          "destination": [
+            "voice5",
+            7
           ]
         }
       },
@@ -7363,6 +8072,78 @@
       {
         "patchline": {
           "source": [
+            "dspstate",
+            0
+          ],
+          "destination": [
+            "dspstatecmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "dspstatecmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "rawmeter",
+            0
+          ],
+          "destination": [
+            "rawmetercmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "rawmetercmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "outmeter",
+            0
+          ],
+          "destination": [
+            "outmetercmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "outmetercmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
             "voice0",
             0
           ],
@@ -7717,6 +8498,30 @@
           "destination": [
             "output",
             1
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "sum0",
+            0
+          ],
+          "destination": [
+            "rawmeter",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "limit0",
+            0
+          ],
+          "destination": [
+            "outmeter",
+            0
           ]
         }
       }
@@ -7739,7 +8544,7 @@
       "autolocalize": 0
     },
     "description": "Barcode six-voice sample playback following the preceding Simpler. No recording.",
-    "digest": "Barcode for Simpler v0.1.0",
+    "digest": "Barcode for Simpler v0.1.1",
     "autosave": 0,
     "parameters": {
       "enable": [
