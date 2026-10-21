@@ -1,17 +1,23 @@
-# Barcode for Simpler v0.1.1
+# Barcode for Simpler v0.1.2
 
 Urządzenie Max for Live dla Ableton Live 11 / Max 8, oparte na **[barcode v0.12.0 autorstwa Zachary'ego Scholla](https://github.com/schollz/barcode)**. Sześć głosów odtwarza sample z najbliższego poprzedzającego Simplera. 36 LFO zmienia poziom, panoramę, prędkość, kierunek oraz początek i koniec pętli. **Bez nagrywania.**
 
-- [Pobierz gotowy AMXD](https://github.com/Korkapetl6/ModelC/raw/refs/heads/barcode-m4l/dist/Barcode-for-Simpler-v0.1.1.amxd)
-- [Pobierz ZIP: urządzenie, patcher, źródła i README](https://github.com/Korkapetl6/ModelC/raw/refs/heads/barcode-m4l/dist/Barcode-for-Simpler-v0.1.1-complete.zip)
+- [Pobierz gotowy AMXD](https://github.com/Korkapetl6/ModelC/raw/refs/heads/barcode-m4l/dist/Barcode-for-Simpler-v0.1.2.amxd)
+- [Pobierz ZIP: urządzenie, patcher, źródła i README](https://github.com/Korkapetl6/ModelC/raw/refs/heads/barcode-m4l/dist/Barcode-for-Simpler-v0.1.2-complete.zip)
 
 **Status: prototyp do testu w Live.** Testy logiki i kontrolera z symulowanym Live API oraz walidacja struktury AMXD przeszły. Nie uruchamiano urządzenia w Max/Live: dźwięk, odczyt przez `buffer~`, działanie panelu i rzeczywiste odtworzenie Setu wymagają sprawdzenia w aplikacji. Nie jest to potwierdzona emulacja softcut 1:1.
+
+## Poprawka 0.1.2 — usunięcie nieobsługiwanego obiektu wyjściowego
+
+Zrzut z 0.1.1 potwierdził aktywny DSP, gotowy sample i sygnał z głosów (−15,4 dB), ale ciszę na wyjściu. W poprzednim generatorze użyto błędnie `expr~ tanh($v1)` — `expr~` nie jest standardowym obiektem Max/MSP. W obu kanałach zastąpiono go natywnym `clip~ -0.98 0.98`. To ograniczenie twarde, a nie poprzednio zamierzone łagodne nasycenie.
+
+Dolny wiersz mierzy teraz sygnał z głosów, za filtrem i na wyjściu oraz pokazuje żądane wzmocnienie Gain. W FREE PLAY opis źródła również odświeża się od razu. Test struktury odrzuca użycie `expr~` i sprawdza połączenia wyjściowe obu kanałów. Odsłuch wersji 0.1.2 nadal wymaga testu w Live.
 
 ## Poprawka 0.1.1 — uruchamianie głosów i diagnostyka
 
 W 0.1.0 użytkownik potwierdził poprawne odczytanie sampla i działanie pasków LFO, ale nie było dźwięku także przy FREE PLAY. W 0.1.1 każdy odtwarzacz otrzymuje jawne `set <nazwa bufora>` z nadrzędnego patchera oraz `startloop` po odczycie i przy rozpoczęciu odtwarzania. FREE PLAY aktualizuje odtwarzacze od razu. Nie opieramy przypisania głosów wyłącznie na rozwinięciu `#0` w zagnieżdżonych patcherach.
 
-Dolny wiersz pokazuje **DSP**, **Active**, **Sample**, **Voices** i **Output**. Mierniki obserwują lewy kanał przed filtrem i po wyjściowym ograniczniku. Paski pokazują modulację, a nie obecność sygnału audio.
+Dolny wiersz pokazuje **DSP**, **Active**, **Sample**, **Voices**, **Filter**, **Gain** i **Output**. Mierniki obserwują lewy kanał przed filtrem i po wyjściowym ograniczniku. Paski pokazują modulację, a nie obecność sygnału audio.
 
 Podmień poprzednie urządzenie na nowy plik, pozostawiając Simpler. Kliknij FREE PLAY. Jeśli nadal jest cisza, zrzut dolnego wiersza pozwoli rozróżnić wyłączony DSP, nieaktywny efekt i brak sygnału z głosów. Nie potwierdzono jeszcze odsłuchu tej poprawki w Live.
 
@@ -19,7 +25,7 @@ Podmień poprzednie urządzenie na nowy plik, pozostawiając Simpler. Kliknij FR
 
 1. Utwórz ścieżkę MIDI i wstaw **Simpler**.
 2. Wczytaj do niego zwykły plik WAV lub AIFF z dysku.
-3. Przeciągnij **Barcode-for-Simpler-v0.1.1.amxd bezpośrednio ZA Simpler**, jako efekt audio w tym samym łańcuchu.
+3. Przeciągnij **Barcode-for-Simpler-v0.1.2.amxd bezpośrednio ZA Simpler**, jako efekt audio w tym samym łańcuchu.
 4. Poczekaj na nazwę sampla w górnym wierszu. Domyślnie aktywne są **ON** i **LIVE PLAY**.
 5. Uruchom transport Live. Barcode zapętli sample bez potrzeby grania nut MIDI. Dla odsłuchu przy zatrzymanym transporcie przełącz **LIVE PLAY → FREE PLAY**.
 6. Podmień sample w Simplerze — Barcode wykryje zmianę automatycznie, zwykle w ciągu około sekundy. **Reload** wymusza ponowny odczyt.
@@ -51,7 +57,7 @@ Zachowano sześć głosów, wzory modulacji, dyskretne prędkości **1/8, 1/4, 1
 
 Oryginalne dwa bufory zastępuje **jeden sample wskazany przez Simpler**. Ścieżka pliku, sample rate i znaczniki pochodzą z Live API; urządzenie nie zmienia ustawień Simplera. Odczytywany jest fragment między Start/End, maksymalnie pierwsze 60 sekund tego fragmentu. Mono jest powielane na oba kanały, stereo zachowuje dwa kanały z modulacją panoramy/balansu.
 
-Audio jest odtwarzane przez sześć natywnych `groove~` z interpolacją pętli. Filtr to biquad low-pass, a wyjście ma łagodne ograniczenie tanh. Nie używamy silnika softcut ani kompresora norns, więc pętle, zmiany kierunku, filtr i nasycenie mogą brzmieć inaczej. Granice pętli są ograniczone do rzeczywistego sampla; nie kopiujemy jednosekundowego zapasu oryginalnego bufora.
+Audio jest odtwarzane przez sześć natywnych `groove~` z interpolacją pętli. Filtr to biquad low-pass, a wyjście ma ograniczenie amplitudy przez natywne `clip~` do ±0,98. Nie używamy silnika softcut ani kompresora norns, więc pętle, zmiany kierunku, filtr i nasycenie mogą brzmieć inaczej. Granice pętli są ograniczone do rzeczywistego sampla; nie kopiujemy jednosekundowego zapasu oryginalnego bufora.
 
 Nie są kopiowane Warp, transpozycja, obwiednia, filtr, slicing ani modulacje Simplera. Prędkość jest taśmowa: szybsze odtwarzanie podnosi wysokość. Wtyczka nie reaguje nutami na wysokość dźwięku; to generator pętli, jak Barcode na norns.
 

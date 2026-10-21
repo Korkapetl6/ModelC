@@ -6607,6 +6607,36 @@
       },
       {
         "box": {
+          "id": "filtermeter",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "peakamp~ 200",
+          "numinlets": 2,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "filtermetercmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend filtermeter",
+          "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
           "id": "outmeter",
           "maxclass": "newobj",
           "patching_rect": [
@@ -6724,8 +6754,8 @@
             100.0,
             22.0
           ],
-          "text": "expr~ tanh($v1)",
-          "numinlets": 1,
+          "text": "clip~ -0.98 0.98",
+          "numinlets": 3,
           "numoutlets": 1
         }
       },
@@ -6799,8 +6829,8 @@
             100.0,
             22.0
           ],
-          "text": "expr~ tanh($v1)",
-          "numinlets": 1,
+          "text": "clip~ -0.98 0.98",
+          "numinlets": 3,
           "numoutlets": 1
         }
       },
@@ -8120,6 +8150,30 @@
       {
         "patchline": {
           "source": [
+            "filtermeter",
+            0
+          ],
+          "destination": [
+            "filtermetercmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "filtermetercmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
             "outmeter",
             0
           ],
@@ -8516,6 +8570,18 @@
       {
         "patchline": {
           "source": [
+            "filter0",
+            0
+          ],
+          "destination": [
+            "filtermeter",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
             "limit0",
             0
           ],
@@ -8544,7 +8610,7 @@
       "autolocalize": 0
     },
     "description": "Barcode six-voice sample playback following the preceding Simpler. No recording.",
-    "digest": "Barcode for Simpler v0.1.1",
+    "digest": "Barcode for Simpler v0.1.2",
     "autosave": 0,
     "parameters": {
       "enable": [

@@ -111,7 +111,7 @@ def build():
     p.data.update({'devicewidth':1100.,'openrect':[0.,0.,1100.,169.],
       'project':{'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},
       'description':'Barcode six-voice sample playback following the preceding Simpler. No recording.',
-      'digest':'Barcode for Simpler v0.1.1','autosave':0})
+      'digest':'Barcode for Simpler v0.1.2','autosave':0})
     p.label('title','BARCODE / SIMPLER',[12.,6.,250.,20.],fontface=1)
     p.label('status','Place directly after Simpler. Drop a sample in Simpler.',[280.,6.,805.,22.],varname='status')
     p.box('display','jsui',rect=[10.,30.,256.,128.],filename='barcode-display.js',numinlets=1,numoutlets=0,
@@ -179,7 +179,7 @@ def build():
     p.connect('ready',0,'dspstate')
     p.box('dspstatecmd',text='prepend dspstate',numinlets=1,numoutlets=1)
     p.connect('dspstate',0,'dspstatecmd');p.connect('dspstatecmd',0,'defer')
-    for name in ['rawmeter','outmeter']:
+    for name in ['rawmeter','filtermeter','outmeter']:
         p.box(name,text='peakamp~ 200',numinlets=2,numoutlets=1)
         p.box(name+'cmd',text='prepend '+name,numinlets=1,numoutlets=1)
         p.connect(name,0,name+'cmd');p.connect(name+'cmd',0,'defer')
@@ -191,10 +191,10 @@ def build():
         p.box('filter'+str(ch),text='biquad~',numinlets=6,numoutlets=1)
         p.connect('sum'+str(ch),0,'filter'+str(ch));p.connect('protocol',8,'filter'+str(ch))
         p.box('amp'+str(ch),text='*~',numinlets=2,numoutlets=1);p.connect('filter'+str(ch),0,'amp'+str(ch));p.connect('wet',0,'amp'+str(ch),1)
-        p.box('limit'+str(ch),text='expr~ tanh($v1)',numinlets=1,numoutlets=1);p.connect('amp'+str(ch),0,'limit'+str(ch))
+        p.box('limit'+str(ch),text='clip~ -0.98 0.98',numinlets=3,numoutlets=1);p.connect('amp'+str(ch),0,'limit'+str(ch))
         p.box('dryamp'+str(ch),text='*~',numinlets=2,numoutlets=1);p.connect('input',ch,'dryamp'+str(ch));p.connect('dry',0,'dryamp'+str(ch),1)
         p.connect('limit'+str(ch),0,'output',ch);p.connect('dryamp'+str(ch),0,'output',ch)
-    p.connect('sum0',0,'rawmeter');p.connect('limit0',0,'outmeter')
+    p.connect('sum0',0,'rawmeter');p.connect('filter0',0,'filtermeter');p.connect('limit0',0,'outmeter')
     p.data['parameters']={**p.params,'parameterbanks':{'0':{'index':0,'name':'Barcode','parameters':['Barcode On','Output','Freeze LFO','Reverse Allowed','LFO Tempo Sync','Follow Transport','Filter Hz','Resonance']}},'inherited_shortname':1}
     p.data['dependency_cache']=[{'name':name,'type':'TEXT','implicit':1} for name in ['barcode.js','barcode-core.js','barcode-display.js']]
     return {'patcher':p.data}

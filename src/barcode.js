@@ -8,7 +8,7 @@ var selectedVoice=0,selectedParam=0,tempo=120,playing=false;
 var sampleReady=false,loading=false,signature='',pending=null,desired=null,seconds=1,startOffset=0;
 var scanTask=null,tickTask=null,loadTask=null,timeoutTask=null,apiOwn=null,apiSong=null;
 var bufferName=jsarguments[1],buffer=new Buffer(bufferName),lastRows=[];
-var dspOn=false,rawPeak=0,outPeak=0,lastRunning=false;
+var dspOn=false,rawPeak=0,filterPeak=0,outPeak=0,lastRunning=false;
 function scalar(api,key){var a=api.get(key);return a instanceof Array?a[0]:a;}
 function objectId(a){for(var i=0;i<a.length-1;i++)if(a[i]==='id')return Number(a[i+1]);return Number(a[0])||0;}
 function ids(a){var r=[];for(var i=0;i<a.length-1;i++)if(a[i]==='id')r.push(Number(a[++i]));return r;}
@@ -113,9 +113,10 @@ function tick(){
 }
 function dspstate(x){dspOn=Number(x)!==0;diagnostic();}
 function rawmeter(x){rawPeak=Number(x)||0;diagnostic();}
+function filtermeter(x){filterPeak=Number(x)||0;diagnostic();}
 function outmeter(x){outPeak=Number(x)||0;diagnostic();}
 function db(x){return x>0.00001?(20*Math.log(x)/Math.LN10).toFixed(1)+' dB':'silence';}
-function diagnostic(){text('diagnostic','DSP '+(dspOn?'ON':'OFF')+' | Active '+(active?'YES':'NO')+' | Sample '+(sampleReady?'READY':'WAIT')+' | Voices '+db(rawPeak)+' | Output '+db(outPeak));}
+function diagnostic(){var gain=(enabled&&active&&sampleReady&&!loading&&(!follow||playing))?master*.25:0;text('diagnostic','DSP '+(dspOn?'ON':'OFF')+' | Active '+(active?'YES':'NO')+' | Voices '+db(rawPeak)+' | Filter '+db(filterPeak)+' | Gain '+gain.toFixed(3)+' | Output '+db(outPeak));}
 function samplerate(x){if(isFinite(Number(x))&&Number(x)>=8000){hostRate=Number(x);updateFilter();}}
 function updateFilter(){
  var f=Math.min(cutoff,hostRate*.45),q=.5+12*resonance*resonance;
@@ -128,7 +129,7 @@ function deviceactive(x){active=Number(x)!==0;audioState();}
 function lfofreeze(x){freeze=Number(x)!==0;tick();}
 function allowreverse(x){reverse=Number(x)!==0;tick();}
 function bpmsync(x){sync=Number(x)!==0;tick();}
-function transport(x){follow=Number(x)!==0;tick();}
+function transport(x){follow=Number(x)!==0;tick();if(sampleReady&&pending)status(pending.path.split(/[\\/]/).pop()+' | '+seconds.toFixed(2)+' s | '+(follow?'Follows Live transport':'Free playback'));}
 function volume(x){master=Math.max(0,Math.min(1,Number(x)||0));audioState();}
 function filterfreq(x){cutoff=Math.max(20,Math.min(20000,Number(x)||20));updateFilter();}
 function filterres(x){resonance=Math.max(0,Math.min(.85,Number(x)||0));updateFilter();}

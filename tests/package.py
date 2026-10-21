@@ -2,7 +2,7 @@ import json,sys
 from pathlib import Path
 root=Path(__file__).resolve().parents[1];sys.path.insert(0,str(root/'tools'))
 from amxd_container import unpack_frozen
-kind,entries=unpack_frozen((root/'dist/Barcode-for-Simpler-v0.1.1.amxd').read_bytes())
+kind,entries=unpack_frozen((root/'dist/Barcode-for-Simpler-v0.1.2.amxd').read_bytes())
 assert kind==b'aaaa'
 assert [e.name for e in entries]==['Barcode-for-Simpler.amxd','barcode.js','barcode-core.js','barcode-display.js']
 for e in entries[1:]:assert e.data==(root/'src'/e.name).read_bytes()
@@ -41,3 +41,13 @@ for i in range(6):
  sub=boxes['voice'+str(i)]['patcher']
  assert any(e['patchline']['source']==['set-buffer',0] and e['patchline']['destination']==['groove',0] for e in sub['lines'])
 print('PASS explicit parent buffer binding and startloop command routes for all six voices')
+
+# Explicitly reject the non-Max audio expression object from 0.1.0/0.1.1.
+assert not any(b.get('text','').startswith('expr~') for b in objects)
+for ch in range(2):
+ assert boxes['limit'+str(ch)]['text']=='clip~ -0.98 0.98'
+ assert boxes['limit'+str(ch)]['numinlets']==3
+ assert any(e['patchline']['source']==['amp'+str(ch),0] and e['patchline']['destination']==['limit'+str(ch),0] for e in patch['lines'])
+ assert any(e['patchline']['source']==['limit'+str(ch),0] and e['patchline']['destination']==['output',ch] for e in patch['lines'])
+assert any(e['patchline']['source']==['filter0',0] and e['patchline']['destination']==['filtermeter',0] for e in patch['lines'])
+print('PASS native clip~ output in both channels; reject expr~ and verify filter meter connection')
