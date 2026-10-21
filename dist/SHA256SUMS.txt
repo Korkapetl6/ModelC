@@ -1,0 +1,2 @@
+40bc6a50bf78895185aba23dda101e5336afbdfc700502fb12489a4acdfc3eea  Barcode-for-Simpler-v0.1.0-complete.zip
+7269bba5129db8d32f14623613d8496e9b29f32f0a9a6403a8597ccd59d9e429  Barcode-for-Simpler-v0.1.0.amxd
