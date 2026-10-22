@@ -5297,7 +5297,7 @@
                   "id": "direction-in",
                   "maxclass": "inlet",
                   "patching_rect": [
-                    720,
+                    1460,
                     20,
                     30,
                     30
@@ -6657,7 +6657,7 @@
                   "id": "direction-in",
                   "maxclass": "inlet",
                   "patching_rect": [
-                    720,
+                    1460,
                     20,
                     30,
                     30
@@ -9713,7 +9713,7 @@
       "autolocalize": 0
     },
     "description": "StepCompass sample command sequencer. Independent sample-only device.",
-    "digest": "StepCompass M4L v0.1.6",
+    "digest": "StepCompass M4L v0.1.7",
     "autosave": 0,
     "parameters": {
       "enable": [

@@ -1,4 +1,7 @@
-# StepCompass M4L v0.1.6
+# StepCompass M4L v0.1.7
+
+Wersja 0.1.7 poprawia kolejność fizycznych wejść podpatcha odtwarzania,
+która w 0.1.6 mogła powodować ciszę. Zachowuje poprawiony slope i pole czasu z ±10 ms.
 
 Odtwarzacz sampla z Simplera z 16-krokowym sekwencerem poleceń.
 Dla Ableton Live 11 + Max for Live / Max 8, również macOS Intel.
@@ -9,7 +12,7 @@ Nie zawiera kodu Compass ani silnika softcut.
 ## Pierwsze uruchomienie
 
 1. Na ścieżce MIDI umieść **Simpler** i wczytaj do niego sample.
-2. Pobierz **StepCompass-M4L-v0.1.6.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
+2. Pobierz **StepCompass-M4L-v0.1.7.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
    W racku oba urządzenia muszą znajdować się w tym samym łańcuchu.
 3. Ustaw początek i koniec sampla w Simplerze. StepCompass automatycznie pobierze ten zakres.
 4. Poczekaj, aż status pokaże nazwę pliku i zakres, np. `Simpler 1.00–4.00 s | ready`.
@@ -61,7 +64,7 @@ nadal służy do wygładzania pętli i skoków sampla. Przy nagłym powrocie gł
 krótkie wygładzenie 64 próbek (około 1,5 ms przy 44,1 kHz), aby ograniczyć kliknięcia.
 W zapisanych sekwencjach stare polecenia Pan left/right stają się Fade out/in.
 
-## Domyślne ustawienia i szanse losowania (v0.1.6)
+## Domyślne ustawienia i szanse losowania (v0.1.7)
 
 Sekwencja początkowa jest zapisana bezpośrednio, jak na przesłanym zrzucie:
 
@@ -91,7 +94,7 @@ Ustawienia zapisują się z projektem i obsługują automatyzację. Starsze zapi
 zachowywane (dawne przełączniki 0/1 zamieniają się na 0/100); stara waga Hold nie jest już używana.
 Przy odczycie starego stanu HOLD % zaczyna od 25%, bez zmieniania zapisanych kroków.
 
-## Rate slope ms (v0.1.6)
+## Rate slope ms (v0.1.7)
 
 Czas dojścia od bieżącej szybkości odtwarzania do nowej: 0–10000 ms, domyślnie 0.
 0 oznacza zmianę natychmiastową; 200 ms krótki ślizg; 1000 ms rozpędzanie/hamowanie taśmy.

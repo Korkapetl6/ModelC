@@ -9,7 +9,7 @@ SHORT=['--','FWD','REV','R+','R-','R?','HOME','POS?','LOOP?','C+','C-','C16','C1
 DEFAULT=[1, 14, 9, 2, 13, 14, 0, 10, 9, 14, 10, 15, 10, 14, 1, 10]
 WEIGHTS=[100, 100, 100, 0, 0, 100, 100, 100, 100, 100, 100, 0, 0, 100, 100, 100]
 p=Patch(1430,169,True)
-p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.6',autosave=0)
+p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.7',autosave=0)
 p.label('title','STEP COMPASS / SIMPLER',[10.,4.,240.,20.],fontface=1)
 p.box('display','jsui',filename='display.js',rect=[10.,30.,240.,128.],presentation=1,presentation_rect=[10.,30.,240.,128.],numinlets=1,numoutlets=0)
 p.label('status','Place directly after Simpler. Drop a sample into Simpler.',[260.,5.,730.,20.],varname='status')
@@ -71,7 +71,7 @@ for i in range(2):
   if b['id'].startswith('panline'):b['text']='line~ 1.'
  # Add phase snapshots for continuing at the current position on rate changes.
  q=Patch();q.data=sub;q.box('phase-out','outlet',rect=[650,440,30,30],index=4);q.connect('groove',2,'phase-out')
- q.box('direction-in','inlet',rect=[720,20,30,30],index=12);q.box('signed-rate',text='*~ 1.',numinlets=2,numoutlets=1);q.connect('in0',0,'signed-rate');q.connect('direction-in',0,'signed-rate',1);q.connect('signed-rate',0,'groove')
+ q.box('direction-in','inlet',rect=[1460,20,30,30],index=12);q.box('signed-rate',text='*~ 1.',numinlets=2,numoutlets=1);q.connect('in0',0,'signed-rate');q.connect('direction-in',0,'signed-rate',1);q.connect('signed-rate',0,'groove')
  p.box('head'+str(i),text='p head_'+str(i),numinlets=12,numoutlets=4,patcher=sub,outlettype=['signal','signal','bang','signal'])
  for name,inlet in [('bounds',1),('seek',4),('fade',9),('edge',10),('start',7),('direction',11)]:p.connect(name+'route',i,'head'+str(i),inlet)
  p.connect('rate-glide',0,'head'+str(i),0)
@@ -101,5 +101,5 @@ dist=ROOT/'dist';dist.mkdir(exist_ok=True);blob=(json.dumps({'patcher':p.data},i
 entries=[Entry('StepCompass.amxd',blob+b'\0',b'JSON',17)]
 for n in ['compass.js','core.js','display.js']:
  data=(ROOT/'src'/n).read_bytes();entries.append(Entry(n,data));(dist/n).write_bytes(data)
-amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.6.amxd').write_bytes(amxd)
+amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.7.amxd').write_bytes(amxd)
 print('Built frozen AMXD:',len(amxd),'bytes')

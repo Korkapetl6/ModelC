@@ -3,15 +3,21 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from amxd_container import unpack_frozen
 root=Path(__file__).resolve().parents[1]
-type_,entries=unpack_frozen((root/'dist/StepCompass-M4L-v0.1.6.amxd').read_bytes());assert type_==b'aaaa';assert {e.name for e in entries}=={'StepCompass.amxd','compass.js','core.js','display.js'}
+type_,entries=unpack_frozen((root/'dist/StepCompass-M4L-v0.1.7.amxd').read_bytes());assert type_==b'aaaa';assert {e.name for e in entries}=={'StepCompass.amxd','compass.js','core.js','display.js'}
 p=json.loads(entries[0].data.rstrip(b'\0'))['patcher']
 def check(p):
  boxes={e['box']['id']:e['box'] for e in p['boxes']};assert len(boxes)==len(p['boxes'])
  for l in p['lines']:
   a,b=l['patchline']['source'],l['patchline']['destination'];assert a[0] in boxes and b[0] in boxes
   assert a[1]<boxes[a[0]].get('numoutlets',1);assert b[1]<boxes[b[0]].get('numinlets',1)
+ for cls in ('inlet','outlet'):
+  ports=sorted((b for b in boxes.values() if b['maxclass']==cls),key=lambda b:b['patching_rect'][0])
+  assert [b.get('index') for b in ports]==list(range(1,len(ports)+1)), 'Physical '+cls+' order differs from declared indices'
  for b in boxes.values():
-  if 'patcher' in b:check(b['patcher'])
+  if 'patcher' in b:
+   child=check(b['patcher'])
+   assert sum(x['maxclass']=='inlet' for x in child.values())==b['numinlets']
+   assert sum(x['maxclass']=='outlet' for x in child.values())==b['numoutlets']
  return boxes
 boxes=check(p)
 assert all('step'+str(i) in boxes for i in range(16))
