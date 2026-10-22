@@ -6,9 +6,10 @@ from amxd_container import Entry,frozen_amxd,unpack_frozen
 ROOT=Path(__file__).resolve().parents[1]
 NAMES=['Hold','Forward','Reverse','Rate +','Rate -','Rate random','Loop start','Position','Loop random','Clock +','Clock -','Clock fastest','Clock slowest','Step random','Fade out','Fade in']
 SHORT=['--','FWD','REV','R+','R-','R?','HOME','POS?','LOOP?','C+','C-','C16','C1','STEP?','FADE OUT','FADE IN']
-DEFAULT=[1,0,0,7,0,0,2,0,0,8,0,0,1,0,6,0]
+DEFAULT=[1, 14, 9, 2, 13, 14, 0, 10, 9, 14, 10, 15, 10, 14, 1, 10]
+WEIGHTS=[100, 100, 100, 0, 0, 100, 100, 100, 100, 100, 100, 0, 0, 100, 100, 100]
 p=Patch(1430,169,True)
-p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.2',autosave=0)
+p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.3',autosave=0)
 p.label('title','STEP COMPASS / SIMPLER',[10.,4.,240.,20.],fontface=1)
 p.box('display','jsui',filename='display.js',rect=[10.,30.,240.,128.],presentation=1,presentation_rect=[10.,30.,240.,128.],numinlets=1,numoutlets=0)
 p.label('status','Place directly after Simpler. Drop a sample into Simpler.',[260.,5.,730.,20.],varname='status')
@@ -18,7 +19,7 @@ p.box('defer',text='deferlow',numinlets=1,numoutlets=1);p.connect('defer',0,'eng
 def cmd(ident,command):
  p.box(ident+'cmd',text='prepend '+command,numinlets=1,numoutlets=1);p.connect(ident,0,ident+'cmd');p.connect(ident+'cmd',0,'defer')
 styles={'textcolor':INK,'textoncolor':BG,'bgcolor':BUTTON,'bgoncolor':ACCENT,'activebgcolor':BUTTON,'activebgoncolor':ACCENT,'activetextcolor':INK,'activetextoncolor':BG}
-for i,(id,label,initial) in enumerate([('enable','ON',1),('freeplay','FREE PLAY',0)]):
+for i,(id,label,initial) in enumerate([('enable','ON',1),('freeplay','FREE PLAY',1)]):
  p.control(id,'live.text',label,[260.+i*96,30.,90.,22.],initial=initial,enum=['OFF',label],text='OFF' if id=='enable' else 'LIVE PLAY',texton=label,mode=1,**styles);cmd(id,id)
 for i,(id,label) in enumerate([('reload','RELOAD'),('reset','RESET'),('randomize','RANDOMIZE')]):
  p.box(id,'textbutton',rect=[455.+i*112,30.,106.,22.],presentation=1,presentation_rect=[455.+i*112,30.,106.,22.],text=label,numinlets=1,numoutlets=3)
@@ -29,10 +30,11 @@ for i in range(16):
  p.control('step'+str(i),'live.menu','Step '+str(i+1),[x+18,y,82.,22.],maximum=15,initial=DEFAULT[i],enum=NAMES);cmd('step'+str(i),'step '+str(i))
 for i,(id,label,lo,hi,val) in enumerate([('regionstart','Start %',0,99.9,0),('regionend','End %',.1,100,100),('smoothing','Fade ms',1,100,20),('volume','Out dB',-60,6,-6),('steps','Steps',1,16,16),('division','Clock 0-4',0,4,2),('seed','Seed',1,65535,1234)]):
  x=260.+i*118;p.label(id+'label',label,[x,130.,70.,17.]);p.control(id,'live.numbox',label,[x+64,130.,50.,22.],minimum=lo,maximum=hi,initial=val,unitstyle=4 if id=='volume' else 1);cmd(id,id)
-p.label('pool-label','RANDOM POOL',[1110.,30.,300.,20.],fontface=1)
+p.label('pool-label','RANDOM WEIGHTS %',[1110.,30.,300.,20.],fontface=1)
 for i in range(16):
  x=1110.+(i%4)*77;y=53.+(i//4)*25
- p.control('pool'+str(i),'live.text','Pool '+NAMES[i],[x,y,73.,21.],initial=1,enum=['OFF','ON'],text=SHORT[i],texton=SHORT[i],mode=1,**styles);cmd('pool'+str(i),'pool '+str(i))
+ p.label('poolname'+str(i),SHORT[i],[x,y+2,37.,18.],fontsize=8.5)
+ p.control('pool'+str(i),'live.numbox','Chance '+NAMES[i],[x+37,y,36.,21.],minimum=0,maximum=100,initial=WEIGHTS[i],unitstyle=5,fontsize=10.);cmd('pool'+str(i),'pool '+str(i))
 p.box('ready',text='live.thisdevice',numinlets=1,numoutlets=3)
 p.box('init','message','initialize',numinlets=2,numoutlets=1);p.connect('ready',0,'init');p.connect('init',0,'defer')
 p.box('active',text='prepend deviceactive',numinlets=1,numoutlets=1);p.connect('ready',1,'active');p.connect('active',0,'defer')
@@ -83,5 +85,5 @@ dist=ROOT/'dist';dist.mkdir(exist_ok=True);blob=(json.dumps({'patcher':p.data},i
 entries=[Entry('StepCompass.amxd',blob+b'\0',b'JSON',17)]
 for n in ['compass.js','core.js','display.js']:
  data=(ROOT/'src'/n).read_bytes();entries.append(Entry(n,data));(dist/n).write_bytes(data)
-amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.2.amxd').write_bytes(amxd)
+amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.3.amxd').write_bytes(amxd)
 print('Built frozen AMXD:',len(amxd),'bytes')

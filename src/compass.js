@@ -1,5 +1,5 @@
 autowatch=0;inlets=1;outlets=2;include('core.js');
-var core=new Compass(),name=jsarguments[1],buffer=new Buffer(name),song=null,own=null,task=null,scanTask=null,ready=false,enabled=1,free=0,deviceOn=1;
+var core=new Compass(),name=jsarguments[1],buffer=new Buffer(name),song=null,own=null,task=null,scanTask=null,ready=false,enabled=1,free=1,deviceOn=1;
 var file='',wanted=null,pendingSource=null,requestedSignature='',loadPhase='',loadedOK=false,loadTimeout=null,freeBeat=0,lastWall=0,lastBeat=null,nextBeat=0,wasRunning=false;
 var currentFade=0,fadeStart=0,fadeEnd=0,previousTempo=120;
 var tickCount=0,smooth=20,db=-6,activeHead=0,busy=false,acks=[false,false],queued=null,phase=[0,0],lastConfig=null,frameLength=0,channels=1;
@@ -68,7 +68,7 @@ function tick(){if(!ready)return;var now=Date.now(),dt=lastWall?Math.min(.1,(now
  text('playing','Step '+(core.index+1)+' | '+core.rate+'x | '+core.division+'/beat'+(run?' | PLAY':' | STOP'));
 }
 function step(i,x){core.steps[clip(i,0,15)|0]=clip(x,0,15)|0;notifyclients();}
-function pool(i,x){core.pool[clip(i,0,15)|0]=Number(x)?1:0;notifyclients();}
+function pool(i,x){core.pool[clip(i,0,15)|0]=clip(x,0,100);notifyclients();}
 function steps(x){core.count=clip(x,1,16)|0;notifyclients();}
 function division(x){core.baseDivision=1<<(clip(x,0,4)|0);core.division=core.baseDivision;notifyclients();}
 function seed(x){core.seed=clip(x,1,65535)|0;core.rng=core.seed;notifyclients();}
@@ -81,8 +81,8 @@ function enable(x){enabled=Number(x)?1:0;}
 function deviceactive(x){deviceOn=Number(x)?1:0;}
 function reset(){var h=core.reset();h.seek=true;transition(h);fadeReset();if(lastBeat!==null)nextBeat=lastBeat;}
 function publish(id,v){var o=this.patcher.getnamed(id);if(o)o.message('int',v);}
-function randomize(){if(!core.randomize()){status('Random pool is empty. Enable a command.');return;}for(var i=0;i<16;i++)publish('step'+i,core.steps[i]);publish('seed',core.seed);notifyclients();reset();}
-function getvalueof(){return [JSON.stringify({version:2,steps:core.steps,pool:core.pool,seed:core.seed})];}
-function setvalueof(){try{var s=JSON.parse(arrayfromargs(arguments).join(' '));if(s.version!==1&&s.version!==2)return;
- for(var i=0;i<16;i++){if(s.steps&&s.steps.length===16)core.steps[i]=clip(s.steps[i],0,15)|0;if(s.pool&&s.pool.length===16)core.pool[i]=s.pool[i]?1:0;}core.seed=clip(s.seed,1,65535)|0;syncUI();if(ready)reload();}catch(e){status('Could not restore saved sample state.');}}
+function randomize(){if(!core.randomize()){status('All random weights are 0%. Set at least one above 0%.');return;}for(var i=0;i<16;i++)publish('step'+i,core.steps[i]);publish('seed',core.seed);notifyclients();reset();}
+function getvalueof(){return [JSON.stringify({version:3,steps:core.steps,pool:core.pool,seed:core.seed})];}
+function setvalueof(){try{var s=JSON.parse(arrayfromargs(arguments).join(' '));if(s.version!==1&&s.version!==2&&s.version!==3)return;
+ for(var i=0;i<16;i++){if(s.steps&&s.steps.length===16)core.steps[i]=clip(s.steps[i],0,15)|0;if(s.pool&&s.pool.length===16)core.pool[i]=s.version<3?(s.pool[i]?100:0):clip(s.pool[i],0,100);}core.seed=clip(s.seed,1,65535)|0;syncUI();if(ready)reload();}catch(e){status('Could not restore saved sample state.');}}
 function notifydeleted(){if(task)task.cancel();if(scanTask)scanTask.cancel();if(loadTimeout)loadTimeout.cancel();}

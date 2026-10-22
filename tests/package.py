@@ -3,7 +3,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from amxd_container import unpack_frozen
 root=Path(__file__).resolve().parents[1]
-type_,entries=unpack_frozen((root/'dist/StepCompass-M4L-v0.1.2.amxd').read_bytes());assert type_==b'aaaa';assert {e.name for e in entries}=={'StepCompass.amxd','compass.js','core.js','display.js'}
+type_,entries=unpack_frozen((root/'dist/StepCompass-M4L-v0.1.3.amxd').read_bytes());assert type_==b'aaaa';assert {e.name for e in entries}=={'StepCompass.amxd','compass.js','core.js','display.js'}
 p=json.loads(entries[0].data.rstrip(b'\0'))['patcher']
 def check(p):
  boxes={e['box']['id']:e['box'] for e in p['boxes']};assert len(boxes)==len(p['boxes'])
@@ -37,3 +37,12 @@ for ch in range(2):
  assert any(l['source']==['stepenv',0] and l['destination']==['amp'+str(ch)+'stepenv',1] for l in lines)
  assert any(l['source']==['amp'+str(ch)+'stepenv',0] and l['destination']==['output',ch] for l in lines)
 print('PASS: fade command labels, resetting native line~ envelope and smoothed stereo output wiring')
+expected_steps=[1,14,9,2,13,14,0,10,9,14,10,15,10,14,1,10]
+for i in range(16):
+ assert boxes['step'+str(i)]['saved_attribute_attributes']['valueof']['parameter_initial']==[expected_steps[i]]
+ control=boxes['pool'+str(i)];assert control['maxclass']=='live.numbox'
+ params=control['saved_attribute_attributes']['valueof'];assert params['parameter_mmin']==0 and params['parameter_mmax']==100
+ assert params['parameter_initial']==[0 if i in (3,4,11,12) else 100]
+assert boxes['freeplay']['saved_attribute_attributes']['valueof']['parameter_initial']==[1]
+assert boxes['seed']['saved_attribute_attributes']['valueof']['parameter_initial']==[1234]
+print('PASS: 16 percentage weight controls, screenshot UI defaults and Free Play enabled')

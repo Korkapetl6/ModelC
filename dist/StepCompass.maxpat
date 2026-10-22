@@ -323,7 +323,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 1,
               "parameter_initial": [
-                0
+                1
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -676,7 +676,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                0
+                14
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -779,7 +779,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                0
+                9
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -882,7 +882,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                7
+                2
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -985,7 +985,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                0
+                13
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -1088,7 +1088,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                0
+                14
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -1191,7 +1191,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                2
+                0
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -1294,7 +1294,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                0
+                10
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -1397,7 +1397,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                0
+                9
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -1500,7 +1500,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                8
+                14
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -1603,7 +1603,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                0
+                10
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -1706,7 +1706,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                0
+                15
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -1809,7 +1809,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                1
+                10
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -1912,7 +1912,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                0
+                14
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -2015,7 +2015,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                6
+                1
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -2118,7 +2118,7 @@
               "parameter_mmin": 0,
               "parameter_mmax": 15,
               "parameter_initial": [
-                0
+                10
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 1,
@@ -2771,7 +2771,7 @@
             300.0,
             20.0
           ],
-          "text": "RANDOM POOL",
+          "text": "RANDOM WEIGHTS %",
           "numinlets": 1,
           "numoutlets": 0,
           "presentation": 1,
@@ -2794,15 +2794,44 @@
       },
       {
         "box": {
-          "id": "pool0",
-          "maxclass": "live.text",
+          "id": "poolname0",
+          "maxclass": "comment",
           "patching_rect": [
             1110.0,
-            53.0,
-            73.0,
-            21.0
+            55.0,
+            37.0,
+            18.0
           ],
           "text": "--",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1110.0,
+            55.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool0",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1147.0,
+            53.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool0",
           "numinlets": 1,
           "numoutlets": 2,
@@ -2813,79 +2842,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1110.0,
+            1147.0,
             53.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Hold",
-              "parameter_shortname": "Pool Hold",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Hold",
+              "parameter_shortname": "Chance Hold",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "--",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -2905,15 +2881,44 @@
       },
       {
         "box": {
-          "id": "pool1",
-          "maxclass": "live.text",
+          "id": "poolname1",
+          "maxclass": "comment",
           "patching_rect": [
             1187.0,
-            53.0,
-            73.0,
-            21.0
+            55.0,
+            37.0,
+            18.0
           ],
           "text": "FWD",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1187.0,
+            55.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool1",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1224.0,
+            53.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool1",
           "numinlets": 1,
           "numoutlets": 2,
@@ -2924,79 +2929,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1187.0,
+            1224.0,
             53.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Forward",
-              "parameter_shortname": "Pool Forward",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Forward",
+              "parameter_shortname": "Chance Forward",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "FWD",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -3016,15 +2968,44 @@
       },
       {
         "box": {
-          "id": "pool2",
-          "maxclass": "live.text",
+          "id": "poolname2",
+          "maxclass": "comment",
           "patching_rect": [
             1264.0,
-            53.0,
-            73.0,
-            21.0
+            55.0,
+            37.0,
+            18.0
           ],
           "text": "REV",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1264.0,
+            55.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool2",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1301.0,
+            53.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool2",
           "numinlets": 1,
           "numoutlets": 2,
@@ -3035,79 +3016,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1264.0,
+            1301.0,
             53.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Reverse",
-              "parameter_shortname": "Pool Reverse",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Reverse",
+              "parameter_shortname": "Chance Reverse",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "REV",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -3127,15 +3055,44 @@
       },
       {
         "box": {
-          "id": "pool3",
-          "maxclass": "live.text",
+          "id": "poolname3",
+          "maxclass": "comment",
           "patching_rect": [
             1341.0,
-            53.0,
-            73.0,
-            21.0
+            55.0,
+            37.0,
+            18.0
           ],
           "text": "R+",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1341.0,
+            55.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool3",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1378.0,
+            53.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool3",
           "numinlets": 1,
           "numoutlets": 2,
@@ -3146,79 +3103,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1341.0,
+            1378.0,
             53.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Rate +",
-              "parameter_shortname": "Pool Rate +",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Rate +",
+              "parameter_shortname": "Chance Rate +",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                0
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "R+",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -3238,15 +3142,44 @@
       },
       {
         "box": {
-          "id": "pool4",
-          "maxclass": "live.text",
+          "id": "poolname4",
+          "maxclass": "comment",
           "patching_rect": [
             1110.0,
-            78.0,
-            73.0,
-            21.0
+            80.0,
+            37.0,
+            18.0
           ],
           "text": "R-",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1110.0,
+            80.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool4",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1147.0,
+            78.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool4",
           "numinlets": 1,
           "numoutlets": 2,
@@ -3257,79 +3190,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1110.0,
+            1147.0,
             78.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Rate -",
-              "parameter_shortname": "Pool Rate -",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Rate -",
+              "parameter_shortname": "Chance Rate -",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                0
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "R-",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -3349,15 +3229,44 @@
       },
       {
         "box": {
-          "id": "pool5",
-          "maxclass": "live.text",
+          "id": "poolname5",
+          "maxclass": "comment",
           "patching_rect": [
             1187.0,
-            78.0,
-            73.0,
-            21.0
+            80.0,
+            37.0,
+            18.0
           ],
           "text": "R?",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1187.0,
+            80.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool5",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1224.0,
+            78.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool5",
           "numinlets": 1,
           "numoutlets": 2,
@@ -3368,79 +3277,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1187.0,
+            1224.0,
             78.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Rate random",
-              "parameter_shortname": "Pool Rate random",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Rate random",
+              "parameter_shortname": "Chance Rate random",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "R?",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -3460,15 +3316,44 @@
       },
       {
         "box": {
-          "id": "pool6",
-          "maxclass": "live.text",
+          "id": "poolname6",
+          "maxclass": "comment",
           "patching_rect": [
             1264.0,
-            78.0,
-            73.0,
-            21.0
+            80.0,
+            37.0,
+            18.0
           ],
           "text": "HOME",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1264.0,
+            80.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool6",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1301.0,
+            78.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool6",
           "numinlets": 1,
           "numoutlets": 2,
@@ -3479,79 +3364,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1264.0,
+            1301.0,
             78.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Loop start",
-              "parameter_shortname": "Pool Loop start",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Loop start",
+              "parameter_shortname": "Chance Loop start",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "HOME",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -3571,15 +3403,44 @@
       },
       {
         "box": {
-          "id": "pool7",
-          "maxclass": "live.text",
+          "id": "poolname7",
+          "maxclass": "comment",
           "patching_rect": [
             1341.0,
-            78.0,
-            73.0,
-            21.0
+            80.0,
+            37.0,
+            18.0
           ],
           "text": "POS?",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1341.0,
+            80.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool7",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1378.0,
+            78.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool7",
           "numinlets": 1,
           "numoutlets": 2,
@@ -3590,79 +3451,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1341.0,
+            1378.0,
             78.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Position",
-              "parameter_shortname": "Pool Position",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Position",
+              "parameter_shortname": "Chance Position",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "POS?",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -3682,15 +3490,44 @@
       },
       {
         "box": {
-          "id": "pool8",
-          "maxclass": "live.text",
+          "id": "poolname8",
+          "maxclass": "comment",
           "patching_rect": [
             1110.0,
-            103.0,
-            73.0,
-            21.0
+            105.0,
+            37.0,
+            18.0
           ],
           "text": "LOOP?",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1110.0,
+            105.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool8",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1147.0,
+            103.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool8",
           "numinlets": 1,
           "numoutlets": 2,
@@ -3701,79 +3538,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1110.0,
+            1147.0,
             103.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Loop random",
-              "parameter_shortname": "Pool Loop random",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Loop random",
+              "parameter_shortname": "Chance Loop random",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "LOOP?",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -3793,15 +3577,44 @@
       },
       {
         "box": {
-          "id": "pool9",
-          "maxclass": "live.text",
+          "id": "poolname9",
+          "maxclass": "comment",
           "patching_rect": [
             1187.0,
-            103.0,
-            73.0,
-            21.0
+            105.0,
+            37.0,
+            18.0
           ],
           "text": "C+",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1187.0,
+            105.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool9",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1224.0,
+            103.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool9",
           "numinlets": 1,
           "numoutlets": 2,
@@ -3812,79 +3625,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1187.0,
+            1224.0,
             103.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Clock +",
-              "parameter_shortname": "Pool Clock +",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Clock +",
+              "parameter_shortname": "Chance Clock +",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "C+",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -3904,15 +3664,44 @@
       },
       {
         "box": {
-          "id": "pool10",
-          "maxclass": "live.text",
+          "id": "poolname10",
+          "maxclass": "comment",
           "patching_rect": [
             1264.0,
-            103.0,
-            73.0,
-            21.0
+            105.0,
+            37.0,
+            18.0
           ],
           "text": "C-",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1264.0,
+            105.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool10",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1301.0,
+            103.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool10",
           "numinlets": 1,
           "numoutlets": 2,
@@ -3923,79 +3712,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1264.0,
+            1301.0,
             103.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Clock -",
-              "parameter_shortname": "Pool Clock -",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Clock -",
+              "parameter_shortname": "Chance Clock -",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "C-",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -4015,15 +3751,44 @@
       },
       {
         "box": {
-          "id": "pool11",
-          "maxclass": "live.text",
+          "id": "poolname11",
+          "maxclass": "comment",
           "patching_rect": [
             1341.0,
-            103.0,
-            73.0,
-            21.0
+            105.0,
+            37.0,
+            18.0
           ],
           "text": "C16",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1341.0,
+            105.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool11",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1378.0,
+            103.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool11",
           "numinlets": 1,
           "numoutlets": 2,
@@ -4034,79 +3799,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1341.0,
+            1378.0,
             103.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Clock fastest",
-              "parameter_shortname": "Pool Clock fastest",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Clock fastest",
+              "parameter_shortname": "Chance Clock fastest",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                0
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "C16",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -4126,15 +3838,44 @@
       },
       {
         "box": {
-          "id": "pool12",
-          "maxclass": "live.text",
+          "id": "poolname12",
+          "maxclass": "comment",
           "patching_rect": [
             1110.0,
-            128.0,
-            73.0,
-            21.0
+            130.0,
+            37.0,
+            18.0
           ],
           "text": "C1",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1110.0,
+            130.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool12",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1147.0,
+            128.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool12",
           "numinlets": 1,
           "numoutlets": 2,
@@ -4145,79 +3886,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1110.0,
+            1147.0,
             128.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Clock slowest",
-              "parameter_shortname": "Pool Clock slowest",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Clock slowest",
+              "parameter_shortname": "Chance Clock slowest",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                0
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "C1",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -4237,15 +3925,44 @@
       },
       {
         "box": {
-          "id": "pool13",
-          "maxclass": "live.text",
+          "id": "poolname13",
+          "maxclass": "comment",
           "patching_rect": [
             1187.0,
-            128.0,
-            73.0,
-            21.0
+            130.0,
+            37.0,
+            18.0
           ],
           "text": "STEP?",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1187.0,
+            130.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool13",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1224.0,
+            128.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool13",
           "numinlets": 1,
           "numoutlets": 2,
@@ -4256,79 +3973,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1187.0,
+            1224.0,
             128.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Step random",
-              "parameter_shortname": "Pool Step random",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Step random",
+              "parameter_shortname": "Chance Step random",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "STEP?",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -4348,15 +4012,44 @@
       },
       {
         "box": {
-          "id": "pool14",
-          "maxclass": "live.text",
+          "id": "poolname14",
+          "maxclass": "comment",
           "patching_rect": [
             1264.0,
-            128.0,
-            73.0,
-            21.0
+            130.0,
+            37.0,
+            18.0
           ],
           "text": "FADE OUT",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1264.0,
+            130.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool14",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1301.0,
+            128.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool14",
           "numinlets": 1,
           "numoutlets": 2,
@@ -4367,79 +4060,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1264.0,
+            1301.0,
             128.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Fade out",
-              "parameter_shortname": "Pool Fade out",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Fade out",
+              "parameter_shortname": "Chance Fade out",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "FADE OUT",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -4459,15 +4099,44 @@
       },
       {
         "box": {
-          "id": "pool15",
-          "maxclass": "live.text",
+          "id": "poolname15",
+          "maxclass": "comment",
           "patching_rect": [
             1341.0,
-            128.0,
-            73.0,
-            21.0
+            130.0,
+            37.0,
+            18.0
           ],
           "text": "FADE IN",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1341.0,
+            130.0,
+            37.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 8.5
+        }
+      },
+      {
+        "box": {
+          "id": "pool15",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            1378.0,
+            128.0,
+            36.0,
+            21.0
+          ],
           "varname": "pool15",
           "numinlets": 1,
           "numoutlets": 2,
@@ -4478,79 +4147,26 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1341.0,
+            1378.0,
             128.0,
-            73.0,
+            36.0,
             21.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Fade in",
-              "parameter_shortname": "Pool Fade in",
-              "parameter_type": 2,
+              "parameter_longname": "Chance Fade in",
+              "parameter_shortname": "Chance Fade in",
+              "parameter_type": 0,
               "parameter_mmin": 0,
-              "parameter_mmax": 1,
+              "parameter_mmax": 100,
               "parameter_initial": [
-                1
+                100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1,
-              "parameter_enum": [
-                "OFF",
-                "ON"
-              ]
+              "parameter_unitstyle": 5
             }
           },
-          "texton": "FADE IN",
-          "mode": 1,
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "textoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ],
-          "bgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "bgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activebgcolor": [
-            0.22,
-            0.25,
-            0.29,
-            1.0
-          ],
-          "activebgoncolor": [
-            0.27,
-            0.83,
-            0.67,
-            1.0
-          ],
-          "activetextcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "activetextoncolor": [
-            0.11,
-            0.12,
-            0.14,
-            1.0
-          ]
+          "fontsize": 10.0
         }
       },
       {
@@ -9684,7 +9300,7 @@
       "autolocalize": 0
     },
     "description": "StepCompass sample command sequencer. Independent sample-only device.",
-    "digest": "StepCompass M4L v0.1.2",
+    "digest": "StepCompass M4L v0.1.3",
     "autosave": 0,
     "parameters": {
       "enable": [
@@ -9813,83 +9429,83 @@
         0
       ],
       "pool0": [
-        "Pool Hold",
-        "Pool Hold",
+        "Chance Hold",
+        "Chance Hold",
         0
       ],
       "pool1": [
-        "Pool Forward",
-        "Pool Forward",
+        "Chance Forward",
+        "Chance Forward",
         0
       ],
       "pool2": [
-        "Pool Reverse",
-        "Pool Reverse",
+        "Chance Reverse",
+        "Chance Reverse",
         0
       ],
       "pool3": [
-        "Pool Rate +",
-        "Pool Rate +",
+        "Chance Rate +",
+        "Chance Rate +",
         0
       ],
       "pool4": [
-        "Pool Rate -",
-        "Pool Rate -",
+        "Chance Rate -",
+        "Chance Rate -",
         0
       ],
       "pool5": [
-        "Pool Rate random",
-        "Pool Rate random",
+        "Chance Rate random",
+        "Chance Rate random",
         0
       ],
       "pool6": [
-        "Pool Loop start",
-        "Pool Loop start",
+        "Chance Loop start",
+        "Chance Loop start",
         0
       ],
       "pool7": [
-        "Pool Position",
-        "Pool Position",
+        "Chance Position",
+        "Chance Position",
         0
       ],
       "pool8": [
-        "Pool Loop random",
-        "Pool Loop random",
+        "Chance Loop random",
+        "Chance Loop random",
         0
       ],
       "pool9": [
-        "Pool Clock +",
-        "Pool Clock +",
+        "Chance Clock +",
+        "Chance Clock +",
         0
       ],
       "pool10": [
-        "Pool Clock -",
-        "Pool Clock -",
+        "Chance Clock -",
+        "Chance Clock -",
         0
       ],
       "pool11": [
-        "Pool Clock fastest",
-        "Pool Clock fastest",
+        "Chance Clock fastest",
+        "Chance Clock fastest",
         0
       ],
       "pool12": [
-        "Pool Clock slowest",
-        "Pool Clock slowest",
+        "Chance Clock slowest",
+        "Chance Clock slowest",
         0
       ],
       "pool13": [
-        "Pool Step random",
-        "Pool Step random",
+        "Chance Step random",
+        "Chance Step random",
         0
       ],
       "pool14": [
-        "Pool Fade out",
-        "Pool Fade out",
+        "Chance Fade out",
+        "Chance Fade out",
         0
       ],
       "pool15": [
-        "Pool Fade in",
-        "Pool Fade in",
+        "Chance Fade in",
+        "Chance Fade in",
         0
       ],
       "data": [
