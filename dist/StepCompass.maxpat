@@ -544,42 +544,25 @@
       {
         "box": {
           "id": "rateslope",
-          "maxclass": "live.numbox",
+          "maxclass": "number",
           "patching_rect": [
-            902.0,
+            898.0,
             30.0,
-            95.0,
+            72.0,
             22.0
           ],
           "varname": "rateslope",
+          "minimum": 0,
+          "maximum": 10000,
           "numinlets": 1,
           "numoutlets": 2,
-          "outlettype": [
-            "",
-            ""
-          ],
-          "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            902.0,
+            898.0,
             30.0,
-            95.0,
+            72.0,
             22.0
-          ],
-          "saved_attribute_attributes": {
-            "valueof": {
-              "parameter_longname": "Rate slope ms",
-              "parameter_shortname": "Rate slope ms",
-              "parameter_type": 0,
-              "parameter_mmin": 0,
-              "parameter_mmax": 10000,
-              "parameter_initial": [
-                0
-              ],
-              "parameter_initial_enable": 1,
-              "parameter_unitstyle": 1
-            }
-          }
+          ]
         }
       },
       {
@@ -594,6 +577,80 @@
           ],
           "text": "prepend rateslope",
           "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "slope-minus",
+          "maxclass": "textbutton",
+          "patching_rect": [
+            976.0,
+            30.0,
+            50.0,
+            22.0
+          ],
+          "text": "-10",
+          "presentation": 1,
+          "presentation_rect": [
+            976.0,
+            30.0,
+            50.0,
+            22.0
+          ],
+          "numinlets": 1,
+          "numoutlets": 3
+        }
+      },
+      {
+        "box": {
+          "id": "slope-minuscmd",
+          "maxclass": "message",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "slopeadjust -10",
+          "numinlets": 2,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "slope-plus",
+          "maxclass": "textbutton",
+          "patching_rect": [
+            1032.0,
+            30.0,
+            50.0,
+            22.0
+          ],
+          "text": "+10",
+          "presentation": 1,
+          "presentation_rect": [
+            1032.0,
+            30.0,
+            50.0,
+            22.0
+          ],
+          "numinlets": 1,
+          "numoutlets": 3
+        }
+      },
+      {
+        "box": {
+          "id": "slope-pluscmd",
+          "maxclass": "message",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "slopeadjust 10",
+          "numinlets": 2,
           "numoutlets": 1
         }
       },
@@ -4384,9 +4441,9 @@
             100.0,
             22.0
           ],
-          "text": "route choose load bind channels bounds edge rate seek fade loadgate master stepenv start clear",
+          "text": "route choose load bind channels bounds edge rate seek fade loadgate master stepenv start clear direction",
           "numinlets": 1,
-          "numoutlets": 15
+          "numoutlets": 16
         }
       },
       {
@@ -4526,6 +4583,21 @@
       },
       {
         "box": {
+          "id": "directionroute",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "route 0 1",
+          "numinlets": 1,
+          "numoutlets": 3
+        }
+      },
+      {
+        "box": {
           "id": "rate-glide",
           "maxclass": "newobj",
           "patching_rect": [
@@ -4580,7 +4652,7 @@
             22.0
           ],
           "text": "p head_0",
-          "numinlets": 11,
+          "numinlets": 12,
           "numoutlets": 4,
           "patcher": {
             "fileversion": 1,
@@ -5219,6 +5291,34 @@
                   ],
                   "index": 4
                 }
+              },
+              {
+                "box": {
+                  "id": "direction-in",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    720,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 12
+                }
+              },
+              {
+                "box": {
+                  "id": "signed-rate",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "*~ 1.",
+                  "numinlets": 2,
+                  "numoutlets": 1
+                }
               }
             ],
             "lines": [
@@ -5801,11 +5901,11 @@
               {
                 "patchline": {
                   "source": [
-                    "in0",
-                    0
+                    "groove",
+                    2
                   ],
                   "destination": [
-                    "groove",
+                    "phase-out",
                     0
                   ]
                 }
@@ -5813,11 +5913,35 @@
               {
                 "patchline": {
                   "source": [
-                    "groove",
-                    2
+                    "in0",
+                    0
                   ],
                   "destination": [
-                    "phase-out",
+                    "signed-rate",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "direction-in",
+                    0
+                  ],
+                  "destination": [
+                    "signed-rate",
+                    1
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "signed-rate",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
                     0
                   ]
                 }
@@ -5888,7 +6012,7 @@
             22.0
           ],
           "text": "p head_1",
-          "numinlets": 11,
+          "numinlets": 12,
           "numoutlets": 4,
           "patcher": {
             "fileversion": 1,
@@ -6527,6 +6651,34 @@
                   ],
                   "index": 4
                 }
+              },
+              {
+                "box": {
+                  "id": "direction-in",
+                  "maxclass": "inlet",
+                  "patching_rect": [
+                    720,
+                    20,
+                    30,
+                    30
+                  ],
+                  "index": 12
+                }
+              },
+              {
+                "box": {
+                  "id": "signed-rate",
+                  "maxclass": "newobj",
+                  "patching_rect": [
+                    0.0,
+                    200.0,
+                    100.0,
+                    22.0
+                  ],
+                  "text": "*~ 1.",
+                  "numinlets": 2,
+                  "numoutlets": 1
+                }
               }
             ],
             "lines": [
@@ -7109,11 +7261,11 @@
               {
                 "patchline": {
                   "source": [
-                    "in0",
-                    0
+                    "groove",
+                    2
                   ],
                   "destination": [
-                    "groove",
+                    "phase-out",
                     0
                   ]
                 }
@@ -7121,11 +7273,35 @@
               {
                 "patchline": {
                   "source": [
-                    "groove",
-                    2
+                    "in0",
+                    0
                   ],
                   "destination": [
-                    "phase-out",
+                    "signed-rate",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "direction-in",
+                    0
+                  ],
+                  "destination": [
+                    "signed-rate",
+                    1
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "signed-rate",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
                     0
                   ]
                 }
@@ -7602,6 +7778,54 @@
         "patchline": {
           "source": [
             "rateslopecmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "slope-minus",
+            0
+          ],
+          "destination": [
+            "slope-minuscmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "slope-minuscmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "slope-plus",
+            0
+          ],
+          "destination": [
+            "slope-pluscmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "slope-pluscmd",
             0
           ],
           "destination": [
@@ -8742,6 +8966,18 @@
         "patchline": {
           "source": [
             "route",
+            14
+          ],
+          "destination": [
+            "directionroute",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "route",
             6
           ],
           "destination": [
@@ -8843,6 +9079,18 @@
           "destination": [
             "head0",
             7
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "directionroute",
+            0
+          ],
+          "destination": [
+            "head0",
+            11
           ]
         }
       },
@@ -8999,6 +9247,18 @@
           "destination": [
             "head1",
             7
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "directionroute",
+            1
+          ],
+          "destination": [
+            "head1",
+            11
           ]
         }
       },
@@ -9453,7 +9713,7 @@
       "autolocalize": 0
     },
     "description": "StepCompass sample command sequencer. Independent sample-only device.",
-    "digest": "StepCompass M4L v0.1.5",
+    "digest": "StepCompass M4L v0.1.6",
     "autosave": 0,
     "parameters": {
       "enable": [
@@ -9464,11 +9724,6 @@
       "freeplay": [
         "FREE PLAY",
         "FREE PLAY",
-        0
-      ],
-      "rateslope": [
-        "Rate slope ms",
-        "Rate slope ms",
         0
       ],
       "step0": [

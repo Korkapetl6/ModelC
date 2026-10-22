@@ -3,7 +3,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from amxd_container import unpack_frozen
 root=Path(__file__).resolve().parents[1]
-type_,entries=unpack_frozen((root/'dist/StepCompass-M4L-v0.1.5.amxd').read_bytes());assert type_==b'aaaa';assert {e.name for e in entries}=={'StepCompass.amxd','compass.js','core.js','display.js'}
+type_,entries=unpack_frozen((root/'dist/StepCompass-M4L-v0.1.6.amxd').read_bytes());assert type_==b'aaaa';assert {e.name for e in entries}=={'StepCompass.amxd','compass.js','core.js','display.js'}
 p=json.loads(entries[0].data.rstrip(b'\0'))['patcher']
 def check(p):
  boxes={e['box']['id']:e['box'] for e in p['boxes']};assert len(boxes)==len(p['boxes'])
@@ -52,14 +52,19 @@ assert boxes['holdpercent']['saved_attribute_attributes']['valueof']['parameter_
 assert boxes['holdpercent']['saved_attribute_attributes']['valueof']['parameter_unitstyle']==5
 assert all(boxes['pool'+str(i)]['saved_attribute_attributes']['valueof']['parameter_unitstyle']==1 for i in range(1,16))
 print('PASS: separate HOLD % control, 15 unitless command weights, screenshot UI defaults and Free Play enabled')
-slope=boxes['rateslope']['saved_attribute_attributes']['valueof']
-assert slope['parameter_mmin']==0 and slope['parameter_mmax']==10000 and slope['parameter_initial']==[0]
+slope=boxes['rateslope']
+assert slope['maxclass']=='number' and slope['minimum']==0 and slope['maximum']==10000
+assert boxes['slope-minuscmd']['text']=='slopeadjust -10'
+assert boxes['slope-pluscmd']['text']=='slopeadjust 10'
 assert boxes['rate-glide']['text']=='line~ 1.'
 for i in range(2):
  assert any(l['source']==['rate-glide',0] and l['destination']==['head'+str(i),0] for l in lines)
  sub=boxes['head'+str(i)]['patcher']
  assert not any(e['box']['id']=='speed' for e in sub['boxes'])
- assert any(e['patchline']['source']==['in0',0] and e['patchline']['destination']==['groove',0] for e in sub['lines'])
+ assert any(e['patchline']['source']==['in0',0] and e['patchline']['destination']==['signed-rate',0] for e in sub['lines'])
+ assert any(e['patchline']['source']==['direction-in',0] and e['patchline']['destination']==['signed-rate',1] for e in sub['lines'])
+ assert any(e['patchline']['source']==['signed-rate',0] and e['patchline']['destination']==['groove',0] for e in sub['lines'])
+ assert any(l['source']==['directionroute',i] and l['destination']==['head'+str(i),11] for l in lines)
 assert 'rateroute' not in boxes
 assert any(l['source']==['rate-glide',0] and l['destination']==['rate-meter',0] for l in lines)
-print('PASS: one native audio-rate glide shared by both stereo heads, live parameter defaults, rate feedback and no competing per-head rate sources')
+print('PASS: one native audio-rate glide shared by both stereo heads, integer entry and fine adjustment buttons, rate feedback and no competing per-head rate sources')

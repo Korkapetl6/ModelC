@@ -49,15 +49,20 @@ function loaded(){if(loadPhase!=='read'||!pendingSource)return;if(loadTimeout)lo
  queued=null;var initial=core.reset();rateGoal=1;rateActual=1;outlet(0,'rate',1,0);configure(0,initial);configure(1,initial);lastConfig=core.head(core.lo);loadedOK=true;lastBeat=null;wasRunning=false;
  var wave=[];for(var i=0;i<200;i++){var p=Math.floor(i*f/200),v=buffer.peek(1,p,1);wave.push(Math.abs(Number(v)||0));}outlet(1,'wave',wave);
  status(file.split(/[\\/]/).pop()+' | Simpler '+(pendingSource.start/1000).toFixed(2)+'–'+((pendingSource.start+ms)/1000).toFixed(2)+' s | ready');outlet(0,'loadgate',1,30);}
-function configure(i,h){outlet(0,'bounds',i,h.lo,h.hi);outlet(0,'edge',i,1/Math.max(.000001,Math.min(.24,smooth*Math.abs(h.rate)/(h.hi-h.lo))),0);outlet(0,'start',i,'startloop');outlet(0,'seek',i,h.pos);}
+function configure(i,h){outlet(0,'direction',i,h.rate<0?-1:1);outlet(0,'bounds',i,h.lo,h.hi);outlet(0,'edge',i,1/Math.max(.000001,Math.min(.24,smooth*Math.abs(h.rate)/(h.hi-h.lo))),0);outlet(0,'start',i,'startloop');outlet(0,'seek',i,h.pos);}
 // One audio-rate line~ is shared by both heads. Retargeting starts at its actual current output.
-function rateslope(x){rateSlope=clip(x,0,10000);notifyclients();}
-function ratevalue(x){rateActual=clip(x,-2,2);}
+function rateslope(x){rateSlope=Math.round(clip(x,0,10000));notifyclients();}
+function slopeadjust(x){rateslope(rateSlope+Number(x));ui('rateslope',rateSlope);}
+function ratevalue(x){rateActual=clip(x,.5,2);}
 function playCommand(h){
  if(!loadedOK||loadPhase)return;
- if(h.rate!==rateGoal){rateGoal=h.rate;outlet(0,'rate',rateGoal,rateSlope);}
- // Rate commands must not seek, restart a head, or wait for a position crossfade.
- if(h.seek===false)return;
+ var magnitude=Math.abs(h.rate);
+ if(magnitude!==rateGoal){rateGoal=magnitude;outlet(0,'rate',rateGoal,rateSlope);}
+ // Speed never crosses zero. Direction changes use the idle head and a crossfade.
+ if(h.seek===false){
+  if(queued){queued.rate=h.rate;return;}
+  if(lastConfig&&(h.rate<0)===(lastConfig.rate<0))return;
+ }
  transition(h);
 }
 function transition(h){if(!loadedOK||loadPhase)return;if(busy){queued=h;return;}
@@ -77,7 +82,7 @@ function tick(){if(!ready)return;var now=Date.now(),dt=lastWall?Math.min(.1,(now
  if(run&&currentFade&&tempo!==previousTempo)stepEnvelope(currentFade,fadeStart,fadeEnd,beat,tempo);previousTempo=tempo;
  if(run!==wasRunning){outlet(0,'master',run&&db>-60?Math.pow(10,db/20):0,20);wasRunning=run;}
  lastBeat=beat;if(++tickCount%5!==0)return;outlet(1,'state',core.index,core.count,core.start,core.end,core.division,core.rate,run?1:0);
- text('playing','Step '+(core.index+1)+' | '+rateActual.toFixed(2)+'x'+(Math.abs(rateActual-rateGoal)>.01?' -> '+rateGoal+'x':'')+' | '+core.division+'/beat'+(run?' | PLAY':' | STOP'));
+ text('playing','Step '+(core.index+1)+' | '+(core.rate<0?'-':'')+rateActual.toFixed(2)+'x'+(Math.abs(rateActual-rateGoal)>.01?' -> '+(core.rate<0?'-':'')+rateGoal+'x':'')+' | '+core.division+'/beat'+(run?' | PLAY':' | STOP'));
 }
 function step(i,x){core.steps[clip(i,0,15)|0]=clip(x,0,15)|0;notifyclients();}
 function holdpercent(x){core.holdPercent=clip(x,0,100);holdHint();notifyclients();}

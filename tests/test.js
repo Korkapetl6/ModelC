@@ -74,12 +74,28 @@ const seeksBefore=messages.filter(m=>m[1]==='seek').length;
 ctx.playCommand(ctx.core.command(3));assert.equal(rateNow(),1);timeMs=250;assert.equal(rateNow(),1.25);
 ctx.playCommand(ctx.core.command(4));assert.equal(rateNow(),1.25);assert.equal(ctx.queued,waitingHead);timeMs=750;assert.equal(rateNow(),1.125);
 const rampsBefore=messages.filter(m=>m[1]==='rate').length;ctx.playCommand(ctx.core.command(1));assert.equal(messages.filter(m=>m[1]==='rate').length,rampsBefore);
-ctx.playCommand(ctx.core.command(2));assert.equal(rateNow(),1.125);timeMs=750+1000*1.125/2.125;assert(Math.abs(rateNow())<1e-12);timeMs=1750;assert.equal(rateNow(),-1);
+// Reversal changes head direction, never the shared magnitude; queued position survives.
+ctx.playCommand(ctx.core.command(2));assert.equal(rateNow(),1.125);assert.equal(waitingHead.rate,-1);
+timeMs=1750;assert.equal(rateNow(),1);
 assert.equal(messages.filter(m=>m[1]==='seek').length,seeksBefore);
-// Seeking or configuring the other head must not replace the shared ramp with its stale target.
-ctx.busy=false;ctx.queued=null;const rateCount=messages.filter(m=>m[1]==='rate').length;ctx.playCommand(ctx.core.command(7));ctx.configure(1,waitingHead);assert.equal(messages.filter(m=>m[1]==='rate').length,rateCount);
-ctx.rateslope(0);ctx.playCommand(ctx.core.command(1));assert.equal(rateNow(),1);
+ctx.playCommand(ctx.core.command(1));assert.equal(waitingHead.rate,1);
+ctx.busy=false;ctx.queued=null;ctx.lastConfig={lo:0,hi:100,rate:1};ctx.phase[ctx.activeHead]=.4;
+const rateCount=messages.filter(m=>m[1]==='rate').length;
+ctx.playCommand(ctx.core.command(2));assert(ctx.busy);assert.equal(ctx.lastConfig.pos,40);
+assert.equal(messages.filter(m=>m[1]==='direction').pop()[3],-1);
+assert.equal(messages.filter(m=>m[1]==='rate').length,rateCount);
+ctx.ended(0);ctx.ended(1);
+ctx.playCommand(ctx.core.command(7));ctx.configure(1,waitingHead);assert.equal(messages.filter(m=>m[1]==='rate').length,rateCount);
+ctx.rateslope(0);ctx.playCommand(ctx.core.command(3));assert.equal(rateNow(),2);
+// Every rate command preserves direction; Forward/Reverse preserve pitch target.
+for(const direction of [-1,1]){
+ const speedCore=new Core();speedCore.rate=direction;
+ for(let i=0;i<10000;i++){speedCore.command(3+i%3);assert.equal(Math.sign(speedCore.rate),direction);assert([.5,1,2].includes(Math.abs(speedCore.rate)));}
+ speedCore.rate=direction*2;speedCore.command(1);assert.equal(speedCore.rate,2);speedCore.command(2);assert.equal(speedCore.rate,-2);
+}
+ctx.rateslope(1234);ctx.slopeadjust(10);assert.equal(ctx.rateSlope,1244);assert.deepEqual(controls.rateslope,['set',1244]);ctx.slopeadjust(-10);assert.equal(ctx.rateSlope,1234);
+ctx.rateslope(0);ctx.slopeadjust(-10);assert.equal(ctx.rateSlope,0);ctx.rateslope(10000);ctx.slopeadjust(10);assert.equal(ctx.rateSlope,10000);
 ctx.rateslope(10001);assert.equal(ctx.rateSlope,10000);ctx.rateslope(-1);assert.equal(ctx.rateSlope,0);
 ctx.rateslope(1234);const slopeSaved=ctx.getvalueof()[0];ctx.rateslope(0);ctx.setvalueof(slopeSaved);assert.equal(ctx.rateSlope,1234);
 ctx.setvalueof(JSON.stringify({version:4,steps:defaults.steps,pool:defaults.pool,holdPercent:25,seed:1234}));assert.equal(ctx.rateSlope,0);
-console.log('PASS: slope mid-ramp retarget continuity model, reverse through zero, rate commands do not seek or wait, position changes preserve ramp, zero time, limits and state migration');
+console.log('PASS: slope mid-ramp retarget continuity model, positive magnitude only, crossfaded direction changes, rate commands do not seek or wait, fine UI increments, position changes preserve ramp, zero time, limits and state migration');
