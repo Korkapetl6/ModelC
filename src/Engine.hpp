@@ -85,7 +85,8 @@ public:
     division = 1 << int(params[Division]);
     beatLeft = 0;
     targetPan = 0;
-    pan = 0;
+    if (!wasPlaying)
+      pan = 0;
     computeRegion();
     Head h{regionLo, regionLo, regionHi, 1, params[Smooth]};
     if (sample && wasPlaying)

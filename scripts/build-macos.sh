@@ -15,7 +15,7 @@ cp third_party/DPF/dgl/src/resources/LICENSE-DejaVuSans.ttf.txt "$bundle/Content
 codesign --force --deep --sign - "$bundle"
 codesign --verify --deep --strict "$bundle"
 file "$bundle/Contents/MacOS/StepCompass"
-lipo -verify_arch x86_64 "$bundle/Contents/MacOS/StepCompass"
+lipo "$bundle/Contents/MacOS/StepCompass" -verify_arch x86_64
 mkdir -p release
 cp README.md THIRD_PARTY.md release/
 ditto -c -k --sequesterRsrc --keepParent "$bundle" release/StepCompass-0.1.0-macOS-Intel.vst3.zip

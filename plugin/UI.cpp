@@ -72,7 +72,7 @@ public:
   ~StepCompassUI() override { removeDrop(drop); }
   void parameterChanged(uint32_t id, float x) override {
     if (id < compass::Count) {
-      v[id] = x;
+      v[id] = id < compass::ActiveStep ? compass::sanitize(id, x) : (std::isfinite(x) ? x : 0);
       repaint();
     }
   }

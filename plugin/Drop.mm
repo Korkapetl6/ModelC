@@ -12,7 +12,7 @@
 @implementation StepCompassDropTarget
 @end
 static char associationKey;
-static NSDragOperation entered(id self, SEL, id<NSDraggingInfo> sender) {
+static NSDragOperation entered(id, SEL, id<NSDraggingInfo> sender) {
   return [[sender draggingPasteboard] canReadObjectForClasses:@[ [NSURL class] ]
                                                       options:@{
                                                         NSPasteboardURLReadingFileURLsOnlyKey : @YES
