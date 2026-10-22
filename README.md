@@ -1,4 +1,4 @@
-# StepCompass M4L v0.1.3
+# StepCompass M4L v0.1.4
 
 Odtwarzacz sampla z Simplera z 16-krokowym sekwencerem poleceń.
 Dla Ableton Live 11 + Max for Live / Max 8, również macOS Intel.
@@ -9,7 +9,7 @@ Nie zawiera kodu Compass ani silnika softcut.
 ## Pierwsze uruchomienie
 
 1. Na ścieżce MIDI umieść **Simpler** i wczytaj do niego sample.
-2. Pobierz **StepCompass-M4L-v0.1.3.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
+2. Pobierz **StepCompass-M4L-v0.1.4.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
    W racku oba urządzenia muszą znajdować się w tym samym łańcuchu.
 3. Ustaw początek i koniec sampla w Simplerze. StepCompass automatycznie pobierze ten zakres.
 4. Poczekaj, aż status pokaże nazwę pliku i zakres, np. `Simpler 1.00–4.00 s | ready`.
@@ -30,7 +30,7 @@ Do instalacji nie jest potrzebny Max Standalone ani kompilator.
 - **LIVE PLAY / FREE PLAY:** transport Live lub granie także przy zatrzymanym transporcie.
 - **RESET:** początek regionu, normalny kierunek i szybkość, pełną głośność kroku, początkowy zegar i seed.
   Nie kasuje sampla ani poleceń.
-- **RANDOMIZE:** nowa sekwencja według wartości w sekcji RANDOM WEIGHTS %.
+- **RANDOMIZE:** nowa sekwencja z dokładną liczbą Holdów wyznaczoną przez HOLD %, a pozostałe komendy według COMMAND WEIGHTS.
 - **Start % / End %:** dodatkowy region wewnątrz zakresu pobranego z Simplera. 0–100% oznacza cały zaznaczony w Simplerze zakres. Loop random pozostaje wewnątrz tego regionu.
 - **Fade ms:** wygładzenie zmian i końców pętli (1–100 ms, domyślnie 20).
 - **Out dB:** głośność, domyślnie −6 dB; −60 oznacza pełną ciszę.
@@ -61,7 +61,7 @@ nadal służy do wygładzania pętli i skoków sampla. Przy nagłym powrocie gł
 krótkie wygładzenie 64 próbek (około 1,5 ms przy 44,1 kHz), aby ograniczyć kliknięcia.
 W zapisanych sekwencjach stare polecenia Pan left/right stają się Fade out/in.
 
-## Domyślne ustawienia i szanse losowania (v0.1.3)
+## Domyślne ustawienia i szanse losowania (v0.1.4)
 
 Sekwencja początkowa jest zapisana bezpośrednio, jak na przesłanym zrzucie:
 
@@ -72,19 +72,24 @@ ON i FREE PLAY są włączone; region 0–100%, Fade ms 20, Out −6 dB, 16 krok
 Clock 2 (4 polecenia na ćwierćnutę). Seed pozostaje 1234 — nie służy do odtworzenia
 ręcznie zmienionej sekwencji ze zrzutu. Wzór kroków nie zależy od seeda przy ładowaniu.
 
-Każda komenda ma edytowalną wagę 0–100%. Przeciągaj liczbę pionowo lub wpisz wartość.
-Domyślnie **Rate +, Rate −, Clock fastest, Clock slowest = 0%**; pozostałe = **100%**.
+**HOLD %** ustala liczbę Holdów po RANDOMIZE, a nie wagę losowania. Domyślnie 25%.
+Liczba Holdów = zaokrąglenie `aktywne Steps × HOLD % / 100` do najbliższej liczby całkowitej
+(połówki w górę). Obok widać wynik, np. `NEXT 4/16` (dla następnego RANDOMIZE).
 
-To względne wagi wyboru dla każdego kroku po RANDOMIZE:
-- 0% wyklucza polecenie.
-- 100% i 100% dają obu poleceniom jednakową szansę.
-- 100% i 50% dają odpowiednio około 66,7% i 33,3% wyborów, jeśli tylko te dwie komendy są aktywne.
-- 100% nie gwarantuje obecności w każdym patternie; losowanie może powtarzać polecenia.
-- Gdy wszystkie wartości wynoszą 0%, RANDOMIZE pozostawia pattern i seed bez zmian.
+- 0% → zero Holdów; 25% → 4 z 16; 50% → 8 z 16; 100% → same Holdy.
+- Dla 8 aktywnych kroków 25% daje dokładnie 2 Holdy.
+- RANDOMIZE rozmieszcza tę liczbę losowo w aktywnych krokach. Nie zmienia nieaktywnych kroków.
+- **COMMAND WEIGHTS** to względne wagi 0–100 pozostałych 15 komend, bez znaku procenta.
+  0 wyklucza komendę; 100 i 50 dają pierwszej dwa razy większą szansę na pozostałych miejscach.
+- Domyślnie Rate +, Rate −, Clock fastest i Clock slowest mają wagę 0; pozostałe 100.
+- Jeśli wszystkie wagi komend są zerowe i potrzebne są kroki inne niż Hold, RANDOMIZE
+  pokazuje komunikat i nic nie zmienia. Przy HOLD 100% może wygenerować same Holdy bez innych wag.
+- HOLD % i wagi działają dopiero po RANDOMIZE; nie zmieniają automatycznie ręcznie ustawionej sekwencji.
+- Domyślny wzór kroków ze zrzutu zostaje zachowany. HOLD 25% zastosuje się po pierwszym RANDOMIZE.
 
-Wagi zapisują się z projektem i mogą być automatyzowane. Zmiana wagi nie zmienia bieżącego
-patternu, dopiero RANDOMIZE. Starsze zapisane przełączniki 0/1 są odczytywane jako 0/100%.
-Domyślne ustawienia dotyczą nowej instancji; zapisany projekt zachowuje własne parametry.
+Ustawienia zapisują się z projektem i obsługują automatyzację. Starsze zapisane wagi komend są
+zachowywane (dawne przełączniki 0/1 zamieniają się na 0/100); stara waga Hold nie jest już używana.
+Przy odczycie starego stanu HOLD % zaczyna od 25%, bez zmieniania zapisanych kroków.
 
 ## Ważne różnice i ograniczenia prototypu
 

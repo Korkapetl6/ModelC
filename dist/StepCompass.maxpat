@@ -2763,22 +2763,22 @@
       },
       {
         "box": {
-          "id": "pool-label",
+          "id": "hold-label",
           "maxclass": "comment",
           "patching_rect": [
             1110.0,
-            30.0,
-            300.0,
+            31.0,
+            48.0,
             20.0
           ],
-          "text": "RANDOM WEIGHTS %",
+          "text": "HOLD %",
           "numinlets": 1,
           "numoutlets": 0,
           "presentation": 1,
           "presentation_rect": [
             1110.0,
-            30.0,
-            300.0,
+            31.0,
+            48.0,
             20.0
           ],
           "textcolor": [
@@ -2794,45 +2794,15 @@
       },
       {
         "box": {
-          "id": "poolname0",
-          "maxclass": "comment",
-          "patching_rect": [
-            1110.0,
-            55.0,
-            37.0,
-            18.0
-          ],
-          "text": "--",
-          "numinlets": 1,
-          "numoutlets": 0,
-          "presentation": 1,
-          "presentation_rect": [
-            1110.0,
-            55.0,
-            37.0,
-            18.0
-          ],
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "fontname": "Arial",
-          "fontsize": 8.5
-        }
-      },
-      {
-        "box": {
-          "id": "pool0",
+          "id": "holdpercent",
           "maxclass": "live.numbox",
           "patching_rect": [
-            1147.0,
-            53.0,
-            36.0,
-            21.0
+            1159.0,
+            30.0,
+            48.0,
+            22.0
           ],
-          "varname": "pool0",
+          "varname": "holdpercent",
           "numinlets": 1,
           "numoutlets": 2,
           "outlettype": [
@@ -2842,31 +2812,30 @@
           "parameter_enable": 1,
           "presentation": 1,
           "presentation_rect": [
-            1147.0,
-            53.0,
-            36.0,
-            21.0
+            1159.0,
+            30.0,
+            48.0,
+            22.0
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Hold",
-              "parameter_shortname": "Chance Hold",
+              "parameter_longname": "Hold percent",
+              "parameter_shortname": "Hold percent",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
               "parameter_initial": [
-                100
+                25
               ],
               "parameter_initial_enable": 1,
               "parameter_unitstyle": 5
             }
-          },
-          "fontsize": 10.0
+          }
         }
       },
       {
         "box": {
-          "id": "pool0cmd",
+          "id": "holdpercentcmd",
           "maxclass": "newobj",
           "patching_rect": [
             0.0,
@@ -2874,9 +2843,71 @@
             100.0,
             22.0
           ],
-          "text": "prepend pool 0",
+          "text": "prepend holdpercent",
           "numinlets": 1,
           "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "hold-count",
+          "maxclass": "comment",
+          "patching_rect": [
+            1110.0,
+            55.0,
+            74.0,
+            18.0
+          ],
+          "text": "NEXT 4/16",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1110.0,
+            55.0,
+            74.0,
+            18.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 9.0,
+          "varname": "hold-count"
+        }
+      },
+      {
+        "box": {
+          "id": "pool-label",
+          "maxclass": "comment",
+          "patching_rect": [
+            1220.0,
+            30.0,
+            200.0,
+            20.0
+          ],
+          "text": "COMMAND WEIGHTS",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            1220.0,
+            30.0,
+            200.0,
+            20.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 11.0,
+          "fontface": 1
         }
       },
       {
@@ -2936,8 +2967,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Forward",
-              "parameter_shortname": "Chance Forward",
+              "parameter_longname": "Weight Forward",
+              "parameter_shortname": "Weight Forward",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -2945,7 +2976,7 @@
                 100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -3023,8 +3054,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Reverse",
-              "parameter_shortname": "Chance Reverse",
+              "parameter_longname": "Weight Reverse",
+              "parameter_shortname": "Weight Reverse",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -3032,7 +3063,7 @@
                 100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -3110,8 +3141,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Rate +",
-              "parameter_shortname": "Chance Rate +",
+              "parameter_longname": "Weight Rate +",
+              "parameter_shortname": "Weight Rate +",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -3119,7 +3150,7 @@
                 0
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -3197,8 +3228,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Rate -",
-              "parameter_shortname": "Chance Rate -",
+              "parameter_longname": "Weight Rate -",
+              "parameter_shortname": "Weight Rate -",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -3206,7 +3237,7 @@
                 0
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -3284,8 +3315,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Rate random",
-              "parameter_shortname": "Chance Rate random",
+              "parameter_longname": "Weight Rate random",
+              "parameter_shortname": "Weight Rate random",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -3293,7 +3324,7 @@
                 100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -3371,8 +3402,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Loop start",
-              "parameter_shortname": "Chance Loop start",
+              "parameter_longname": "Weight Loop start",
+              "parameter_shortname": "Weight Loop start",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -3380,7 +3411,7 @@
                 100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -3458,8 +3489,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Position",
-              "parameter_shortname": "Chance Position",
+              "parameter_longname": "Weight Position",
+              "parameter_shortname": "Weight Position",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -3467,7 +3498,7 @@
                 100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -3545,8 +3576,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Loop random",
-              "parameter_shortname": "Chance Loop random",
+              "parameter_longname": "Weight Loop random",
+              "parameter_shortname": "Weight Loop random",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -3554,7 +3585,7 @@
                 100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -3632,8 +3663,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Clock +",
-              "parameter_shortname": "Chance Clock +",
+              "parameter_longname": "Weight Clock +",
+              "parameter_shortname": "Weight Clock +",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -3641,7 +3672,7 @@
                 100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -3719,8 +3750,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Clock -",
-              "parameter_shortname": "Chance Clock -",
+              "parameter_longname": "Weight Clock -",
+              "parameter_shortname": "Weight Clock -",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -3728,7 +3759,7 @@
                 100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -3806,8 +3837,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Clock fastest",
-              "parameter_shortname": "Chance Clock fastest",
+              "parameter_longname": "Weight Clock fastest",
+              "parameter_shortname": "Weight Clock fastest",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -3815,7 +3846,7 @@
                 0
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -3893,8 +3924,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Clock slowest",
-              "parameter_shortname": "Chance Clock slowest",
+              "parameter_longname": "Weight Clock slowest",
+              "parameter_shortname": "Weight Clock slowest",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -3902,7 +3933,7 @@
                 0
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -3980,8 +4011,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Step random",
-              "parameter_shortname": "Chance Step random",
+              "parameter_longname": "Weight Step random",
+              "parameter_shortname": "Weight Step random",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -3989,7 +4020,7 @@
                 100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -4067,8 +4098,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Fade out",
-              "parameter_shortname": "Chance Fade out",
+              "parameter_longname": "Weight Fade out",
+              "parameter_shortname": "Weight Fade out",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -4076,7 +4107,7 @@
                 100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -4154,8 +4185,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Chance Fade in",
-              "parameter_shortname": "Chance Fade in",
+              "parameter_longname": "Weight Fade in",
+              "parameter_shortname": "Weight Fade in",
               "parameter_type": 0,
               "parameter_mmin": 0,
               "parameter_mmax": 100,
@@ -4163,7 +4194,7 @@
                 100
               ],
               "parameter_initial_enable": 1,
-              "parameter_unitstyle": 5
+              "parameter_unitstyle": 1
             }
           },
           "fontsize": 10.0
@@ -8048,11 +8079,11 @@
       {
         "patchline": {
           "source": [
-            "pool0",
+            "holdpercent",
             0
           ],
           "destination": [
-            "pool0cmd",
+            "holdpercentcmd",
             0
           ]
         }
@@ -8060,7 +8091,7 @@
       {
         "patchline": {
           "source": [
-            "pool0cmd",
+            "holdpercentcmd",
             0
           ],
           "destination": [
@@ -9300,7 +9331,7 @@
       "autolocalize": 0
     },
     "description": "StepCompass sample command sequencer. Independent sample-only device.",
-    "digest": "StepCompass M4L v0.1.3",
+    "digest": "StepCompass M4L v0.1.4",
     "autosave": 0,
     "parameters": {
       "enable": [
@@ -9428,84 +9459,84 @@
         "Seed",
         0
       ],
-      "pool0": [
-        "Chance Hold",
-        "Chance Hold",
+      "holdpercent": [
+        "Hold percent",
+        "Hold percent",
         0
       ],
       "pool1": [
-        "Chance Forward",
-        "Chance Forward",
+        "Weight Forward",
+        "Weight Forward",
         0
       ],
       "pool2": [
-        "Chance Reverse",
-        "Chance Reverse",
+        "Weight Reverse",
+        "Weight Reverse",
         0
       ],
       "pool3": [
-        "Chance Rate +",
-        "Chance Rate +",
+        "Weight Rate +",
+        "Weight Rate +",
         0
       ],
       "pool4": [
-        "Chance Rate -",
-        "Chance Rate -",
+        "Weight Rate -",
+        "Weight Rate -",
         0
       ],
       "pool5": [
-        "Chance Rate random",
-        "Chance Rate random",
+        "Weight Rate random",
+        "Weight Rate random",
         0
       ],
       "pool6": [
-        "Chance Loop start",
-        "Chance Loop start",
+        "Weight Loop start",
+        "Weight Loop start",
         0
       ],
       "pool7": [
-        "Chance Position",
-        "Chance Position",
+        "Weight Position",
+        "Weight Position",
         0
       ],
       "pool8": [
-        "Chance Loop random",
-        "Chance Loop random",
+        "Weight Loop random",
+        "Weight Loop random",
         0
       ],
       "pool9": [
-        "Chance Clock +",
-        "Chance Clock +",
+        "Weight Clock +",
+        "Weight Clock +",
         0
       ],
       "pool10": [
-        "Chance Clock -",
-        "Chance Clock -",
+        "Weight Clock -",
+        "Weight Clock -",
         0
       ],
       "pool11": [
-        "Chance Clock fastest",
-        "Chance Clock fastest",
+        "Weight Clock fastest",
+        "Weight Clock fastest",
         0
       ],
       "pool12": [
-        "Chance Clock slowest",
-        "Chance Clock slowest",
+        "Weight Clock slowest",
+        "Weight Clock slowest",
         0
       ],
       "pool13": [
-        "Chance Step random",
-        "Chance Step random",
+        "Weight Step random",
+        "Weight Step random",
         0
       ],
       "pool14": [
-        "Chance Fade out",
-        "Chance Fade out",
+        "Weight Fade out",
+        "Weight Fade out",
         0
       ],
       "pool15": [
-        "Chance Fade in",
-        "Chance Fade in",
+        "Weight Fade in",
+        "Weight Fade in",
         0
       ],
       "data": [

@@ -1,6 +1,6 @@
 const assert=require('assert'),fs=require('fs'),vm=require('vm'),Core=require('../src/core.js');
 let c=new Core();c.duration=10000;c.reset();for(let i=0;i<20000;i++){const h=c.command(i%16);assert(c.lo>=0&&c.hi<=10000&&c.hi>c.lo);assert(c.division>=1&&c.division<=16);if(h&&h.lo!==undefined)assert(h.pos>=h.lo&&h.pos<h.hi);}
-let a=new Core(),b=new Core();for(let i=0;i<500;i++)assert.deepEqual(a.advance(),b.advance());a.pool.fill(0);assert(!a.randomize());a.pool[2]=1;assert(a.randomize());assert(a.steps.every(x=>x===2));
+let a=new Core(),b=new Core();for(let i=0;i<500;i++)assert.deepEqual(a.advance(),b.advance());a.holdPercent=0;a.pool.fill(0);assert(!a.randomize());a.pool[2]=1;assert(a.randomize());assert(a.steps.every(x=>x===2));
 console.log('PASS: command bounds, seed repeatability, 20000 commands, random pool');
 let messages=[],scheduled=[];const controls={};
 function Task(fn,self){this.fn=()=>fn.call(self);this.repeat=()=>{};this.cancel=()=>{this.cancelled=true;};this.schedule=()=>scheduled.push(this.fn);}
@@ -39,12 +39,27 @@ assert.equal(ctx.core.fadeValue(14,0),1);assert.equal(ctx.core.fadeValue(14,1),0
 console.log('PASS: fade endpoints, Hold restores full gain, consecutive fades restart, unchanged master volume, clock/tempo retiming and reset');
 const defaults=new Core();
 assert.deepEqual(defaults.steps,[1,14,9,2,13,14,0,10,9,14,10,15,10,14,1,10]);
-assert.deepEqual(defaults.pool,[100,100,100,0,0,100,100,100,100,100,100,0,0,100,100,100]);
-let weighted=new Core();weighted.pool.fill(0);weighted.pool[1]=100;weighted.pool[2]=50;let counts=[0,0];
+assert.deepEqual(defaults.pool,[0,100,100,0,0,100,100,100,100,100,100,0,0,100,100,100]);
+let weighted=new Core();weighted.holdPercent=0;weighted.pool.fill(0);weighted.pool[1]=100;weighted.pool[2]=50;let counts=[0,0];
 for(let trial=0;trial<10000;trial++){assert(weighted.randomize());for(const command of weighted.steps){assert(command===1||command===2);counts[command-1]++;}}
 assert(Math.abs(counts[0]/(counts[0]+counts[1])-2/3)<.01);
 weighted.pool.fill(0);let before=JSON.stringify(weighted);assert.equal(weighted.randomize(),false);assert.equal(JSON.stringify(weighted),before);
 ctx.pool(1,37.5);assert.equal(ctx.core.pool[1],37.5);ctx.pool(2,200);assert.equal(ctx.core.pool[2],100);ctx.pool(3,-5);assert.equal(ctx.core.pool[3],0);
-const weightedSaved=ctx.getvalueof()[0];assert.equal(JSON.parse(weightedSaved).version,3);ctx.pool(1,0);ctx.setvalueof(weightedSaved);assert.equal(ctx.core.pool[1],37.5);
-ctx.setvalueof(JSON.stringify({version:2,steps:defaults.steps,pool:[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],seed:1234}));assert.deepEqual(Array.from(ctx.core.pool),[100,0,100,0,100,0,100,0,100,0,100,0,100,0,100,0]);
+const weightedSaved=ctx.getvalueof()[0];assert.equal(JSON.parse(weightedSaved).version,4);ctx.pool(1,0);ctx.setvalueof(weightedSaved);assert.equal(ctx.core.pool[1],37.5);
+ctx.setvalueof(JSON.stringify({version:2,steps:defaults.steps,pool:[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],seed:1234}));assert.deepEqual(Array.from(ctx.core.pool),[0,0,100,0,100,0,100,0,100,0,100,0,100,0,100,0]);
 console.log('PASS: screenshot defaults, 160000 weighted draws (100:50), 0% exclusion, empty-pool no-op, clamping, fractional weight save/restore, legacy migration');
+// Every active length and integer percentage must have an exact quota, not a Bernoulli chance.
+for(let length=1;length<=16;length++)for(let percent=0;percent<=100;percent++){
+ const quota=new Core();quota.count=length;quota.holdPercent=percent;
+ const inactive=quota.steps.slice(length);assert(quota.randomize());
+ assert.equal(quota.steps.slice(0,length).filter(x=>x===0).length,Math.round(length*percent/100));
+ assert.deepEqual(quota.steps.slice(length),inactive);
+}
+const allHold=new Core();allHold.pool.fill(0);allHold.holdPercent=100;assert(allHold.randomize());assert(allHold.steps.every(x=>x===0));
+allHold.holdPercent=25;const noPoolState=JSON.stringify(allHold);assert(!allHold.randomize());assert.equal(JSON.stringify(allHold),noPoolState);
+const positions=new Set();const shuffled=new Core();shuffled.holdPercent=25;
+for(let i=0;i<100;i++){assert(shuffled.randomize());positions.add(shuffled.steps.map((x,j)=>x===0?j:-1).filter(x=>x>=0).join(','));}assert(positions.size>50);
+ctx.holdpercent(50);ctx.steps(8);assert.equal(ctx.core.holdCount(),4);assert.equal(controls['hold-count'][1],'NEXT 4/8');
+const holdSaved=ctx.getvalueof()[0];ctx.holdpercent(0);ctx.setvalueof(holdSaved);assert.equal(ctx.core.holdPercent,50);
+ctx.setvalueof(JSON.stringify({version:3,pool:defaults.pool,steps:defaults.steps,seed:1234}));assert.equal(ctx.core.holdPercent,25);
+console.log('PASS: exact Hold quotas for all 16 lengths x 101 percentages, inactive-step preservation, shuffled placement, 100% with empty pool, HOLD state restore/migration and count label');

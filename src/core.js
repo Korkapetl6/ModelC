@@ -1,5 +1,5 @@
 /* Independent sample command sequencer. MIT. ES5 for Max 8. */
-function Compass(){this.steps=[1,14,9,2,13,14,0,10,9,14,10,15,10,14,1,10];this.pool=[100,100,100,0,0,100,100,100,100,100,100,0,0,100,100,100];this.count=16;this.baseDivision=4;this.seed=1234;this.start=0;this.end=1;this.duration=1000;this.reset();}
+function Compass(){this.steps=[1,14,9,2,13,14,0,10,9,14,10,15,10,14,1,10];this.holdPercent=25;this.pool=[0,100,100,0,0,100,100,100,100,100,100,0,0,100,100,100];this.count=16;this.baseDivision=4;this.seed=1234;this.start=0;this.end=1;this.duration=1000;this.reset();}
 Compass.prototype.random=function(){var s=this.rng|0;s^=s<<13;s^=s>>>17;s^=s<<5;this.rng=s>>>0;return this.rng/4294967296;};
 Compass.prototype.reset=function(){this.rng=this.seed||1;this.index=-1;this.division=this.baseDivision;this.lo=this.start*this.duration;this.hi=Math.max(this.lo+1,this.end*this.duration);this.rate=1;return this.head(this.lo);};
 Compass.prototype.head=function(p){return {lo:this.lo,hi:this.hi,rate:this.rate,pos:Math.max(this.lo,Math.min(this.hi-.01,p))};};
@@ -11,15 +11,23 @@ Compass.prototype.command=function(c){var rates=[-2,-1,-.5,.5,1,2],p=null,i=rate
  case 9:this.division=Math.min(16,this.division*2);return null;case 10:this.division=Math.max(1,this.division/2);return null;case 11:this.division=16;return null;case 12:this.division=1;return null;case 13:this.index=Math.floor(this.random()*this.count);return null;
  case 14:return {fade:14};case 15:return {fade:15};default:return null;}
  var h=this.head(p===null?this.lo:p);h.seek=p!==null;return h;};
+Compass.prototype.holdCount=function(){return Math.round(this.count*Math.max(0,Math.min(100,Number(this.holdPercent)||0))/100);};
 Compass.prototype.randomize=function(){
- var weights=[],total=0,i,j;
- for(i=0;i<16;i++){var w=Number(this.pool[i]);w=isFinite(w)?Math.max(0,Math.min(100,w)):0;weights.push(w);total+=w;}
- if(total<=0)return false;
- this.seed=1+Math.floor(this.random()*65534);this.rng=this.seed;
- for(i=0;i<16;i++){var draw=this.random()*total;
-  for(j=0;j<16;j++){if(weights[j]<=0)continue;if(draw<weights[j]){this.steps[i]=j;break;}draw-=weights[j];}
+ var weights=[0],total=0,i,j,n=this.count,holds=this.holdCount(),slots=[],next=this.steps.slice();
+ for(i=1;i<16;i++){var w=Number(this.pool[i]);w=isFinite(w)?Math.max(0,Math.min(100,w)):0;weights.push(w);total+=w;}
+ if(holds<n&&total<=0)return false;
+ this.seed=1+(this.seed%65535);this.rng=this.seed;
+ // Advance beyond correlated first outputs of nearby 16-bit seeds.
+ for(i=0;i<16;i++)this.random();
+ for(i=0;i<n;i++)slots.push(i);
+ // Uniformly shuffle active positions, then reserve exactly the requested number for Hold.
+ for(i=n-1;i>0;i--){j=Math.floor(this.random()*(i+1));var tmp=slots[i];slots[i]=slots[j];slots[j]=tmp;}
+ for(i=0;i<n;i++){
+  if(i<holds){next[slots[i]]=0;continue;}
+  var draw=this.random()*total;
+  for(j=1;j<16;j++){if(weights[j]<=0)continue;if(draw<weights[j]){next[slots[i]]=j;break;}draw-=weights[j];}
  }
- return true;
+ this.steps=next;return true;
 };
 Compass.prototype.fadeValue=function(command,phase){phase=Math.max(0,Math.min(1,phase));return command===14?1-phase:(command===15?phase:1);};
 if(typeof module!=='undefined')module.exports=Compass;

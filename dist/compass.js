@@ -11,7 +11,8 @@ function scalar(key){var v=song.get(key);return Number(v instanceof Array?v[0]:v
 function initialize(){if(ready)return;try{song=new LiveAPI(null,'live_set');own=new LiveAPI(null,'this_device');}catch(e){status('Open in Ableton Live 11 with Max for Live.');return;}
  ready=true;outlet(0,'bind',String(name));task=new Task(tick,this);task.interval=10;task.repeat();syncUI();
  scanTask=new Task(scan,this);scanTask.interval=500;scanTask.repeat();scan();}
-function syncUI(){for(var i=0;i<16;i++){ui('step'+i,core.steps[i]);ui('pool'+i,core.pool[i]);}ui('seed',core.seed);}
+function holdHint(){text('hold-count','NEXT '+core.holdCount()+'/'+core.count);}
+function syncUI(){for(var i=0;i<16;i++){ui('step'+i,core.steps[i]);if(i>0)ui('pool'+i,core.pool[i]);}ui('holdpercent',core.holdPercent);ui('seed',core.seed);holdHint();}
 function value(api,key){var a=api.get(key);return a instanceof Array?a[0]:a;}
 function objectId(a){for(var i=0;i<a.length-1;i++)if(a[i]==='id')return Number(a[i+1]);return Number(a[0])||0;}
 function ids(a){var r=[];for(var i=0;i<a.length-1;i++)if(a[i]==='id')r.push(Number(a[++i]));return r;}
@@ -68,8 +69,9 @@ function tick(){if(!ready)return;var now=Date.now(),dt=lastWall?Math.min(.1,(now
  text('playing','Step '+(core.index+1)+' | '+core.rate+'x | '+core.division+'/beat'+(run?' | PLAY':' | STOP'));
 }
 function step(i,x){core.steps[clip(i,0,15)|0]=clip(x,0,15)|0;notifyclients();}
+function holdpercent(x){core.holdPercent=clip(x,0,100);holdHint();notifyclients();}
 function pool(i,x){core.pool[clip(i,0,15)|0]=clip(x,0,100);notifyclients();}
-function steps(x){core.count=clip(x,1,16)|0;notifyclients();}
+function steps(x){core.count=clip(x,1,16)|0;holdHint();notifyclients();}
 function division(x){core.baseDivision=1<<(clip(x,0,4)|0);core.division=core.baseDivision;notifyclients();}
 function seed(x){core.seed=clip(x,1,65535)|0;core.rng=core.seed;notifyclients();}
 function regionstart(x){core.start=Math.min(clip(x,0,99.9)/100,core.end-.001);reset();notifyclients();}
@@ -81,8 +83,8 @@ function enable(x){enabled=Number(x)?1:0;}
 function deviceactive(x){deviceOn=Number(x)?1:0;}
 function reset(){var h=core.reset();h.seek=true;transition(h);fadeReset();if(lastBeat!==null)nextBeat=lastBeat;}
 function publish(id,v){var o=this.patcher.getnamed(id);if(o)o.message('int',v);}
-function randomize(){if(!core.randomize()){status('All random weights are 0%. Set at least one above 0%.');return;}for(var i=0;i<16;i++)publish('step'+i,core.steps[i]);publish('seed',core.seed);notifyclients();reset();}
-function getvalueof(){return [JSON.stringify({version:3,steps:core.steps,pool:core.pool,seed:core.seed})];}
-function setvalueof(){try{var s=JSON.parse(arrayfromargs(arguments).join(' '));if(s.version!==1&&s.version!==2&&s.version!==3)return;
- for(var i=0;i<16;i++){if(s.steps&&s.steps.length===16)core.steps[i]=clip(s.steps[i],0,15)|0;if(s.pool&&s.pool.length===16)core.pool[i]=s.version<3?(s.pool[i]?100:0):clip(s.pool[i],0,100);}core.seed=clip(s.seed,1,65535)|0;syncUI();if(ready)reload();}catch(e){status('Could not restore saved sample state.');}}
+function randomize(){if(!core.randomize()){status('No command weights. Enable a command or set HOLD to 100%.');return;}for(var i=0;i<16;i++)publish('step'+i,core.steps[i]);publish('seed',core.seed);notifyclients();reset();status('Randomized: '+core.holdCount()+' Hold / '+core.count+' steps.');}
+function getvalueof(){return [JSON.stringify({version:4,holdPercent:core.holdPercent,steps:core.steps,pool:core.pool,seed:core.seed})];}
+function setvalueof(){try{var s=JSON.parse(arrayfromargs(arguments).join(' '));if(s.version!==1&&s.version!==2&&s.version!==3&&s.version!==4)return;core.holdPercent=s.version>=4?clip(s.holdPercent,0,100):25;
+ for(var i=0;i<16;i++){if(s.steps&&s.steps.length===16)core.steps[i]=clip(s.steps[i],0,15)|0;if(s.pool&&s.pool.length===16)core.pool[i]=s.version<3?(s.pool[i]?100:0):clip(s.pool[i],0,100);}core.pool[0]=0;core.seed=clip(s.seed,1,65535)|0;syncUI();if(ready)reload();}catch(e){status('Could not restore saved sample state.');}}
 function notifydeleted(){if(task)task.cancel();if(scanTask)scanTask.cancel();if(loadTimeout)loadTimeout.cancel();}
