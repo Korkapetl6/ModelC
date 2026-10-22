@@ -592,8 +592,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -695,8 +695,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -798,8 +798,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -901,8 +901,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -1004,8 +1004,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -1107,8 +1107,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -1210,8 +1210,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -1313,8 +1313,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -1416,8 +1416,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -1519,8 +1519,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -1622,8 +1622,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -1725,8 +1725,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -1828,8 +1828,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -1931,8 +1931,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -2034,8 +2034,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -2137,8 +2137,8 @@
                 "Clock fastest",
                 "Clock slowest",
                 "Step random",
-                "Pan left",
-                "Pan right"
+                "Fade out",
+                "Fade in"
               ]
             }
           }
@@ -4356,7 +4356,7 @@
             73.0,
             21.0
           ],
-          "text": "PAN L",
+          "text": "FADE OUT",
           "varname": "pool14",
           "numinlets": 1,
           "numoutlets": 2,
@@ -4374,8 +4374,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Pan left",
-              "parameter_shortname": "Pool Pan left",
+              "parameter_longname": "Pool Fade out",
+              "parameter_shortname": "Pool Fade out",
               "parameter_type": 2,
               "parameter_mmin": 0,
               "parameter_mmax": 1,
@@ -4390,7 +4390,7 @@
               ]
             }
           },
-          "texton": "PAN L",
+          "texton": "FADE OUT",
           "mode": 1,
           "textcolor": [
             0.91,
@@ -4467,7 +4467,7 @@
             73.0,
             21.0
           ],
-          "text": "PAN R",
+          "text": "FADE IN",
           "varname": "pool15",
           "numinlets": 1,
           "numoutlets": 2,
@@ -4485,8 +4485,8 @@
           ],
           "saved_attribute_attributes": {
             "valueof": {
-              "parameter_longname": "Pool Pan right",
-              "parameter_shortname": "Pool Pan right",
+              "parameter_longname": "Pool Fade in",
+              "parameter_shortname": "Pool Fade in",
               "parameter_type": 2,
               "parameter_mmin": 0,
               "parameter_mmax": 1,
@@ -4501,7 +4501,7 @@
               ]
             }
           },
-          "texton": "PAN R",
+          "texton": "FADE IN",
           "mode": 1,
           "textcolor": [
             0.91,
@@ -4651,7 +4651,7 @@
             100.0,
             22.0
           ],
-          "text": "route choose load bind channels bounds edge rate seek fade loadgate master pan start clear",
+          "text": "route choose load bind channels bounds edge rate seek fade loadgate master stepenv start clear",
           "numinlets": 1,
           "numoutlets": 15
         }
@@ -7553,7 +7553,22 @@
       },
       {
         "box": {
-          "id": "pan",
+          "id": "envmessage",
+          "maxclass": "message",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "$1, $2 $3",
+          "numinlets": 2,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "envline",
           "maxclass": "newobj",
           "patching_rect": [
             0.0,
@@ -7561,9 +7576,24 @@
             100.0,
             22.0
           ],
-          "text": "unpack f f f",
-          "numinlets": 1,
-          "numoutlets": 3
+          "text": "line~ 1.",
+          "numinlets": 2,
+          "numoutlets": 2
+        }
+      },
+      {
+        "box": {
+          "id": "stepenv",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "rampsmooth~ 64 64",
+          "numinlets": 3,
+          "numoutlets": 1
         }
       },
       {
@@ -7579,36 +7609,6 @@
           "text": "plugout~",
           "numinlets": 2,
           "numoutlets": 0
-        }
-      },
-      {
-        "box": {
-          "id": "panpack0",
-          "maxclass": "newobj",
-          "patching_rect": [
-            0.0,
-            200.0,
-            100.0,
-            22.0
-          ],
-          "text": "pack 1. 15.",
-          "numinlets": 2,
-          "numoutlets": 1
-        }
-      },
-      {
-        "box": {
-          "id": "panline0",
-          "maxclass": "newobj",
-          "patching_rect": [
-            0.0,
-            200.0,
-            100.0,
-            22.0
-          ],
-          "text": "line~ 1.",
-          "numinlets": 2,
-          "numoutlets": 2
         }
       },
       {
@@ -7658,7 +7658,7 @@
       },
       {
         "box": {
-          "id": "amp0panline0",
+          "id": "amp0stepenv",
           "maxclass": "newobj",
           "patching_rect": [
             0.0,
@@ -7669,36 +7669,6 @@
           "text": "*~",
           "numinlets": 2,
           "numoutlets": 1
-        }
-      },
-      {
-        "box": {
-          "id": "panpack1",
-          "maxclass": "newobj",
-          "patching_rect": [
-            0.0,
-            200.0,
-            100.0,
-            22.0
-          ],
-          "text": "pack 1. 15.",
-          "numinlets": 2,
-          "numoutlets": 1
-        }
-      },
-      {
-        "box": {
-          "id": "panline1",
-          "maxclass": "newobj",
-          "patching_rect": [
-            0.0,
-            200.0,
-            100.0,
-            22.0
-          ],
-          "text": "line~ 1.",
-          "numinlets": 2,
-          "numoutlets": 2
         }
       },
       {
@@ -7748,7 +7718,7 @@
       },
       {
         "box": {
-          "id": "amp1panline1",
+          "id": "amp1stepenv",
           "maxclass": "newobj",
           "patching_rect": [
             0.0,
@@ -9450,7 +9420,7 @@
             11
           ],
           "destination": [
-            "pan",
+            "envmessage",
             0
           ]
         }
@@ -9458,11 +9428,11 @@
       {
         "patchline": {
           "source": [
-            "pan",
+            "envmessage",
             0
           ],
           "destination": [
-            "panpack0",
+            "envline",
             0
           ]
         }
@@ -9470,23 +9440,11 @@
       {
         "patchline": {
           "source": [
-            "pan",
-            2
-          ],
-          "destination": [
-            "panpack0",
-            1
-          ]
-        }
-      },
-      {
-        "patchline": {
-          "source": [
-            "panpack0",
+            "envline",
             0
           ],
           "destination": [
-            "panline0",
+            "stepenv",
             0
           ]
         }
@@ -9570,7 +9528,7 @@
             0
           ],
           "destination": [
-            "amp0panline0",
+            "amp0stepenv",
             0
           ]
         }
@@ -9578,11 +9536,11 @@
       {
         "patchline": {
           "source": [
-            "panline0",
+            "stepenv",
             0
           ],
           "destination": [
-            "amp0panline0",
+            "amp0stepenv",
             1
           ]
         }
@@ -9590,7 +9548,7 @@
       {
         "patchline": {
           "source": [
-            "amp0panline0",
+            "amp0stepenv",
             0
           ],
           "destination": [
@@ -9602,42 +9560,6 @@
       {
         "patchline": {
           "source": [
-            "pan",
-            1
-          ],
-          "destination": [
-            "panpack1",
-            0
-          ]
-        }
-      },
-      {
-        "patchline": {
-          "source": [
-            "pan",
-            2
-          ],
-          "destination": [
-            "panpack1",
-            1
-          ]
-        }
-      },
-      {
-        "patchline": {
-          "source": [
-            "panpack1",
-            0
-          ],
-          "destination": [
-            "panline1",
-            0
-          ]
-        }
-      },
-      {
-        "patchline": {
-          "source": [
             "head0",
             1
           ],
@@ -9714,7 +9636,7 @@
             0
           ],
           "destination": [
-            "amp1panline1",
+            "amp1stepenv",
             0
           ]
         }
@@ -9722,11 +9644,11 @@
       {
         "patchline": {
           "source": [
-            "panline1",
+            "stepenv",
             0
           ],
           "destination": [
-            "amp1panline1",
+            "amp1stepenv",
             1
           ]
         }
@@ -9734,7 +9656,7 @@
       {
         "patchline": {
           "source": [
-            "amp1panline1",
+            "amp1stepenv",
             0
           ],
           "destination": [
@@ -9762,7 +9684,7 @@
       "autolocalize": 0
     },
     "description": "StepCompass sample command sequencer. Independent sample-only device.",
-    "digest": "StepCompass M4L v0.1.1",
+    "digest": "StepCompass M4L v0.1.2",
     "autosave": 0,
     "parameters": {
       "enable": [
@@ -9961,13 +9883,13 @@
         0
       ],
       "pool14": [
-        "Pool Pan left",
-        "Pool Pan left",
+        "Pool Fade out",
+        "Pool Fade out",
         0
       ],
       "pool15": [
-        "Pool Pan right",
-        "Pool Pan right",
+        "Pool Fade in",
+        "Pool Fade in",
         0
       ],
       "data": [

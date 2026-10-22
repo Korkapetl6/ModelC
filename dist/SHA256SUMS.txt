@@ -1,2 +1,2 @@
-f81cd402fb37c31cda78493251cc0154c1acc629eeadb8108c922f0cacfd0674  StepCompass-M4L-v0.1.1.amxd
-22ab55855e534a6a88f63223cbea6247ec30b69e2407adf3c5d50834864e1b87  StepCompass-M4L-v0.1.1-complete.zip
+345c62f83b33fff731310edaee530ec8582fe45cfe43ff08ef91c8c458e4ea15  StepCompass-M4L-v0.1.2.amxd
+3032f70c0318df718999c9d322f5469c32d9e6327603ce12eda86a20eb7b1d03  StepCompass-M4L-v0.1.2-complete.zip

@@ -24,3 +24,16 @@ nodes[100].devices=['id',10,'id',11,'id',20];nodes[11]={class_name:'OriginalSimp
 ctx.freeplay(0);ctx.tick();assert(!ctx.wasRunning);song.is_playing=1;ctx.tick();assert(ctx.wasRunning);song.current_song_time=.25;ctx.tick();assert(ctx.core.index>=1);
 const saved=ctx.getvalueof()[0];assert(!('file' in JSON.parse(saved)));ctx.setvalueof(saved);assert(ctx.requestedSignature.includes('/samples/nearest.wav'));ctx.notifydeleted();assert(ctx.scanTask.cancelled);
 console.log('PASS: mocked Live API nearest Simpler, marker offsets, replacement races, removal/empty-source mute, restore, transport and fade handshake');
+// Per-step fades must not latch into Hold, alter Output dB, or retain a previous ramp.
+ctx.gateended();ctx.loaded();ctx.volume(-12);ctx.core.count=4;ctx.core.baseDivision=4;ctx.core.steps=[14,0,15,0];ctx.wasRunning=false;ctx.lastBeat=null;song.is_playing=1;song.tempo=120;song.current_song_time=0;
+function env(){return messages.filter(m=>m[1]==='stepenv').pop().slice(2);}
+ctx.tick();assert.deepEqual(env(),[1,0,125]);assert.equal(ctx.db,-12);
+song.current_song_time=.25;ctx.tick();assert.deepEqual(env(),[1,1,125]);
+song.current_song_time=.5;ctx.tick();assert.deepEqual(env(),[0,1,125]);
+song.current_song_time=.75;ctx.tick();assert.deepEqual(env(),[1,1,125]);
+ctx.core.steps=[14,14,15,15];song.current_song_time=0;ctx.tick();assert.deepEqual(env(),[1,0,125]);song.current_song_time=.25;ctx.tick();assert.deepEqual(env(),[1,0,125]);song.current_song_time=.5;ctx.tick();assert.deepEqual(env(),[0,1,125]);song.current_song_time=.75;ctx.tick();assert.deepEqual(env(),[0,1,125]);
+// Clock changes change fade length; tempo changes retime the remaining beat fraction.
+ctx.core.steps=[9,14,0,0];song.current_song_time=0;ctx.tick();assert.equal(ctx.core.division,8);song.current_song_time=.125;ctx.tick();assert.deepEqual(env(),[1,0,62.5]);song.tempo=60;song.current_song_time=.1875;ctx.tick();assert.deepEqual(env(),[.5,0,62.5]);
+ctx.reset();assert.deepEqual(env(),[1,1,0]);assert.equal(ctx.db,-12);
+assert.equal(ctx.core.fadeValue(14,0),1);assert.equal(ctx.core.fadeValue(14,1),0);assert.equal(ctx.core.fadeValue(15,0),0);assert.equal(ctx.core.fadeValue(15,1),1);assert.equal(ctx.core.fadeValue(0,1),1);
+console.log('PASS: fade endpoints, Hold restores full gain, consecutive fades restart, unchanged master volume, clock/tempo retiming and reset');

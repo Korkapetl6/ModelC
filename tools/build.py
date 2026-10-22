@@ -4,11 +4,11 @@ from pathlib import Path
 from patch import Patch,voice_patch,BG,INK,ACCENT,BUTTON
 from amxd_container import Entry,frozen_amxd,unpack_frozen
 ROOT=Path(__file__).resolve().parents[1]
-NAMES=['Hold','Forward','Reverse','Rate +','Rate -','Rate random','Loop start','Position','Loop random','Clock +','Clock -','Clock fastest','Clock slowest','Step random','Pan left','Pan right']
-SHORT=['--','FWD','REV','R+','R-','R?','HOME','POS?','LOOP?','C+','C-','C16','C1','STEP?','PAN L','PAN R']
+NAMES=['Hold','Forward','Reverse','Rate +','Rate -','Rate random','Loop start','Position','Loop random','Clock +','Clock -','Clock fastest','Clock slowest','Step random','Fade out','Fade in']
+SHORT=['--','FWD','REV','R+','R-','R?','HOME','POS?','LOOP?','C+','C-','C16','C1','STEP?','FADE OUT','FADE IN']
 DEFAULT=[1,0,0,7,0,0,2,0,0,8,0,0,1,0,6,0]
 p=Patch(1430,169,True)
-p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.1',autosave=0)
+p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.2',autosave=0)
 p.label('title','STEP COMPASS / SIMPLER',[10.,4.,240.,20.],fontface=1)
 p.box('display','jsui',filename='display.js',rect=[10.,30.,240.,128.],presentation=1,presentation_rect=[10.,30.,240.,128.],numinlets=1,numoutlets=0)
 p.label('status','Place directly after Simpler. Drop a sample into Simpler.',[260.,5.,730.,20.],varname='status')
@@ -37,7 +37,7 @@ p.box('ready',text='live.thisdevice',numinlets=1,numoutlets=3)
 p.box('init','message','initialize',numinlets=2,numoutlets=1);p.connect('ready',0,'init');p.connect('init',0,'defer')
 p.box('active',text='prepend deviceactive',numinlets=1,numoutlets=1);p.connect('ready',1,'active');p.connect('active',0,'defer')
 p.box('data',text='pattr CompassData @bindto engine @parameter_enable 1',varname='CompassData',numinlets=1,numoutlets=3,saved_object_attributes={'parameter_enable':1,'parameter_mappable':0},saved_attribute_attributes={'valueof':{'parameter_type':3,'parameter_invisible':1,'parameter_longname':'CompassData','parameter_shortname':'CompassData'}});p.params['data']=['CompassData','CompassData',0]
-protocol=['choose','load','bind','channels','bounds','edge','rate','seek','fade','loadgate','master','pan','start','clear']
+protocol=['choose','load','bind','channels','bounds','edge','rate','seek','fade','loadgate','master','stepenv','start','clear']
 p.box('route',text='route '+' '.join(protocol),numinlets=1,numoutlets=len(protocol)+1);p.connect('engine',0,'route')
 def route(name,dest,inlet=0):p.connect('route',protocol.index(name),dest,inlet)
 p.box('replace',text='prepend replace',numinlets=1,numoutlets=1);route('load','replace')
@@ -64,15 +64,17 @@ for i in range(2):
 p.box('loadgate',text='line~ 0.',numinlets=2,numoutlets=2);route('loadgate','loadgate')
 p.box('gatedone','message','gateended',numinlets=2,numoutlets=1);p.box('gatevalue',text='snapshot~',numinlets=2,numoutlets=1);p.connect('loadgate',0,'gatevalue');p.connect('loadgate',1,'gatevalue');p.box('gatezero',text='if $f1 <= 0.000001 then bang',numinlets=1,numoutlets=1);p.connect('gatevalue',0,'gatezero');p.connect('gatezero',0,'gatedone');p.connect('gatedone',0,'defer')
 p.box('master',text='line~ 0.',numinlets=2,numoutlets=2);route('master','master')
-p.box('pan',text='unpack f f f',numinlets=1,numoutlets=3);route('pan','pan')
+# Each step resets the envelope; a new line message cancels the preceding ramp.
+p.box('envmessage','message','$1, $2 $3',numinlets=2,numoutlets=1);route('stepenv','envmessage')
+p.box('envline',text='line~ 1.',numinlets=2,numoutlets=2);p.connect('envmessage',0,'envline')
+# Short smoothing only on discontinuities (e.g. Fade Out -> Hold), not a second musical fade.
+p.box('stepenv',text='rampsmooth~ 64 64',numinlets=3,numoutlets=1);p.connect('envline',0,'stepenv')
 p.box('output',text='plugout~',numinlets=2,numoutlets=0)
 for ch in range(2):
- p.box('panpack'+str(ch),text='pack 1. 15.',numinlets=2,numoutlets=1);p.connect('pan',ch,'panpack'+str(ch));p.connect('pan',2,'panpack'+str(ch),1)
- p.box('panline'+str(ch),text='line~ 1.',numinlets=2,numoutlets=2);p.connect('panpack'+str(ch),0,'panline'+str(ch))
  p.box('sum'+str(ch),text='+~',numinlets=2,numoutlets=1)
  for i in range(2):p.connect('head'+str(i),ch,'sum'+str(ch),i)
  prev='sum'+str(ch)
- for kind in ['master','loadgate','panline'+str(ch)]:
+ for kind in ['master','loadgate','stepenv']:
   ident='amp'+str(ch)+kind;p.box(ident,text='*~',numinlets=2,numoutlets=1);p.connect(prev,0,ident);p.connect(kind,0,ident,1);prev=ident
  p.connect(prev,0,'output',ch)
 p.data['parameters']={**p.params,'inherited_shortname':1}
@@ -81,5 +83,5 @@ dist=ROOT/'dist';dist.mkdir(exist_ok=True);blob=(json.dumps({'patcher':p.data},i
 entries=[Entry('StepCompass.amxd',blob+b'\0',b'JSON',17)]
 for n in ['compass.js','core.js','display.js']:
  data=(ROOT/'src'/n).read_bytes();entries.append(Entry(n,data));(dist/n).write_bytes(data)
-amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.1.amxd').write_bytes(amxd)
+amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.2.amxd').write_bytes(amxd)
 print('Built frozen AMXD:',len(amxd),'bytes')

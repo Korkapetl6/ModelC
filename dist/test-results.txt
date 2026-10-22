@@ -1,3 +1,5 @@
 PASS: command bounds, seed repeatability, 20000 commands, random pool
 PASS: mocked Live API nearest Simpler, marker offsets, replacement races, removal/empty-source mute, restore, transport and fade handshake
+PASS: fade endpoints, Hold restores full gain, consecutive fades restart, unchanged master volume, clock/tempo retiming and reset
 PASS: frozen AMXD roundtrip, embedded scripts, patch port references, 16 step menus, two DSP heads and startup gains
+PASS: fade command labels, resetting native line~ envelope and smoothed stereo output wiring

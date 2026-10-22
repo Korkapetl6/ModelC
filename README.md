@@ -1,4 +1,4 @@
-# StepCompass M4L v0.1.1
+# StepCompass M4L v0.1.2
 
 Odtwarzacz sampla z Simplera z 16-krokowym sekwencerem poleceń.
 Dla Ableton Live 11 + Max for Live / Max 8, również macOS Intel.
@@ -9,7 +9,7 @@ Nie zawiera kodu Compass ani silnika softcut.
 ## Pierwsze uruchomienie
 
 1. Na ścieżce MIDI umieść **Simpler** i wczytaj do niego sample.
-2. Pobierz **StepCompass-M4L-v0.1.1.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
+2. Pobierz **StepCompass-M4L-v0.1.2.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
    W racku oba urządzenia muszą znajdować się w tym samym łańcuchu.
 3. Ustaw początek i koniec sampla w Simplerze. StepCompass automatycznie pobierze ten zakres.
 4. Poczekaj, aż status pokaże nazwę pliku i zakres, np. `Simpler 1.00–4.00 s | ready`.
@@ -28,7 +28,7 @@ Do instalacji nie jest potrzebny Max Standalone ani kompilator.
 
 - **ON / OFF:** wycisza/włącza odtwarzanie.
 - **LIVE PLAY / FREE PLAY:** transport Live lub granie także przy zatrzymanym transporcie.
-- **RESET:** początek regionu, normalny kierunek i szybkość, środek panoramy, początkowy zegar i seed.
+- **RESET:** początek regionu, normalny kierunek i szybkość, pełną głośność kroku, początkowy zegar i seed.
   Nie kasuje sampla ani poleceń.
 - **RANDOMIZE:** nowa sekwencja z podświetlonych poleceń w sekcji RANDOM POOL.
 - **Start % / End %:** dodatkowy region wewnątrz zakresu pobranego z Simplera. 0–100% oznacza cały zaznaczony w Simplerze zakres. Loop random pozostaje wewnątrz tego regionu.
@@ -50,7 +50,16 @@ Do instalacji nie jest potrzebny Max Standalone ani kompilator.
 | Clock + / − | Podwój / podziel przez dwa częstotliwość poleceń |
 | Clock fastest / slowest | 16 / 1 polecenie na ćwierćnutę |
 | Step random | Losowa pozycja sekwencera; następny tick przechodzi do następnego kroku |
-| Pan left / right | Losowe przesunięcie panoramy |
+| Fade out | W ciągu jednego kroku: pełna głośność → cisza |
+| Fade in | W ciągu jednego kroku: cisza → pełna głośność |
+
+FADE OUT i FADE IN zastępują PAN L/PAN R (także w puli losowania). Fade działa tylko na
+przypisany krok. Następny krok, nawet Hold, wraca do pełnej głośności ustawionej pokrętłem
+Out dB, chyba że sam ma Fade In/Out. Kolejne kroki z fade zaczynają własną obwiednię od nowa.
+Długość fade wynika z aktualnego tempa i zegara kroków; nie z pokrętła **Fade ms**, które
+nadal służy do wygładzania pętli i skoków sampla. Przy nagłym powrocie głośności zastosowano
+krótkie wygładzenie 64 próbek (około 1,5 ms przy 44,1 kHz), aby ograniczyć kliknięcia.
+W zapisanych sekwencjach stare polecenia Pan left/right stają się Fade out/in.
 
 ## Ważne różnice i ograniczenia prototypu
 
