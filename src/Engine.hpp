@@ -77,7 +77,11 @@ public:
   void attach(const Sample *s) {
     sample = s;
     gate = 0;
+    // A new file cannot inherit heads or queued regions from the previous buffer.
+    const bool playing = wasPlaying;
+    wasPlaying = false;
     reset();
+    wasPlaying = playing;
   }
   void reset() {
     rng = unsigned(params[Seed]);

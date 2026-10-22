@@ -128,6 +128,18 @@ int main() {
     x.parameter(Steps, std::numeric_limits<float>::infinity());
     block(x);
   }
+  {
+    Engine reload;
+    reload.attach(&s);
+    block(reload);
+    reload.command(Reverse);
+    Sample tiny = constant(32);
+    reload.attach(&tiny);
+    assert(reload.loopStart() == 0 && reload.loopEnd() == 32 && reload.rate() == 1);
+    block(reload, 128, true, 128);
+    assert(reload.loopEnd() == 32);
+    std::cout << "PASS: new short sample discards old heads and queued regions\n";
+  }
   Engine a, b;
   a.attach(&ramp);
   b.attach(&ramp);

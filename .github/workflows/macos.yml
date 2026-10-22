@@ -4,6 +4,9 @@ on:
   push:
     branches: [stepcompass-v0.1]
     paths-ignore: ['release/**']
+concurrency:
+  group: stepcompass-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
