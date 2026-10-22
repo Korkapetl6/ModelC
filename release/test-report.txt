@@ -2,5 +2,6 @@ PASS: 16 WAV/AIFF format fixtures, channels, rate and truncated-file rejection
 PASS: stopped silence, Free Play, output gain and stereo preservation
 PASS: tempo clock, 1/4-beat spacing, transport seek and clock commands
 PASS: forward/reverse loop seam jumps <0.02 at 44.1/48/96 kHz (ramp fixture)
+PASS: new short sample discards old heads and queued regions
 PASS: 4500 automation/command blocks, bounds, finite output, deterministic seed
 PASS: plugin output, state, concurrent reloads, missing sample silence
