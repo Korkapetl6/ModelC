@@ -236,12 +236,12 @@ public:
     }
     if (x >= 24 && x < 936 && y >= 230 && y <= 292) {
       selected = std::min(15, int((x - 24) / 57));
-      if (e.button == 3)
+      if (e.button == DGL_NAMESPACE::kMouseButtonRight)
         clickChange(Step0 + selected, Hold);
       repaint();
       return true;
     }
-    if (e.button != 1)
+    if (e.button != DGL_NAMESPACE::kMouseButtonLeft)
       return false;
     if (y >= 20 && y <= 52) {
       if (x >= 444 && x < 548)
