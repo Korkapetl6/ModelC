@@ -1,6 +1,7 @@
 autowatch=0;inlets=1;outlets=2;include('core.js');
 var core=new Compass(),name=jsarguments[1],buffer=new Buffer(name),song=null,own=null,task=null,scanTask=null,ready=false,enabled=1,free=1,deviceOn=1;
 var file='',wanted=null,pendingSource=null,requestedSignature='',loadPhase='',loadedOK=false,loadTimeout=null,freeBeat=0,lastWall=0,lastBeat=null,nextBeat=0,wasRunning=false;
+var rateSlope=0,rateGoal=1,rateActual=1;
 var currentFade=0,fadeStart=0,fadeEnd=0,previousTempo=120;
 var tickCount=0,smooth=20,db=-6,activeHead=0,busy=false,acks=[false,false],queued=null,phase=[0,0],lastConfig=null,frameLength=0,channels=1;
 function ui(id,v){var o=this.patcher.getnamed(id);if(o)o.message('set',v);}
@@ -12,7 +13,7 @@ function initialize(){if(ready)return;try{song=new LiveAPI(null,'live_set');own=
  ready=true;outlet(0,'bind',String(name));task=new Task(tick,this);task.interval=10;task.repeat();syncUI();
  scanTask=new Task(scan,this);scanTask.interval=500;scanTask.repeat();scan();}
 function holdHint(){text('hold-count','NEXT '+core.holdCount()+'/'+core.count);}
-function syncUI(){for(var i=0;i<16;i++){ui('step'+i,core.steps[i]);if(i>0)ui('pool'+i,core.pool[i]);}ui('holdpercent',core.holdPercent);ui('seed',core.seed);holdHint();}
+function syncUI(){for(var i=0;i<16;i++){ui('step'+i,core.steps[i]);if(i>0)ui('pool'+i,core.pool[i]);}ui('rateslope',rateSlope);ui('holdpercent',core.holdPercent);ui('seed',core.seed);holdHint();}
 function value(api,key){var a=api.get(key);return a instanceof Array?a[0]:a;}
 function objectId(a){for(var i=0;i<a.length-1;i++)if(a[i]==='id')return Number(a[i+1]);return Number(a[0])||0;}
 function ids(a){var r=[];for(var i=0;i<a.length-1;i++)if(a[i]==='id')r.push(Number(a[++i]));return r;}
@@ -45,10 +46,20 @@ function loaded(){if(loadPhase!=='read'||!pendingSource)return;if(loadTimeout)lo
  wanted=null;loadPhase='';var f=Number(buffer.framecount()),ms=Math.min(Number(buffer.length()),pendingSource.duration);
  if(!isFinite(ms)||ms<=0||f<32){silence();status('Empty or unsupported sample. Press RELOAD.');return;}
  core.duration=ms;frameLength=f;channels=buffer.channelcount()>1?2:1;outlet(0,'channels',channels);outlet(0,'bind',String(name));
- queued=null;var initial=core.reset();configure(0,initial);configure(1,initial);lastConfig=core.head(core.lo);loadedOK=true;lastBeat=null;wasRunning=false;
+ queued=null;var initial=core.reset();rateGoal=1;rateActual=1;outlet(0,'rate',1,0);configure(0,initial);configure(1,initial);lastConfig=core.head(core.lo);loadedOK=true;lastBeat=null;wasRunning=false;
  var wave=[];for(var i=0;i<200;i++){var p=Math.floor(i*f/200),v=buffer.peek(1,p,1);wave.push(Math.abs(Number(v)||0));}outlet(1,'wave',wave);
  status(file.split(/[\\/]/).pop()+' | Simpler '+(pendingSource.start/1000).toFixed(2)+'–'+((pendingSource.start+ms)/1000).toFixed(2)+' s | ready');outlet(0,'loadgate',1,30);}
-function configure(i,h){outlet(0,'bounds',i,h.lo,h.hi);outlet(0,'edge',i,1/Math.max(.000001,Math.min(.24,smooth*Math.abs(h.rate)/(h.hi-h.lo))),0);outlet(0,'rate',i,h.rate,0);outlet(0,'start',i,'startloop');outlet(0,'seek',i,h.pos);}
+function configure(i,h){outlet(0,'bounds',i,h.lo,h.hi);outlet(0,'edge',i,1/Math.max(.000001,Math.min(.24,smooth*Math.abs(h.rate)/(h.hi-h.lo))),0);outlet(0,'start',i,'startloop');outlet(0,'seek',i,h.pos);}
+// One audio-rate line~ is shared by both heads. Retargeting starts at its actual current output.
+function rateslope(x){rateSlope=clip(x,0,10000);notifyclients();}
+function ratevalue(x){rateActual=clip(x,-2,2);}
+function playCommand(h){
+ if(!loadedOK||loadPhase)return;
+ if(h.rate!==rateGoal){rateGoal=h.rate;outlet(0,'rate',rateGoal,rateSlope);}
+ // Rate commands must not seek, restart a head, or wait for a position crossfade.
+ if(h.seek===false)return;
+ transition(h);
+}
 function transition(h){if(!loadedOK||loadPhase)return;if(busy){queued=h;return;}
  if(!h.seek&&lastConfig)h.pos=lastConfig.lo+phase[activeHead]*(lastConfig.hi-lastConfig.lo);
  h.pos=clip(h.pos,h.lo,h.hi-.01);var next=1-activeHead;configure(next,h);busy=true;acks=[true,true];outlet(0,'fade',next,1,smooth);outlet(0,'fade',activeHead,0,smooth);activeHead=next;lastConfig=h;}
@@ -60,13 +71,13 @@ function tick(){if(!ready)return;var now=Date.now(),dt=lastWall?Math.min(.1,(now
  var playing=false,beat=0,tempo=120;try{playing=!!scalar('is_playing');tempo=scalar('tempo');beat=scalar('current_song_time');}catch(e){return;}
  if(free&&!playing){freeBeat+=dt*tempo/60;beat=freeBeat;}
  var run=!!(loadedOK&&!loadPhase&&enabled&&deviceOn&&(playing||free));
- if(run&&!wasRunning){var h=core.reset();h.seek=true;transition(h);fadeReset();nextBeat=beat;lastBeat=beat;}
- if(run&&lastBeat!==null&&(beat<lastBeat-.02||beat-lastBeat>.5)){h=core.reset();h.seek=true;transition(h);nextBeat=beat;}
- if(run){var ticks=0;while(beat+1e-8>=nextBeat&&ticks++<32){h=core.advance();if(h&&h.lo!==undefined)transition(h);var end=nextBeat+1/core.division;stepEnvelope(h&&h.fade?h.fade:0,nextBeat,end,beat,tempo);nextBeat=end;}}
+ if(run&&!wasRunning){var h=core.reset();h.seek=true;playCommand(h);fadeReset();nextBeat=beat;lastBeat=beat;}
+ if(run&&lastBeat!==null&&(beat<lastBeat-.02||beat-lastBeat>.5)){h=core.reset();h.seek=true;playCommand(h);nextBeat=beat;}
+ if(run){var ticks=0;while(beat+1e-8>=nextBeat&&ticks++<32){h=core.advance();if(h&&h.lo!==undefined)playCommand(h);var end=nextBeat+1/core.division;stepEnvelope(h&&h.fade?h.fade:0,nextBeat,end,beat,tempo);nextBeat=end;}}
  if(run&&currentFade&&tempo!==previousTempo)stepEnvelope(currentFade,fadeStart,fadeEnd,beat,tempo);previousTempo=tempo;
  if(run!==wasRunning){outlet(0,'master',run&&db>-60?Math.pow(10,db/20):0,20);wasRunning=run;}
  lastBeat=beat;if(++tickCount%5!==0)return;outlet(1,'state',core.index,core.count,core.start,core.end,core.division,core.rate,run?1:0);
- text('playing','Step '+(core.index+1)+' | '+core.rate+'x | '+core.division+'/beat'+(run?' | PLAY':' | STOP'));
+ text('playing','Step '+(core.index+1)+' | '+rateActual.toFixed(2)+'x'+(Math.abs(rateActual-rateGoal)>.01?' -> '+rateGoal+'x':'')+' | '+core.division+'/beat'+(run?' | PLAY':' | STOP'));
 }
 function step(i,x){core.steps[clip(i,0,15)|0]=clip(x,0,15)|0;notifyclients();}
 function holdpercent(x){core.holdPercent=clip(x,0,100);holdHint();notifyclients();}
@@ -81,10 +92,10 @@ function volume(x){db=clip(x,-60,6);outlet(0,'master',wasRunning&&db>-60?Math.po
 function freeplay(x){free=Number(x)?1:0;}
 function enable(x){enabled=Number(x)?1:0;}
 function deviceactive(x){deviceOn=Number(x)?1:0;}
-function reset(){var h=core.reset();h.seek=true;transition(h);fadeReset();if(lastBeat!==null)nextBeat=lastBeat;}
+function reset(){var h=core.reset();h.seek=true;playCommand(h);fadeReset();if(lastBeat!==null)nextBeat=lastBeat;}
 function publish(id,v){var o=this.patcher.getnamed(id);if(o)o.message('int',v);}
 function randomize(){if(!core.randomize()){status('No command weights. Enable a command or set HOLD to 100%.');return;}for(var i=0;i<16;i++)publish('step'+i,core.steps[i]);publish('seed',core.seed);notifyclients();reset();status('Randomized: '+core.holdCount()+' Hold / '+core.count+' steps.');}
-function getvalueof(){return [JSON.stringify({version:4,holdPercent:core.holdPercent,steps:core.steps,pool:core.pool,seed:core.seed})];}
-function setvalueof(){try{var s=JSON.parse(arrayfromargs(arguments).join(' '));if(s.version!==1&&s.version!==2&&s.version!==3&&s.version!==4)return;core.holdPercent=s.version>=4?clip(s.holdPercent,0,100):25;
+function getvalueof(){return [JSON.stringify({version:5,rateSlope:rateSlope,holdPercent:core.holdPercent,steps:core.steps,pool:core.pool,seed:core.seed})];}
+function setvalueof(){try{var s=JSON.parse(arrayfromargs(arguments).join(' '));if(s.version!==1&&s.version!==2&&s.version!==3&&s.version!==4&&s.version!==5)return;rateSlope=s.version>=5?clip(s.rateSlope,0,10000):0;core.holdPercent=s.version>=4?clip(s.holdPercent,0,100):25;
  for(var i=0;i<16;i++){if(s.steps&&s.steps.length===16)core.steps[i]=clip(s.steps[i],0,15)|0;if(s.pool&&s.pool.length===16)core.pool[i]=s.version<3?(s.pool[i]?100:0):clip(s.pool[i],0,100);}core.pool[0]=0;core.seed=clip(s.seed,1,65535)|0;syncUI();if(ready)reload();}catch(e){status('Could not restore saved sample state.');}}
 function notifydeleted(){if(task)task.cancel();if(scanTask)scanTask.cancel();if(loadTimeout)loadTimeout.cancel();}

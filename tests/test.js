@@ -45,7 +45,7 @@ for(let trial=0;trial<10000;trial++){assert(weighted.randomize());for(const comm
 assert(Math.abs(counts[0]/(counts[0]+counts[1])-2/3)<.01);
 weighted.pool.fill(0);let before=JSON.stringify(weighted);assert.equal(weighted.randomize(),false);assert.equal(JSON.stringify(weighted),before);
 ctx.pool(1,37.5);assert.equal(ctx.core.pool[1],37.5);ctx.pool(2,200);assert.equal(ctx.core.pool[2],100);ctx.pool(3,-5);assert.equal(ctx.core.pool[3],0);
-const weightedSaved=ctx.getvalueof()[0];assert.equal(JSON.parse(weightedSaved).version,4);ctx.pool(1,0);ctx.setvalueof(weightedSaved);assert.equal(ctx.core.pool[1],37.5);
+const weightedSaved=ctx.getvalueof()[0];assert.equal(JSON.parse(weightedSaved).version,5);ctx.pool(1,0);ctx.setvalueof(weightedSaved);assert.equal(ctx.core.pool[1],37.5);
 ctx.setvalueof(JSON.stringify({version:2,steps:defaults.steps,pool:[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],seed:1234}));assert.deepEqual(Array.from(ctx.core.pool),[0,0,100,0,100,0,100,0,100,0,100,0,100,0,100,0]);
 console.log('PASS: screenshot defaults, 160000 weighted draws (100:50), 0% exclusion, empty-pool no-op, clamping, fractional weight save/restore, legacy migration');
 // Every active length and integer percentage must have an exact quota, not a Bernoulli chance.
@@ -63,3 +63,23 @@ ctx.holdpercent(50);ctx.steps(8);assert.equal(ctx.core.holdCount(),4);assert.equ
 const holdSaved=ctx.getvalueof()[0];ctx.holdpercent(0);ctx.setvalueof(holdSaved);assert.equal(ctx.core.holdPercent,50);
 ctx.setvalueof(JSON.stringify({version:3,pool:defaults.pool,steps:defaults.steps,seed:1234}));assert.equal(ctx.core.holdPercent,25);
 console.log('PASS: exact Hold quotas for all 16 lengths x 101 percentages, inactive-step preservation, shuffled placement, 100% with empty pool, HOLD state restore/migration and count label');
+// Model native line~ target/time semantics, then verify the controller never resets its current value.
+let timeMs=0,rampStart=0,rampFrom=1,rampTo=1,rampDuration=0;
+function rateNow(){const t=rampDuration?Math.min(1,(timeMs-rampStart)/rampDuration):1;return rampFrom+(rampTo-rampFrom)*t;}
+const originalOutlet=ctx.outlet;
+ctx.outlet=function(...args){if(args[1]==='rate'){assert.equal(args.length,4);const current=rateNow();rampFrom=current;rampTo=args[2];rampDuration=args[3];rampStart=timeMs;}originalOutlet(...args);};
+ctx.loadedOK=true;ctx.loadPhase='';ctx.rateGoal=1;ctx.core.rate=1;ctx.rateslope(1000);ctx.busy=true;
+const waitingHead={lo:0,hi:100,rate:1,pos:10,seek:true};ctx.queued=waitingHead;
+const seeksBefore=messages.filter(m=>m[1]==='seek').length;
+ctx.playCommand(ctx.core.command(3));assert.equal(rateNow(),1);timeMs=250;assert.equal(rateNow(),1.25);
+ctx.playCommand(ctx.core.command(4));assert.equal(rateNow(),1.25);assert.equal(ctx.queued,waitingHead);timeMs=750;assert.equal(rateNow(),1.125);
+const rampsBefore=messages.filter(m=>m[1]==='rate').length;ctx.playCommand(ctx.core.command(1));assert.equal(messages.filter(m=>m[1]==='rate').length,rampsBefore);
+ctx.playCommand(ctx.core.command(2));assert.equal(rateNow(),1.125);timeMs=750+1000*1.125/2.125;assert(Math.abs(rateNow())<1e-12);timeMs=1750;assert.equal(rateNow(),-1);
+assert.equal(messages.filter(m=>m[1]==='seek').length,seeksBefore);
+// Seeking or configuring the other head must not replace the shared ramp with its stale target.
+ctx.busy=false;ctx.queued=null;const rateCount=messages.filter(m=>m[1]==='rate').length;ctx.playCommand(ctx.core.command(7));ctx.configure(1,waitingHead);assert.equal(messages.filter(m=>m[1]==='rate').length,rateCount);
+ctx.rateslope(0);ctx.playCommand(ctx.core.command(1));assert.equal(rateNow(),1);
+ctx.rateslope(10001);assert.equal(ctx.rateSlope,10000);ctx.rateslope(-1);assert.equal(ctx.rateSlope,0);
+ctx.rateslope(1234);const slopeSaved=ctx.getvalueof()[0];ctx.rateslope(0);ctx.setvalueof(slopeSaved);assert.equal(ctx.rateSlope,1234);
+ctx.setvalueof(JSON.stringify({version:4,steps:defaults.steps,pool:defaults.pool,holdPercent:25,seed:1234}));assert.equal(ctx.rateSlope,0);
+console.log('PASS: slope mid-ramp retarget continuity model, reverse through zero, rate commands do not seek or wait, position changes preserve ramp, zero time, limits and state migration');

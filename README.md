@@ -1,4 +1,4 @@
-# StepCompass M4L v0.1.4
+# StepCompass M4L v0.1.5
 
 Odtwarzacz sampla z Simplera z 16-krokowym sekwencerem poleceń.
 Dla Ableton Live 11 + Max for Live / Max 8, również macOS Intel.
@@ -9,7 +9,7 @@ Nie zawiera kodu Compass ani silnika softcut.
 ## Pierwsze uruchomienie
 
 1. Na ścieżce MIDI umieść **Simpler** i wczytaj do niego sample.
-2. Pobierz **StepCompass-M4L-v0.1.4.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
+2. Pobierz **StepCompass-M4L-v0.1.5.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
    W racku oba urządzenia muszą znajdować się w tym samym łańcuchu.
 3. Ustaw początek i koniec sampla w Simplerze. StepCompass automatycznie pobierze ten zakres.
 4. Poczekaj, aż status pokaże nazwę pliku i zakres, np. `Simpler 1.00–4.00 s | ready`.
@@ -61,7 +61,7 @@ nadal służy do wygładzania pętli i skoków sampla. Przy nagłym powrocie gł
 krótkie wygładzenie 64 próbek (około 1,5 ms przy 44,1 kHz), aby ograniczyć kliknięcia.
 W zapisanych sekwencjach stare polecenia Pan left/right stają się Fade out/in.
 
-## Domyślne ustawienia i szanse losowania (v0.1.4)
+## Domyślne ustawienia i szanse losowania (v0.1.5)
 
 Sekwencja początkowa jest zapisana bezpośrednio, jak na przesłanym zrzucie:
 
@@ -91,15 +91,36 @@ Ustawienia zapisują się z projektem i obsługują automatyzację. Starsze zapi
 zachowywane (dawne przełączniki 0/1 zamieniają się na 0/100); stara waga Hold nie jest już używana.
 Przy odczycie starego stanu HOLD % zaczyna od 25%, bez zmieniania zapisanych kroków.
 
+## Rate slope ms (v0.1.5)
+
+Czas dojścia od bieżącej szybkości odtwarzania do nowej: 0–10000 ms, domyślnie 0.
+0 oznacza zmianę natychmiastową; 200 ms krótki ślizg; 1000 ms rozpędzanie/hamowanie taśmy.
+Działa dla Forward, Reverse, Rate +/− i Rate random. Zmiana szybkości zmienia też pitch.
+Przejście jest liniowe w szybkości, nie w półtonach.
+
+Sygnał szybkości tworzy natywny `line~` na wątku DSP, wspólny dla obu głowic stereo.
+Kolejne polecenie retargetuje go od aktualnej wartości — bez skoku do poprzedniego celu,
+bez restartu pozycji sampla i bez czekania na crossfade pozycji/pętli. Hold, Fade In/Out,
+Position i Loop nie przerywają rozpoczętego ślizgu. Powtórzenie tego samego celu nie wydłuża go.
+
+Zmiana kierunku przy dodatnim slope przechodzi płynnie przez 0 (chwilowe zatrzymanie),
+a następnie rozpędza sample w przeciwną stronę. RESET ustawia cel 1x z aktualnym slope.
+Załadowanie nowego sampla ustawia 1x natychmiast, gdy wyjście jest wyciszone.
+Zmiana samego pokrętła slope obowiązuje od następnego nowego celu; nie restartuje istniejącej rampy.
+Kontrolka zapisuje się w projekcie i obsługuje automatyzację. Stare stany otrzymują 0 ms.
+Status pokazuje szybkość odczytaną z DSP oraz cel podczas przejścia.
+
 ## Ważne różnice i ograniczenia prototypu
 
 - Audio odtwarzają natywne obiekty MSP `groove~`, po jednej parze stereo na głowicę.
-  Przy skoku lub zmianie kierunku następuje crossfade między dwiema głowicami.
+  Przy skoku pozycji lub zmianie pętli następuje crossfade między dwiema głowicami.
+  Szybkość i kierunek zmienia wspólny sygnał Rate slope.
   Przy samym zawijaniu pętli zastosowano krótkie wyciszenie obu końców, a nie nakładanie ich
   jak w silniku VST. Może to być słyszalne jako pulsowanie przy krótkiej pętli; zmniejsz Fade ms.
 - Zegar odczytuje czas Live przez Live API w zadaniu co 10 ms. To nie jest zegar audio sample-accurate.
   Przy obciążeniu interfejsu/CPU polecenia mogą się opóźniać. Odtwarzanie audio trwa na wątku DSP.
-- Następna zmiana czeka na zakończenie crossfade; przy wielu zmianach oczekuje najnowsza.
+- Następna zmiana pozycji/pętli czeka na zakończenie crossfade; przy wielu zmianach oczekuje najnowsza.
+  Polecenia szybkości zmieniają cel Rate slope od razu.
 - Podmiana sampla czeka na zakończenie fade-out, żeby nie zmieniać bufora pod głośno grającą głowicą.
 - Brak Warp/time-stretch. Zmiana szybkości zmienia wysokość dźwięku.
 - Mono jest kierowane na oba kanały; stereo ma wspólne skoki i pętlę.

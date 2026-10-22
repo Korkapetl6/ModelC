@@ -513,6 +513,92 @@
       },
       {
         "box": {
+          "id": "rateslope-label",
+          "maxclass": "comment",
+          "patching_rect": [
+            800.0,
+            31.0,
+            100.0,
+            20.0
+          ],
+          "text": "Rate slope ms",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            800.0,
+            31.0,
+            100.0,
+            20.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 11.0
+        }
+      },
+      {
+        "box": {
+          "id": "rateslope",
+          "maxclass": "live.numbox",
+          "patching_rect": [
+            902.0,
+            30.0,
+            95.0,
+            22.0
+          ],
+          "varname": "rateslope",
+          "numinlets": 1,
+          "numoutlets": 2,
+          "outlettype": [
+            "",
+            ""
+          ],
+          "parameter_enable": 1,
+          "presentation": 1,
+          "presentation_rect": [
+            902.0,
+            30.0,
+            95.0,
+            22.0
+          ],
+          "saved_attribute_attributes": {
+            "valueof": {
+              "parameter_longname": "Rate slope ms",
+              "parameter_shortname": "Rate slope ms",
+              "parameter_type": 0,
+              "parameter_mmin": 0,
+              "parameter_mmax": 10000,
+              "parameter_initial": [
+                0
+              ],
+              "parameter_initial_enable": 1,
+              "parameter_unitstyle": 1
+            }
+          }
+        }
+      },
+      {
+        "box": {
+          "id": "rateslopecmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend rateslope",
+          "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
           "id": "label0",
           "maxclass": "comment",
           "patching_rect": [
@@ -4395,21 +4481,6 @@
       },
       {
         "box": {
-          "id": "rateroute",
-          "maxclass": "newobj",
-          "patching_rect": [
-            0.0,
-            200.0,
-            100.0,
-            22.0
-          ],
-          "text": "route 0 1",
-          "numinlets": 1,
-          "numoutlets": 3
-        }
-      },
-      {
-        "box": {
           "id": "seekroute",
           "maxclass": "newobj",
           "patching_rect": [
@@ -4451,6 +4522,51 @@
           "text": "route 0 1",
           "numinlets": 1,
           "numoutlets": 3
+        }
+      },
+      {
+        "box": {
+          "id": "rate-glide",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "line~ 1.",
+          "numinlets": 2,
+          "numoutlets": 2
+        }
+      },
+      {
+        "box": {
+          "id": "rate-meter",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "snapshot~ 20",
+          "numinlets": 2,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "rate-meter-cmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend ratevalue",
+          "numinlets": 1,
+          "numoutlets": 1
         }
       },
       {
@@ -4640,21 +4756,6 @@
                     30
                   ],
                   "index": 11
-                }
-              },
-              {
-                "box": {
-                  "id": "speed",
-                  "maxclass": "newobj",
-                  "patching_rect": [
-                    0.0,
-                    200.0,
-                    100.0,
-                    22.0
-                  ],
-                  "text": "line~ 0.",
-                  "numinlets": 2,
-                  "numoutlets": 2
                 }
               },
               {
@@ -5121,30 +5222,6 @@
               }
             ],
             "lines": [
-              {
-                "patchline": {
-                  "source": [
-                    "in0",
-                    0
-                  ],
-                  "destination": [
-                    "speed",
-                    0
-                  ]
-                }
-              },
-              {
-                "patchline": {
-                  "source": [
-                    "speed",
-                    0
-                  ],
-                  "destination": [
-                    "groove",
-                    0
-                  ]
-                }
-              },
               {
                 "patchline": {
                   "source": [
@@ -5717,6 +5794,18 @@
                   ],
                   "destination": [
                     "amp1",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in0",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
                     0
                   ]
                 }
@@ -5979,21 +6068,6 @@
               },
               {
                 "box": {
-                  "id": "speed",
-                  "maxclass": "newobj",
-                  "patching_rect": [
-                    0.0,
-                    200.0,
-                    100.0,
-                    22.0
-                  ],
-                  "text": "line~ 0.",
-                  "numinlets": 2,
-                  "numoutlets": 2
-                }
-              },
-              {
-                "box": {
                   "id": "groove",
                   "maxclass": "newobj",
                   "patching_rect": [
@@ -6456,30 +6530,6 @@
               }
             ],
             "lines": [
-              {
-                "patchline": {
-                  "source": [
-                    "in0",
-                    0
-                  ],
-                  "destination": [
-                    "speed",
-                    0
-                  ]
-                }
-              },
-              {
-                "patchline": {
-                  "source": [
-                    "speed",
-                    0
-                  ],
-                  "destination": [
-                    "groove",
-                    0
-                  ]
-                }
-              },
               {
                 "patchline": {
                   "source": [
@@ -7052,6 +7102,18 @@
                   ],
                   "destination": [
                     "amp1",
+                    0
+                  ]
+                }
+              },
+              {
+                "patchline": {
+                  "source": [
+                    "in0",
+                    0
+                  ],
+                  "destination": [
+                    "groove",
                     0
                   ]
                 }
@@ -7516,6 +7578,30 @@
         "patchline": {
           "source": [
             "randomizecmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "rateslope",
+            0
+          ],
+          "destination": [
+            "rateslopecmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "rateslopecmd",
             0
           ],
           "destination": [
@@ -8620,18 +8706,6 @@
         "patchline": {
           "source": [
             "route",
-            6
-          ],
-          "destination": [
-            "rateroute",
-            0
-          ]
-        }
-      },
-      {
-        "patchline": {
-          "source": [
-            "route",
             7
           ],
           "destination": [
@@ -8667,11 +8741,47 @@
       {
         "patchline": {
           "source": [
-            "rateroute",
+            "route",
+            6
+          ],
+          "destination": [
+            "rate-glide",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "rate-glide",
             0
           ],
           "destination": [
-            "head0",
+            "rate-meter",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "rate-meter",
+            0
+          ],
+          "destination": [
+            "rate-meter-cmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "rate-meter-cmd",
+            0
+          ],
+          "destination": [
+            "defer",
             0
           ]
         }
@@ -8733,6 +8843,18 @@
           "destination": [
             "head0",
             7
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "rate-glide",
+            0
+          ],
+          "destination": [
+            "head0",
+            0
           ]
         }
       },
@@ -8823,18 +8945,6 @@
       {
         "patchline": {
           "source": [
-            "rateroute",
-            1
-          ],
-          "destination": [
-            "head1",
-            0
-          ]
-        }
-      },
-      {
-        "patchline": {
-          "source": [
             "boundsroute",
             1
           ],
@@ -8889,6 +8999,18 @@
           "destination": [
             "head1",
             7
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "rate-glide",
+            0
+          ],
+          "destination": [
+            "head1",
+            0
           ]
         }
       },
@@ -9331,7 +9453,7 @@
       "autolocalize": 0
     },
     "description": "StepCompass sample command sequencer. Independent sample-only device.",
-    "digest": "StepCompass M4L v0.1.4",
+    "digest": "StepCompass M4L v0.1.5",
     "autosave": 0,
     "parameters": {
       "enable": [
@@ -9342,6 +9464,11 @@
       "freeplay": [
         "FREE PLAY",
         "FREE PLAY",
+        0
+      ],
+      "rateslope": [
+        "Rate slope ms",
+        "Rate slope ms",
         0
       ],
       "step0": [

@@ -9,7 +9,7 @@ SHORT=['--','FWD','REV','R+','R-','R?','HOME','POS?','LOOP?','C+','C-','C16','C1
 DEFAULT=[1, 14, 9, 2, 13, 14, 0, 10, 9, 14, 10, 15, 10, 14, 1, 10]
 WEIGHTS=[100, 100, 100, 0, 0, 100, 100, 100, 100, 100, 100, 0, 0, 100, 100, 100]
 p=Patch(1430,169,True)
-p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.4',autosave=0)
+p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.5',autosave=0)
 p.label('title','STEP COMPASS / SIMPLER',[10.,4.,240.,20.],fontface=1)
 p.box('display','jsui',filename='display.js',rect=[10.,30.,240.,128.],presentation=1,presentation_rect=[10.,30.,240.,128.],numinlets=1,numoutlets=0)
 p.label('status','Place directly after Simpler. Drop a sample into Simpler.',[260.,5.,730.,20.],varname='status')
@@ -24,6 +24,8 @@ for i,(id,label,initial) in enumerate([('enable','ON',1),('freeplay','FREE PLAY'
 for i,(id,label) in enumerate([('reload','RELOAD'),('reset','RESET'),('randomize','RANDOMIZE')]):
  p.box(id,'textbutton',rect=[455.+i*112,30.,106.,22.],presentation=1,presentation_rect=[455.+i*112,30.,106.,22.],text=label,numinlets=1,numoutlets=3)
  p.box(id+'cmd','message',id,numinlets=2,numoutlets=1);p.connect(id,0,id+'cmd');p.connect(id+'cmd',0,'defer')
+p.label('rateslope-label','Rate slope ms',[800.,31.,100.,20.])
+p.control('rateslope','live.numbox','Rate slope ms',[902.,30.,95.,22.],minimum=0,maximum=10000,initial=0,unitstyle=1);cmd('rateslope','rateslope')
 for i in range(16):
  x=260.+(i%8)*104;y=60.+(i//8)*35
  p.label('label'+str(i),str(i+1),[x,y,18.,20.])
@@ -48,10 +50,16 @@ def route(name,dest,inlet=0):p.connect('route',protocol.index(name),dest,inlet)
 p.box('replace',text='prepend replace',numinlets=1,numoutlets=1);route('load','replace')
 p.box('buffer',text='buffer~ #0-compass',numinlets=1,numoutlets=2);p.connect('replace',0,'buffer');p.box('clearbuffer','message','clear',numinlets=2,numoutlets=1);route('clear','clearbuffer');p.connect('clearbuffer',0,'buffer')
 p.box('loaded','message','loaded',numinlets=2,numoutlets=1);p.connect('buffer',1,'loaded');p.connect('loaded',0,'defer')
-for name in ['bounds','edge','rate','seek','fade','start']:
+for name in ['bounds','edge','seek','fade','start']:
  p.box(name+'route',text='route 0 1',numinlets=1,numoutlets=3);route(name,name+'route')
+p.box('rate-glide',text='line~ 1.',numinlets=2,numoutlets=2);route('rate','rate-glide')
+p.box('rate-meter',text='snapshot~ 20',numinlets=2,numoutlets=1);p.connect('rate-glide',0,'rate-meter')
+p.box('rate-meter-cmd',text='prepend ratevalue',numinlets=1,numoutlets=1);p.connect('rate-meter',0,'rate-meter-cmd');p.connect('rate-meter-cmd',0,'defer')
 for i in range(2):
  sub=voice_patch()
+ sub['boxes']=[e for e in sub['boxes'] if e['box']['id']!='speed']
+ sub['lines']=[e for e in sub['lines'] if 'speed' not in [e['patchline']['source'][0],e['patchline']['destination'][0]]]
+ sub['lines'].append({'patchline':{'source':['in0',0],'destination':['groove',0]}})
  for e in sub['boxes']:
   b=e['box']
   if b['id']=='groove':b['text']='groove~ #0-compass 2 @loop 1 @loopinterp 1'
@@ -61,7 +69,8 @@ for i in range(2):
  # Add phase snapshots for continuing at the current position on rate changes.
  q=Patch();q.data=sub;q.box('phase-out','outlet',rect=[650,440,30,30],index=4);q.connect('groove',2,'phase-out')
  p.box('head'+str(i),text='p head_'+str(i),numinlets=11,numoutlets=4,patcher=sub,outlettype=['signal','signal','bang','signal'])
- for name,inlet in [('rate',0),('bounds',1),('seek',4),('fade',9),('edge',10),('start',7)]:p.connect(name+'route',i,'head'+str(i),inlet)
+ for name,inlet in [('bounds',1),('seek',4),('fade',9),('edge',10),('start',7)]:p.connect(name+'route',i,'head'+str(i),inlet)
+ p.connect('rate-glide',0,'head'+str(i),0)
  route('bind','head'+str(i),6);route('channels','head'+str(i),5)
  p.box('ended'+str(i),'message','ended '+str(i),numinlets=2,numoutlets=1);p.connect('head'+str(i),2,'ended'+str(i));p.connect('ended'+str(i),0,'defer')
  p.box('snapshot'+str(i),text='snapshot~ 10',numinlets=2,numoutlets=1);p.connect('head'+str(i),3,'snapshot'+str(i))
@@ -88,5 +97,5 @@ dist=ROOT/'dist';dist.mkdir(exist_ok=True);blob=(json.dumps({'patcher':p.data},i
 entries=[Entry('StepCompass.amxd',blob+b'\0',b'JSON',17)]
 for n in ['compass.js','core.js','display.js']:
  data=(ROOT/'src'/n).read_bytes();entries.append(Entry(n,data));(dist/n).write_bytes(data)
-amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.4.amxd').write_bytes(amxd)
+amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.5.amxd').write_bytes(amxd)
 print('Built frozen AMXD:',len(amxd),'bytes')
