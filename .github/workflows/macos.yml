@@ -10,24 +10,33 @@ jobs:
   build:
     runs-on: macos-15-intel
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Fetch pinned framework
         run: ./scripts/bootstrap.sh
       - name: Test DSP and plugin adapter with ASan and UBSan
-        run: ./scripts/test.sh | tee test-report.txt
+        run: |
+          set -o pipefail
+          ./scripts/test.sh 2>&1 | tee test-report.txt
       - name: Build and sign VST3
-        run: ./scripts/build-macos.sh
+        run: |
+          set -o pipefail
+          ./scripts/build-macos.sh 2>&1 | tee build-report.txt
       - name: Include validation report
-        run: cp test-report.txt release/test-report.txt
+        if: always()
+        run: |
+          mkdir -p release
+          if [ -f test-report.txt ]; then cp test-report.txt release/; fi
+          if [ -f build-report.txt ]; then tail -n 150 build-report.txt > release/build-report.txt; fi
       - uses: actions/upload-artifact@v4
         with:
           name: StepCompass-macOS-Intel
           path: release/
-      - name: Publish downloadable ZIP on this branch
+      - name: Publish downloadable ZIP and validation reports on this branch
+        if: always()
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add release
           git diff --cached --quiet && exit 0
-          git commit -m 'Build StepCompass macOS Intel VST3 [skip ci]'
+          git commit -m 'Publish StepCompass build output [skip ci]'
           git push origin HEAD:stepcompass-v0.1
