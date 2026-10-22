@@ -1,3 +1,3 @@
 PASS: command bounds, seed repeatability, 20000 commands, random pool
-PASS: mocked Max/Live loading handshake, explicit start, stereo routing, both fade acknowledgments, mute, transport, state
+PASS: mocked Live API nearest Simpler, marker offsets, replacement races, removal/empty-source mute, restore, transport and fade handshake
 PASS: frozen AMXD roundtrip, embedded scripts, patch port references, 16 step menus, two DSP heads and startup gains

@@ -1,20 +1,25 @@
-# StepCompass M4L v0.1.0
+# StepCompass M4L v0.1.1
 
-Samodzielny odtwarzacz sampla z 16-krokowym sekwencerem poleceń.
+Odtwarzacz sampla z Simplera z 16-krokowym sekwencerem poleceń.
 Dla Ableton Live 11 + Max for Live / Max 8, również macOS Intel.
-Bez nagrywania; nie wymaga Simplera ani nut MIDI.
+Bez nagrywania; pobiera sample i jego zakres z poprzedzającego Simplera. Nuty MIDI nie są potrzebne.
 Niezależna implementacja inspirowana koncepcją Compass Oliviera Creurera dla norns.
 Nie zawiera kodu Compass ani silnika softcut.
 
 ## Pierwsze uruchomienie
 
-1. Pobierz **StepCompass-M4L-v0.1.0.amxd** i przeciągnij do Live na pustą **ścieżkę audio**.
-   To Max Audio Effect, który generuje własny dźwięk. Przychodzące audio nie jest przepuszczane.
-2. Kliknij **LOAD SAMPLE**, wybierz WAV/AIFF.
-3. Poczekaj na nazwę pliku i `sample ready`.
-4. Włącz transport Abletona lub przełącz **LIVE PLAY** na **FREE PLAY**.
-5. Zmień polecenia w listach kroków 1–16. Aktualny krok świeci na wyświetlaczu po lewej;
-   numer i szybkość są też podane w wierszu statusu.
+1. Na ścieżce MIDI umieść **Simpler** i wczytaj do niego sample.
+2. Pobierz **StepCompass-M4L-v0.1.1.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
+   W racku oba urządzenia muszą znajdować się w tym samym łańcuchu.
+3. Ustaw początek i koniec sampla w Simplerze. StepCompass automatycznie pobierze ten zakres.
+4. Poczekaj, aż status pokaże nazwę pliku i zakres, np. `Simpler 1.00–4.00 s | ready`.
+5. Włącz transport Abletona lub przełącz **LIVE PLAY** na **FREE PLAY**.
+6. Zmień polecenia w listach kroków 1–16. Aktualny krok świeci na wyświetlaczu po lewej.
+
+Zmiany sampla i markerów są wykrywane co 0,5 sekundy. **RELOAD** ponawia pobranie ręcznie.
+StepCompass wybiera najbliższy poprzedzający Simpler w tym samym łańcuchu. Brak Simplera,
+pusty sample lub usunięcie źródła wycisza StepCompass. Nie odtwarza wtedy starej kopii.
+Przychodzące audio Simplera nie jest przepuszczane — słyszysz odtwarzanie StepCompass.
 
 Plik AMXD zawiera wszystkie potrzebne skrypty. ZIP zawiera także źródła i README.
 Do instalacji nie jest potrzebny Max Standalone ani kompilator.
@@ -26,7 +31,7 @@ Do instalacji nie jest potrzebny Max Standalone ani kompilator.
 - **RESET:** początek regionu, normalny kierunek i szybkość, środek panoramy, początkowy zegar i seed.
   Nie kasuje sampla ani poleceń.
 - **RANDOMIZE:** nowa sekwencja z podświetlonych poleceń w sekcji RANDOM POOL.
-- **Start % / End %:** region sampla. Loop random wybiera pętle wewnątrz tego regionu.
+- **Start % / End %:** dodatkowy region wewnątrz zakresu pobranego z Simplera. 0–100% oznacza cały zaznaczony w Simplerze zakres. Loop random pozostaje wewnątrz tego regionu.
 - **Fade ms:** wygładzenie zmian i końców pętli (1–100 ms, domyślnie 20).
 - **Out dB:** głośność, domyślnie −6 dB; −60 oznacza pełną ciszę.
 - **Steps:** liczba aktywnych kroków 1–16.
@@ -59,9 +64,14 @@ Do instalacji nie jest potrzebny Max Standalone ani kompilator.
 - Podmiana sampla czeka na zakończenie fade-out, żeby nie zmieniać bufora pod głośno grającą głowicą.
 - Brak Warp/time-stretch. Zmiana szybkości zmienia wysokość dźwięku.
 - Mono jest kierowane na oba kanały; stereo ma wspólne skoki i pętlę.
-- Wczytywany jest cały plik do RAM. Brak opcji nagrywania, automatycznego importu z Simplera i edycji waveform myszą.
-- **Live Set przechowuje ścieżkę do sampla, nie kopię jego audio.** Trzymaj plik w folderze projektu;
-  po przeniesieniu użyj LOAD SAMPLE. Nie zakładaj, że Collect All and Save skopiuje ten zewnętrzny plik.
+- Wczytywany jest zakres **Sample.start_marker → Sample.end_marker**, w jednostkach próbek pliku,
+  przeliczonych na milisekundy według jego częstotliwości próbkowania. To granice sampla,
+  a nie oddzielna pętla wewnątrz trybu Classic ani aktualny slice.
+- Kopia audio trafia do RAM. Nie ma limitu 60 sekund znanego z wcześniejszego Barcode.
+- Pobierany jest surowy plik: Warp, transpose, obwiednia, filtr i efekty Simplera nie są kopiowane.
+- Zapis projektu zachowuje sekwencję i parametry. Po otwarciu StepCompass ponownie odnajduje Simpler;
+  nie zapisuje identyfikatorów Live API ani niezależnej ścieżki do sampla. Zapisuj sample z projektem
+  przez funkcje zarządzania plikami Live/Simplera.
 - Przy dodatnim Out dB można przesterować dalszy tor Live. Nie ma ukrytego ogranicznika.
 - Zweryfikowano algorytm, kontener i połączenia; środowisko budowania nie ma Max ani Live.
   Rzeczywiste odtwarzanie, GUI i ponowne otwarcie Setu wymagają sprawdzenia w Live.

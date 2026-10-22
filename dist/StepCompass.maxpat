@@ -42,7 +42,7 @@
             240.0,
             20.0
           ],
-          "text": "STEP COMPASS",
+          "text": "STEP COMPASS / SIMPLER",
           "numinlets": 1,
           "numoutlets": 0,
           "presentation": 1,
@@ -95,7 +95,7 @@
             730.0,
             20.0
           ],
-          "text": "LOAD SAMPLE: WAV / AIFF",
+          "text": "Place directly after Simpler. Drop a sample into Simpler.",
           "numinlets": 1,
           "numoutlets": 0,
           "presentation": 1,
@@ -402,7 +402,7 @@
       },
       {
         "box": {
-          "id": "choose",
+          "id": "reload",
           "maxclass": "textbutton",
           "patching_rect": [
             455.0,
@@ -410,7 +410,7 @@
             106.0,
             22.0
           ],
-          "text": "LOAD SAMPLE",
+          "text": "RELOAD",
           "presentation": 1,
           "presentation_rect": [
             455.0,
@@ -424,7 +424,7 @@
       },
       {
         "box": {
-          "id": "choosecmd",
+          "id": "reloadcmd",
           "maxclass": "message",
           "patching_rect": [
             0.0,
@@ -432,7 +432,7 @@
             100.0,
             22.0
           ],
-          "text": "choose",
+          "text": "reload",
           "numinlets": 2,
           "numoutlets": 1
         }
@@ -4651,39 +4651,9 @@
             100.0,
             22.0
           ],
-          "text": "route choose load bind channels bounds edge rate seek fade loadgate master pan start",
+          "text": "route choose load bind channels bounds edge rate seek fade loadgate master pan start clear",
           "numinlets": 1,
-          "numoutlets": 14
-        }
-      },
-      {
-        "box": {
-          "id": "open",
-          "maxclass": "newobj",
-          "patching_rect": [
-            0.0,
-            200.0,
-            100.0,
-            22.0
-          ],
-          "text": "opendialog",
-          "numinlets": 1,
-          "numoutlets": 2
-        }
-      },
-      {
-        "box": {
-          "id": "loadcmd",
-          "maxclass": "newobj",
-          "patching_rect": [
-            0.0,
-            200.0,
-            100.0,
-            22.0
-          ],
-          "text": "prepend load",
-          "numinlets": 1,
-          "numoutlets": 1
+          "numoutlets": 15
         }
       },
       {
@@ -4714,6 +4684,21 @@
           "text": "buffer~ #0-compass",
           "numinlets": 1,
           "numoutlets": 2
+        }
+      },
+      {
+        "box": {
+          "id": "clearbuffer",
+          "maxclass": "message",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "clear",
+          "numinlets": 2,
+          "numoutlets": 1
         }
       },
       {
@@ -7853,11 +7838,11 @@
       {
         "patchline": {
           "source": [
-            "choose",
+            "reload",
             0
           ],
           "destination": [
-            "choosecmd",
+            "reloadcmd",
             0
           ]
         }
@@ -7865,7 +7850,7 @@
       {
         "patchline": {
           "source": [
-            "choosecmd",
+            "reloadcmd",
             0
           ],
           "destination": [
@@ -8922,42 +8907,6 @@
         "patchline": {
           "source": [
             "route",
-            0
-          ],
-          "destination": [
-            "open",
-            0
-          ]
-        }
-      },
-      {
-        "patchline": {
-          "source": [
-            "open",
-            0
-          ],
-          "destination": [
-            "loadcmd",
-            0
-          ]
-        }
-      },
-      {
-        "patchline": {
-          "source": [
-            "loadcmd",
-            0
-          ],
-          "destination": [
-            "defer",
-            0
-          ]
-        }
-      },
-      {
-        "patchline": {
-          "source": [
-            "route",
             1
           ],
           "destination": [
@@ -8970,6 +8919,30 @@
         "patchline": {
           "source": [
             "replace",
+            0
+          ],
+          "destination": [
+            "buffer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "route",
+            13
+          ],
+          "destination": [
+            "clearbuffer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "clearbuffer",
             0
           ],
           "destination": [
@@ -9789,7 +9762,7 @@
       "autolocalize": 0
     },
     "description": "StepCompass sample command sequencer. Independent sample-only device.",
-    "digest": "StepCompass M4L v0.1.0",
+    "digest": "StepCompass M4L v0.1.1",
     "autosave": 0,
     "parameters": {
       "enable": [

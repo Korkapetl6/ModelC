@@ -125,4 +125,3 @@ def voice_patch():
     p.data['lines']=[line for line in p.data['lines'] if not (line['patchline']['source']==['groove',1] and line['patchline']['destination']==['amp1',0])]
     p.connect('right-select',0,'amp1')
     return p.data
-

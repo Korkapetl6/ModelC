@@ -8,10 +8,10 @@ NAMES=['Hold','Forward','Reverse','Rate +','Rate -','Rate random','Loop start','
 SHORT=['--','FWD','REV','R+','R-','R?','HOME','POS?','LOOP?','C+','C-','C16','C1','STEP?','PAN L','PAN R']
 DEFAULT=[1,0,0,7,0,0,2,0,0,8,0,0,1,0,6,0]
 p=Patch(1430,169,True)
-p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.0',autosave=0)
-p.label('title','STEP COMPASS',[10.,4.,240.,20.],fontface=1)
+p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.1',autosave=0)
+p.label('title','STEP COMPASS / SIMPLER',[10.,4.,240.,20.],fontface=1)
 p.box('display','jsui',filename='display.js',rect=[10.,30.,240.,128.],presentation=1,presentation_rect=[10.,30.,240.,128.],numinlets=1,numoutlets=0)
-p.label('status','LOAD SAMPLE: WAV / AIFF',[260.,5.,730.,20.],varname='status')
+p.label('status','Place directly after Simpler. Drop a sample into Simpler.',[260.,5.,730.,20.],varname='status')
 p.label('playing','Step 0 | STOP',[1000.,5.,420.,20.],varname='playing')
 p.box('engine',text='js compass.js #0-compass',varname='engine',numinlets=1,numoutlets=2)
 p.box('defer',text='deferlow',numinlets=1,numoutlets=1);p.connect('defer',0,'engine');p.connect('engine',1,'display')
@@ -20,7 +20,7 @@ def cmd(ident,command):
 styles={'textcolor':INK,'textoncolor':BG,'bgcolor':BUTTON,'bgoncolor':ACCENT,'activebgcolor':BUTTON,'activebgoncolor':ACCENT,'activetextcolor':INK,'activetextoncolor':BG}
 for i,(id,label,initial) in enumerate([('enable','ON',1),('freeplay','FREE PLAY',0)]):
  p.control(id,'live.text',label,[260.+i*96,30.,90.,22.],initial=initial,enum=['OFF',label],text='OFF' if id=='enable' else 'LIVE PLAY',texton=label,mode=1,**styles);cmd(id,id)
-for i,(id,label) in enumerate([('choose','LOAD SAMPLE'),('reset','RESET'),('randomize','RANDOMIZE')]):
+for i,(id,label) in enumerate([('reload','RELOAD'),('reset','RESET'),('randomize','RANDOMIZE')]):
  p.box(id,'textbutton',rect=[455.+i*112,30.,106.,22.],presentation=1,presentation_rect=[455.+i*112,30.,106.,22.],text=label,numinlets=1,numoutlets=3)
  p.box(id+'cmd','message',id,numinlets=2,numoutlets=1);p.connect(id,0,id+'cmd');p.connect(id+'cmd',0,'defer')
 for i in range(16):
@@ -37,13 +37,11 @@ p.box('ready',text='live.thisdevice',numinlets=1,numoutlets=3)
 p.box('init','message','initialize',numinlets=2,numoutlets=1);p.connect('ready',0,'init');p.connect('init',0,'defer')
 p.box('active',text='prepend deviceactive',numinlets=1,numoutlets=1);p.connect('ready',1,'active');p.connect('active',0,'defer')
 p.box('data',text='pattr CompassData @bindto engine @parameter_enable 1',varname='CompassData',numinlets=1,numoutlets=3,saved_object_attributes={'parameter_enable':1,'parameter_mappable':0},saved_attribute_attributes={'valueof':{'parameter_type':3,'parameter_invisible':1,'parameter_longname':'CompassData','parameter_shortname':'CompassData'}});p.params['data']=['CompassData','CompassData',0]
-protocol=['choose','load','bind','channels','bounds','edge','rate','seek','fade','loadgate','master','pan','start']
+protocol=['choose','load','bind','channels','bounds','edge','rate','seek','fade','loadgate','master','pan','start','clear']
 p.box('route',text='route '+' '.join(protocol),numinlets=1,numoutlets=len(protocol)+1);p.connect('engine',0,'route')
 def route(name,dest,inlet=0):p.connect('route',protocol.index(name),dest,inlet)
-p.box('open',text='opendialog',numinlets=1,numoutlets=2);route('choose','open')
-p.box('loadcmd',text='prepend load',numinlets=1,numoutlets=1);p.connect('open',0,'loadcmd');p.connect('loadcmd',0,'defer')
 p.box('replace',text='prepend replace',numinlets=1,numoutlets=1);route('load','replace')
-p.box('buffer',text='buffer~ #0-compass',numinlets=1,numoutlets=2);p.connect('replace',0,'buffer')
+p.box('buffer',text='buffer~ #0-compass',numinlets=1,numoutlets=2);p.connect('replace',0,'buffer');p.box('clearbuffer','message','clear',numinlets=2,numoutlets=1);route('clear','clearbuffer');p.connect('clearbuffer',0,'buffer')
 p.box('loaded','message','loaded',numinlets=2,numoutlets=1);p.connect('buffer',1,'loaded');p.connect('loaded',0,'defer')
 for name in ['bounds','edge','rate','seek','fade','start']:
  p.box(name+'route',text='route 0 1',numinlets=1,numoutlets=3);route(name,name+'route')
@@ -83,5 +81,5 @@ dist=ROOT/'dist';dist.mkdir(exist_ok=True);blob=(json.dumps({'patcher':p.data},i
 entries=[Entry('StepCompass.amxd',blob+b'\0',b'JSON',17)]
 for n in ['compass.js','core.js','display.js']:
  data=(ROOT/'src'/n).read_bytes();entries.append(Entry(n,data));(dist/n).write_bytes(data)
-amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.0.amxd').write_bytes(amxd)
+amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.1.amxd').write_bytes(amxd)
 print('Built frozen AMXD:',len(amxd),'bytes')
