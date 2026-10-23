@@ -9916,7 +9916,7 @@
       "autolocalize": 0
     },
     "description": "StepCompass sample command sequencer. Independent sample-only device.",
-    "digest": "StepCompass M4L v0.1.8",
+    "digest": "StepCompass M4L v0.1.9",
     "autosave": 0,
     "parameters": {
       "enable": [

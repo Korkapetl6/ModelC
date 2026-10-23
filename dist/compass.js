@@ -1,7 +1,7 @@
 autowatch=0;inlets=1;outlets=2;include('core.js');
 var core=new Compass(),name=jsarguments[1],buffer=new Buffer(name),song=null,own=null,task=null,scanTask=null,ready=false,enabled=1,free=1,deviceOn=1;
 var file='',wanted=null,pendingSource=null,requestedSignature='',loadPhase='',loadedOK=false,loadTimeout=null,freeBeat=0,lastWall=0,lastBeat=null,nextBeat=0,wasRunning=false;
-var rateSlope=0,rateGoal=1,rateActual=1;
+var rateSlope=50,rateGoal=1,rateActual=1;
 var currentFade=0,fadeStart=0,fadeEnd=0,previousTempo=120;
 var tickCount=0,smooth=20,db=-6,activeHead=0,busy=false,acks=[false,false],queued=null,phase=[0,0],lastConfig=null,frameLength=0,channels=1;
 function ui(id,v){var o=this.patcher.getnamed(id);if(o)o.message('set',v);}

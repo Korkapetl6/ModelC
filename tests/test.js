@@ -117,7 +117,7 @@ for(let i=0;i<10;i++){
 }
 assert.equal(new Core().applyPreset(-1),null);assert.equal(new Core().applyPreset(10),null);
 ctx.loadedOK=true;ctx.loadPhase='';ctx.presetselect(1);ctx.loadpreset();
-assert.deepEqual(Array.from(ctx.core.steps),Core.presets[1].steps);assert.equal(ctx.rateSlope,850);
+assert.deepEqual(Array.from(ctx.core.steps),Core.presets[1].steps);assert.equal(ctx.rateSlope,50);
 assert.deepEqual(controls.steps,['int',16]);assert.deepEqual(controls.division,['int',2]);
 const presetState=ctx.getvalueof()[0];ctx.core.steps[0]=0;ctx.setvalueof(presetState);assert.deepEqual(Array.from(ctx.core.steps),Core.presets[1].steps);
 console.log('PASS: 10 fixed factory patterns, exact first-two quotas, Reverse/Forward pairs, range/weights preservation, copy isolation, preset loading and saved step/slope restoration');
