@@ -13,7 +13,7 @@
       0.0,
       0.0,
       1430.0,
-      201.0
+      169.0
     ],
     "openinpresentation": 1,
     "default_fontsize": 11.0,
@@ -71,7 +71,7 @@
             10.0,
             30.0,
             240.0,
-            128.0
+            96.0
           ],
           "filename": "display.js",
           "presentation": 1,
@@ -79,7 +79,7 @@
             10.0,
             30.0,
             240.0,
-            128.0
+            96.0
           ],
           "numinlets": 1,
           "numoutlets": 0
@@ -513,50 +513,19 @@
       },
       {
         "box": {
-          "id": "preset-label",
-          "maxclass": "comment",
-          "patching_rect": [
-            260.0,
-            169.0,
-            60.0,
-            22.0
-          ],
-          "text": "PRESET",
-          "numinlets": 1,
-          "numoutlets": 0,
-          "presentation": 1,
-          "presentation_rect": [
-            260.0,
-            169.0,
-            60.0,
-            22.0
-          ],
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "fontname": "Arial",
-          "fontsize": 11.0,
-          "fontface": 1
-        }
-      },
-      {
-        "box": {
           "id": "preset-menu",
           "maxclass": "umenu",
           "patching_rect": [
-            323.0,
-            169.0,
-            205.0,
+            10.0,
+            134.0,
+            155.0,
             22.0
           ],
           "presentation": 1,
           "presentation_rect": [
-            323.0,
-            169.0,
-            205.0,
+            10.0,
+            134.0,
+            155.0,
             22.0
           ],
           "numinlets": 1,
@@ -604,17 +573,17 @@
           "id": "preset-load",
           "maxclass": "textbutton",
           "patching_rect": [
-            539.0,
-            169.0,
-            90.0,
+            172.0,
+            134.0,
+            78.0,
             22.0
           ],
           "text": "LOAD PRESET",
           "presentation": 1,
           "presentation_rect": [
-            539.0,
-            169.0,
-            90.0,
+            172.0,
+            134.0,
+            78.0,
             22.0
           ],
           "numinlets": 1,
@@ -634,36 +603,6 @@
           "text": "loadpreset",
           "numinlets": 2,
           "numoutlets": 1
-        }
-      },
-      {
-        "box": {
-          "id": "preset-help",
-          "maxclass": "comment",
-          "patching_rect": [
-            642.0,
-            170.0,
-            660.0,
-            20.0
-          ],
-          "text": "Choose preset, then LOAD. Replaces steps, clock, seed and slope.",
-          "numinlets": 1,
-          "numoutlets": 0,
-          "presentation": 1,
-          "presentation_rect": [
-            642.0,
-            170.0,
-            660.0,
-            20.0
-          ],
-          "textcolor": [
-            0.91,
-            0.93,
-            0.94,
-            1.0
-          ],
-          "fontname": "Arial",
-          "fontsize": 11.0
         }
       },
       {
@@ -9903,7 +9842,7 @@
       0.0,
       0.0,
       1430.0,
-      201.0
+      169.0
     ],
     "project": {
       "version": 1,
@@ -9916,7 +9855,7 @@
       "autolocalize": 0
     },
     "description": "StepCompass sample command sequencer. Independent sample-only device.",
-    "digest": "StepCompass M4L v0.1.9",
+    "digest": "StepCompass M4L v0.1.10",
     "autosave": 0,
     "parameters": {
       "enable": [

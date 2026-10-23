@@ -9,4 +9,4 @@ PASS: frozen AMXD roundtrip, embedded scripts, patch port references, 16 step me
 PASS: fade command labels, resetting native line~ envelope and smoothed stereo output wiring
 PASS: separate HOLD % control, 15 unitless command weights, screenshot UI defaults and Free Play enabled
 PASS: one native audio-rate glide shared by both stereo heads, integer entry and fine adjustment buttons, rate feedback and no competing per-head rate sources
-PASS: 10-choice preset menu, explicit LOAD button and expanded panel
+PASS: 10-choice preset menu, explicit LOAD button and all controls within standard Live panel

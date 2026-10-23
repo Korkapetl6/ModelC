@@ -8,10 +8,10 @@ NAMES=['Hold','Forward','Reverse','Rate +','Rate -','Rate random','Loop start','
 SHORT=['--','FWD','REV','R+','R-','R?','HOME','POS?','LOOP?','C+','C-','C16','C1','STEP?','FADE OUT','FADE IN']
 DEFAULT=[1, 14, 9, 2, 13, 14, 0, 10, 9, 14, 10, 15, 10, 14, 1, 10]
 WEIGHTS=[100, 100, 100, 0, 0, 100, 100, 100, 100, 100, 100, 0, 0, 100, 100, 100]
-p=Patch(1430,201,True)
-p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,201.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.9',autosave=0)
+p=Patch(1430,169,True)
+p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.10',autosave=0)
 p.label('title','STEP COMPASS / SIMPLER',[10.,4.,240.,20.],fontface=1)
-p.box('display','jsui',filename='display.js',rect=[10.,30.,240.,128.],presentation=1,presentation_rect=[10.,30.,240.,128.],numinlets=1,numoutlets=0)
+p.box('display','jsui',filename='display.js',rect=[10.,30.,240.,96.],presentation=1,presentation_rect=[10.,30.,240.,96.],numinlets=1,numoutlets=0)
 p.label('status','Place directly after Simpler. Drop a sample into Simpler.',[260.,5.,730.,20.],varname='status')
 p.label('playing','Step 0 | STOP',[1000.,5.,420.,20.],varname='playing')
 p.box('engine',text='js compass.js #0-compass',varname='engine',numinlets=1,numoutlets=2)
@@ -24,11 +24,9 @@ for i,(id,label,initial) in enumerate([('enable','ON',1),('freeplay','FREE PLAY'
 for i,(id,label) in enumerate([('reload','RELOAD'),('reset','RESET'),('randomize','RANDOMIZE')]):
  p.box(id,'textbutton',rect=[455.+i*112,30.,106.,22.],presentation=1,presentation_rect=[455.+i*112,30.,106.,22.],text=label,numinlets=1,numoutlets=3)
  p.box(id+'cmd','message',id,numinlets=2,numoutlets=1);p.connect(id,0,id+'cmd');p.connect(id+'cmd',0,'defer')
-p.label('preset-label','PRESET',[260.,169.,60.,22.],fontface=1)
-p.box('preset-menu','umenu',rect=[323.,169.,205.,22.],presentation=1,presentation_rect=[323.,169.,205.,22.],numinlets=1,numoutlets=3,items=['01 Soft drift', ',', '02 Small detours', ',', '03 Position drift', ',', '04 Loop wander', ',', '05 Broken motion', ',', '06 Tape turns', ',', '07 Loop shuffle', ',', '08 Clock fracture', ',', '09 Jump cuts', ',', '10 Full scatter']);cmd('preset-menu','presetselect')
-p.box('preset-load','textbutton',rect=[539.,169.,90.,22.],presentation=1,presentation_rect=[539.,169.,90.,22.],text='LOAD PRESET',numinlets=1,numoutlets=3)
+p.box('preset-menu','umenu',rect=[10.,134.,155.,22.],presentation=1,presentation_rect=[10.,134.,155.,22.],numinlets=1,numoutlets=3,items=['01 Soft drift', ',', '02 Small detours', ',', '03 Position drift', ',', '04 Loop wander', ',', '05 Broken motion', ',', '06 Tape turns', ',', '07 Loop shuffle', ',', '08 Clock fracture', ',', '09 Jump cuts', ',', '10 Full scatter']);cmd('preset-menu','presetselect')
+p.box('preset-load','textbutton',rect=[172.,134.,78.,22.],presentation=1,presentation_rect=[172.,134.,78.,22.],text='LOAD PRESET',numinlets=1,numoutlets=3)
 p.box('preset-load-cmd','message','loadpreset',numinlets=2,numoutlets=1);p.connect('preset-load',0,'preset-load-cmd');p.connect('preset-load-cmd',0,'defer')
-p.label('preset-help','Choose preset, then LOAD. Replaces steps, clock, seed and slope.',[642.,170.,660.,20.])
 p.label('rateslope-label','Rate slope ms',[800.,31.,100.,20.])
 # Native integer entry avoids normalized 0..10000 Live dragging; state lives in CompassData.
 p.box('rateslope','number',rect=[898.,30.,72.,22.],varname='rateslope',minimum=0,maximum=10000,numinlets=1,numoutlets=2,presentation=1,presentation_rect=[898.,30.,72.,22.]);cmd('rateslope','rateslope')
@@ -106,5 +104,5 @@ dist=ROOT/'dist';dist.mkdir(exist_ok=True);blob=(json.dumps({'patcher':p.data},i
 entries=[Entry('StepCompass.amxd',blob+b'\0',b'JSON',17)]
 for n in ['compass.js','core.js','display.js']:
  data=(ROOT/'src'/n).read_bytes();entries.append(Entry(n,data));(dist/n).write_bytes(data)
-amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.9.amxd').write_bytes(amxd)
+amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.10.amxd').write_bytes(amxd)
 print('Built frozen AMXD:',len(amxd),'bytes')

@@ -3,7 +3,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from amxd_container import unpack_frozen
 root=Path(__file__).resolve().parents[1]
-type_,entries=unpack_frozen((root/'dist/StepCompass-M4L-v0.1.9.amxd').read_bytes());assert type_==b'aaaa';assert {e.name for e in entries}=={'StepCompass.amxd','compass.js','core.js','display.js'}
+type_,entries=unpack_frozen((root/'dist/StepCompass-M4L-v0.1.10.amxd').read_bytes());assert type_==b'aaaa';assert {e.name for e in entries}=={'StepCompass.amxd','compass.js','core.js','display.js'}
 p=json.loads(entries[0].data.rstrip(b'\0'))['patcher']
 def check(p):
  boxes={e['box']['id']:e['box'] for e in p['boxes']};assert len(boxes)==len(p['boxes'])
@@ -77,6 +77,10 @@ print('PASS: one native audio-rate glide shared by both stereo heads, integer en
 assert boxes['preset-menu']['maxclass']=='umenu'
 assert len([x for x in boxes['preset-menu']['items'] if x!=','])==10
 assert boxes['preset-load-cmd']['text']=='loadpreset'
-assert p['openrect'][3]==201
+assert p['openrect'][3]==169
+for b in boxes.values():
+ if b.get('presentation'):
+  x,y,w,h=b['presentation_rect'];assert y>=0 and y+h<=169, b['id']+' falls outside Live panel'
+assert boxes['display']['presentation_rect'][1]+boxes['display']['presentation_rect'][3]<=boxes['preset-menu']['presentation_rect'][1]
 assert any(l['source']==['preset-load',0] and l['destination']==['preset-load-cmd',0] for l in lines)
-print('PASS: 10-choice preset menu, explicit LOAD button and expanded panel')
+print('PASS: 10-choice preset menu, explicit LOAD button and all controls within standard Live panel')
