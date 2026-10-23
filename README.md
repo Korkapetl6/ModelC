@@ -209,3 +209,24 @@ Okno liczy się także przy spowolnieniu i po wcześniejszym ręcznym powrocie d
 Wszystkie presety startują przy 1/beat, slope 50 ms. RESET rozpoczyna nowe okno.
 Przy 120 BPM: do 2 sekund efektu, następnie 1 sekunda regeneracji.
 Powrót pitcha trwa ustawiony slope; wysoki slope wydłuża słyszalne hamowanie.
+
+## Safe / No Fades / No Repeat (0.1.13)
+
+Plik: `dist/no-repeat/StepCompass-M4L-Safe-NoRepeat-v0.1.13.amxd`.
+Budowa: `python3 tools/build.py --no-repeat`.
+Wariant zachowuje Safe (do 4 beatów zmian szybkości, potem 2 beaty odpoczynku),
+No Fades i domyślny slope 50 ms.
+
+Wybrany zakres audio dzielony jest na 16 równych stref. Na każdym wykonanym kroku
+porównuje się jego początek z początkiem poprzedniego kroku, także dla Hold.
+Jeśli oba leżą w tej samej strefie, następny start trafia do środka jednej z pozostałych
+15 stref. Inaczej odtwarzanie trwa naturalnie. Przy wykroczeniu poza bieżącą pętlę
+pętla zostaje przeniesiona z zachowaniem długości. Kierunek, rate i zakres źródła zostają.
+Powtórzenia pętli wewnątrz kroku nie są blokowane. RESET/nowy preset czyści historię.
+
+To porównywanie miejsc pliku, nie analiza podobieństwa brzmienia. Powtórzone nagranie
+w różnych strefach może nadal brzmieć tak samo; różne początki nie gwarantują
+całkowicie rozłącznych odcinków audio. Dla długich sampli i krótkich kroków wariant
+może wywoływać częste skoki. Pozycja pochodzi ze snapshotów DSP co 10 ms;
+przy przeciążeniu lub krokach krótszych od crossfade mogą występować opóźnienia
+i pomijanie oczekujących przejść, jak w pozostałych wersjach.
