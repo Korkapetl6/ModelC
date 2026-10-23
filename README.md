@@ -195,3 +195,17 @@ w menu, presetach ani losowaniu. Wszystkie takie kroki zastępuje Hold.
 Pozostaje techniczne wygładzanie skoków i końców pętli (Fade ms), chroniące przed klikami.
 Slope nadal wynosi 50 ms. Wersja standardowa pozostaje dostępna.
 Budowanie wariantu: `python3 tools/build.py --no-fades`.
+
+## Osobna wersja Safe (0.1.12)
+
+Plik: `dist/safe/StepCompass-M4L-Safe-v0.1.12.amxd`. Budowa: `python3 tools/build.py --safe`.
+Wariant No Fades z ograniczeniem czasu rozpędzenia. Pełny zakres Clock (do 16/beat)
+i Rate (0.5–2x) pozostaje dostępny. Po 4 beatach od wyjścia poza 1/beat lub 1x
+następuje powrót do 1/beat i 1x, z zachowaniem kierunku i slope.
+Następne 2 beaty to RECOVER: komendy Clock i Rate działają jak Hold.
+Reverse/Forward i skoki pozycji nadal działają. Timer liczy wykonany czas muzyczny,
+nie indeks kroku; Step random i kolejne przyspieszenia go nie przedłużają.
+Okno liczy się także przy spowolnieniu i po wcześniejszym ręcznym powrocie do 1x.
+Wszystkie presety startują przy 1/beat, slope 50 ms. RESET rozpoczyna nowe okno.
+Przy 120 BPM: do 2 sekund efektu, następnie 1 sekunda regeneracji.
+Powrót pitcha trwa ustawiony slope; wysoki slope wydłuża słyszalne hamowanie.

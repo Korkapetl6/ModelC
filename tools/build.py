@@ -4,7 +4,9 @@ from pathlib import Path
 from patch import Patch,voice_patch,BG,INK,ACCENT,BUTTON
 from amxd_container import Entry,frozen_amxd,unpack_frozen
 ROOT=Path(__file__).resolve().parents[1]
-NO_FADES='--no-fades' in sys.argv
+SAFE='--safe' in sys.argv
+NO_FADES='--no-fades' in sys.argv or SAFE
+from safe_mode import transform_safe
 from no_fades import transform
 NAMES=['Hold','Forward','Reverse','Rate +','Rate -','Rate random','Loop start','Position','Loop random','Clock +','Clock -','Clock fastest','Clock slowest','Step random','Fade out','Fade in']
 SHORT=['--','FWD','REV','R+','R-','R?','HOME','POS?','LOOP?','C+','C-','C16','C1','STEP?','FADE OUT','FADE IN']
@@ -14,7 +16,7 @@ if NO_FADES:
  NAMES=NAMES[:14];DEFAULT=[0 if x>=14 else x for x in DEFAULT]
 p=Patch(1430,169,True)
 p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.11',autosave=0)
-p.label('title','STEP COMPASS / NO FADES' if NO_FADES else 'STEP COMPASS / SIMPLER',[10.,4.,240.,20.],fontface=1)
+p.label('title','STEP COMPASS / SAFE' if SAFE else 'STEP COMPASS / NO FADES' if NO_FADES else 'STEP COMPASS / SIMPLER',[10.,4.,240.,20.],fontface=1)
 p.box('display','jsui',filename='display.js',rect=[10.,30.,240.,96.],presentation=1,presentation_rect=[10.,30.,240.,96.],numinlets=1,numoutlets=0)
 p.label('status','Place directly after Simpler. Drop a sample into Simpler.',[260.,5.,730.,20.],varname='status')
 p.label('playing','Step 0 | STOP',[1000.,5.,420.,20.],varname='playing')
@@ -41,7 +43,7 @@ for i in range(16):
  x=260.+(i%8)*104;y=60.+(i//8)*35
  p.label('label'+str(i),str(i+1),[x,y,18.,20.])
  p.control('step'+str(i),'live.menu','Step '+str(i+1),[x+18,y,82.,22.],maximum=len(NAMES)-1,initial=DEFAULT[i],enum=NAMES);cmd('step'+str(i),'step '+str(i))
-for i,(id,label,lo,hi,val) in enumerate([('regionstart','Start %',0,99.9,0),('regionend','End %',.1,100,100),('smoothing','Fade ms',1,100,20),('volume','Out dB',-60,6,-6),('steps','Steps',1,16,16),('division','Clock 0-4',0,4,2),('seed','Seed',1,65535,1234)]):
+for i,(id,label,lo,hi,val) in enumerate([('regionstart','Start %',0,99.9,0),('regionend','End %',.1,100,100),('smoothing','Fade ms',1,100,20),('volume','Out dB',-60,6,-6),('steps','Steps',1,16,16),('division','Clock 0-4',0,4,0 if SAFE else 2),('seed','Seed',1,65535,1234)]):
  x=260.+i*118;p.label(id+'label',label,[x,130.,70.,17.]);p.control(id,'live.numbox',label,[x+64,130.,50.,22.],minimum=lo,maximum=hi,initial=val,unitstyle=4 if id=='volume' else 1);cmd(id,id)
 p.label('hold-label','HOLD %',[1110.,31.,48.,20.],fontface=1)
 p.control('holdpercent','live.numbox','Hold percent',[1159.,30.,48.,22.],minimum=0,maximum=100,initial=25,unitstyle=5);cmd('holdpercent','holdpercent')
@@ -104,9 +106,12 @@ for ch in range(2):
  p.connect(prev,0,'output',ch)
 p.data['parameters']={**p.params,'inherited_shortname':1}
 p.data['dependency_cache']=[{'name':n,'type':'TEXT','implicit':1} for n in ['compass.js','core.js','display.js']]
-dist=ROOT/'dist'/('no-fades' if NO_FADES else '');dist.mkdir(parents=True,exist_ok=True);blob=(json.dumps({'patcher':p.data},indent=2)+'\n').encode();(dist/'StepCompass.maxpat').write_bytes(blob)
+dist=ROOT/'dist'/('safe' if SAFE else 'no-fades' if NO_FADES else '');dist.mkdir(parents=True,exist_ok=True);blob=(json.dumps({'patcher':p.data},indent=2)+'\n').encode();(dist/'StepCompass.maxpat').write_bytes(blob)
 entries=[Entry('StepCompass.amxd',blob+b'\0',b'JSON',17)]
 for n in ['compass.js','core.js','display.js']:
- data=(transform(n,(ROOT/'src'/n).read_text()) if NO_FADES else (ROOT/'src'/n).read_text()).encode();entries.append(Entry(n,data));(dist/n).write_bytes(data)
-amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/('StepCompass-M4L-NoFades-v0.1.11.amxd' if NO_FADES else 'StepCompass-M4L-v0.1.11.amxd')).write_bytes(amxd)
+ source=(ROOT/'src'/n).read_text()
+ if NO_FADES:source=transform(n,source)
+ if SAFE:source=transform_safe(n,source)
+ data=source.encode();entries.append(Entry(n,data));(dist/n).write_bytes(data)
+amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/('StepCompass-M4L-Safe-v0.1.12.amxd' if SAFE else 'StepCompass-M4L-NoFades-v0.1.11.amxd' if NO_FADES else 'StepCompass-M4L-v0.1.11.amxd')).write_bytes(amxd)
 print('Built frozen AMXD:',len(amxd),'bytes')
