@@ -1,4 +1,4 @@
-# StepCompass M4L v0.1.10
+# StepCompass M4L v0.1.11
 
 Wersja 0.1.7 poprawia kolejność fizycznych wejść podpatcha odtwarzania,
 która w 0.1.6 mogła powodować ciszę. Zachowuje poprawiony slope i pole czasu z ±10 ms.
@@ -12,7 +12,7 @@ Nie zawiera kodu Compass ani silnika softcut.
 ## Pierwsze uruchomienie
 
 1. Na ścieżce MIDI umieść **Simpler** i wczytaj do niego sample.
-2. Pobierz **StepCompass-M4L-v0.1.10.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
+2. Pobierz **StepCompass-M4L-v0.1.11.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
    W racku oba urządzenia muszą znajdować się w tym samym łańcuchu.
 3. Ustaw początek i koniec sampla w Simplerze. StepCompass automatycznie pobierze ten zakres.
 4. Poczekaj, aż status pokaże nazwę pliku i zakres, np. `Simpler 1.00–4.00 s | ready`.
@@ -64,7 +64,7 @@ nadal służy do wygładzania pętli i skoków sampla. Przy nagłym powrocie gł
 krótkie wygładzenie 64 próbek (około 1,5 ms przy 44,1 kHz), aby ograniczyć kliknięcia.
 W zapisanych sekwencjach stare polecenia Pan left/right stają się Fade out/in.
 
-## Domyślne ustawienia i szanse losowania (v0.1.10)
+## Domyślne ustawienia i szanse losowania (v0.1.11)
 
 Sekwencja początkowa jest zapisana bezpośrednio, jak na przesłanym zrzucie:
 
@@ -94,7 +94,7 @@ Ustawienia zapisują się z projektem i obsługują automatyzację. Starsze zapi
 zachowywane (dawne przełączniki 0/1 zamieniają się na 0/100); stara waga Hold nie jest już używana.
 Przy odczycie starego stanu HOLD % zaczyna od 25%, bez zmieniania zapisanych kroków.
 
-## Rate slope ms (v0.1.10)
+## Rate slope ms (v0.1.11)
 
 Czas dojścia od bieżącej szybkości odtwarzania do nowej: 0–10000 ms, domyślnie 50 ms.
 0 oznacza zmianę natychmiastową; 200 ms krótki ślizg; 1000 ms rozpędzanie/hamowanie taśmy.
@@ -158,15 +158,14 @@ Barcode/OctaScenes w tym repozytorium. Brak zewnętrznych obiektów MSP i płatn
 ## 10 gotowych presetów (0.1.8)
 
 Pod podglądem sampla po lewej wybierz preset i kliknij LOAD PRESET. Sam wybór nazwy nic nie zmienia.
-LOAD zastępuje 16 komend, ustawia 16 kroków, bazowy clock 4/beat (Clock 2), seed i slope;
+LOAD zastępuje 16 komend, ustawia 16 kroków, bazowy clock (preset 1: 4/beat, pozostałe: 1/beat), seed i slope;
 restartuje sekwencję. Zachowuje sample, zakres, głośność, Fade ms, HOLD % i wagi RANDOMIZE.
 Wzór po załadowaniu można edytować; zapis Setu zachowuje jego aktualne kroki.
 Nazwa w menu wskazuje wybór do załadowania, nie identyfikuje edytowanego wzoru.
 RANDOMIZE nadal używa wag; nie zachowuje dokładnych proporcji presetu.
 
 W pierwszych dwóch presetach są trzy pary Reverse → Forward. Po każdym Reverse
-następny krok przywraca kierunek do przodu. Nie ma Holdów: przy wymaganych liczbach
-komend pozostałe pola zajmują fade in/out.
+następny krok przywraca kierunek do przodu. Preset 1 ma Hold na kroku 3 zamiast Clock +, zgodnie z przesłanym ustawieniem.
 Rate +/− przesuwa cel o oktawę względem poprzedniej szybkości (0.5, 1, 2), z ograniczeniem
 na końcach zakresu. Para Rate +, Rate − daje 1→2→1, nie 1→2→0.5.
 Step random może pomijać lub powtarzać komendy, w tym Forward: liczby oznaczają obsadę
@@ -174,13 +173,17 @@ Step random może pomijać lub powtarzać komendy, w tym Forward: liczby oznacza
 
 | Preset | Charakter | Slope ms |
 |---|---|---|
-| 01 Soft drift | 3 pary Reverse/Forward, 1 Rate +, 1 Rate −, 2 Clock +, 2 Clock −, 2 Fade out, 2 Fade in | 50 |
-| 02 Small detours | Te same liczby kierunku, pitcha i clocka, 2 Step random, 1 Fade out, 1 Fade in | 50 |
+| 01 Soft drift | 3 pary Reverse/Forward, 1 Rate +, 1 Rate −, 1 Clock +, 2 Clock −, 1 Hold, 2 Fade out, 2 Fade in | 50 |
+| 02 Small detours | 3 pary Reverse/Forward, 1 Rate +, 1 Rate −, 2 Clock +, 2 Clock −, 2 Step random, 1 Fade out, 1 Fade in | 50 |
 | 03 Position drift | Dodaje skoki pozycji | 50 |
 | 04 Loop wander | Dodaje losową pętlę oraz Loop start | 50 |
 | 05 Broken motion | Więcej skoków, mniej odpoczynku | 50 |
 | 06 Tape turns | Zmiany kierunku i losowy pitch | 50 |
 | 07 Loop shuffle | Gęstsze zmiany pętli | 50 |
-| 08 Clock fracture | Dochodzi Clock fastest/slowest | 50 |
+| 08 Clock fracture | Clock slowest i pauza Hold | 50 |
 | 09 Jump cuts | Częstsze skoki pozycji i kroków | 50 |
-| 10 Full scatter | Bez Hold i fade; najwięcej skoków i zmian szybkości | 50 |
+| 10 Full scatter | Dużo skoków i zmian szybkości, z pauzami Hold | 50 |
+
+W 0.1.11 presety 2–10 startują przy Clock 0 (1 krok/beat); Clock fastest zastąpiono Hold.
+Clock + nadal może stopniowo przyspieszyć sekwencję, zwłaszcza przy Step random.
+Preset 1 zachowuje Clock 2 i seed 12340 ze zrzutu ekranu. Slope wszędzie: 50 ms.

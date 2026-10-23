@@ -111,6 +111,6 @@ function loadpreset(){
  var p=core.applyPreset(selectedPreset);if(!p)return;
  rateslope(p.slope);ui('rateslope',rateSlope);
  for(var i=0;i<16;i++)publish('step'+i,core.steps[i]);
- publish('steps',16);publish('division',2);publish('seed',core.seed);
+ publish('steps',16);publish('division',p.clock);publish('seed',core.seed);
  reset();notifyclients();status('Preset: '+p.name+' | 16 steps | weights unchanged');
 }
