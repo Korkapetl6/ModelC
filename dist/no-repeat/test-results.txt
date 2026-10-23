@@ -1,1 +1,2 @@
 PASS: zone exclusion, natural continuation, short-loop length/range, 16000 repeated commands, Safe recovery and controller phase/cursor wiring
+PASS: overlapping starts across zone boundaries, reverse/wrap coverage, tempo/rate-sized exclusion and short-source limitation

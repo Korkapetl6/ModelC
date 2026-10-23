@@ -78,11 +78,11 @@ function tick(){if(!ready)return;var now=Date.now(),dt=lastWall?Math.min(.1,(now
  var run=!!(loadedOK&&!loadPhase&&enabled&&deviceOn&&(playing||free));
  if(run&&!wasRunning){var h=core.reset();h.seek=true;playCommand(h);fadeReset();nextBeat=beat;lastBeat=beat;}
  if(run&&lastBeat!==null&&(beat<lastBeat-.02||beat-lastBeat>.5)){h=core.reset();h.seek=true;playCommand(h);nextBeat=beat;}
- if(run){var ticks=0;while(beat+1e-8>=nextBeat&&ticks++<32){h=core.advance(stepCursor());if(h&&h.lo!==undefined)playCommand(h);var end=nextBeat+1/core.division;stepEnvelope(h&&h.fade?h.fade:0,nextBeat,end,beat,tempo);nextBeat=end;}}
+ if(run){var ticks=0;while(beat+1e-8>=nextBeat&&ticks++<32){h=core.advance(stepCursor(),tempo,rateActual);if(h&&h.lo!==undefined)playCommand(h);var end=nextBeat+1/core.division;stepEnvelope(h&&h.fade?h.fade:0,nextBeat,end,beat,tempo);nextBeat=end;}}
  if(run&&currentFade&&tempo!==previousTempo)stepEnvelope(currentFade,fadeStart,fadeEnd,beat,tempo);previousTempo=tempo;
  if(run!==wasRunning){outlet(0,'master',run&&db>-60?Math.pow(10,db/20):0,20);wasRunning=run;}
  lastBeat=beat;if(++tickCount%5!==0)return;outlet(1,'state',core.index,core.count,core.start,core.end,core.division,core.rate,run?1:0);
- text('playing','Step '+(core.index+1)+' | '+(core.rate<0?'-':'')+rateActual.toFixed(2)+'x'+(Math.abs(rateActual-rateGoal)>.01?' -> '+(core.rate<0?'-':'')+rateGoal+'x':'')+' | '+core.division+'/beat'+(core.safeRest>0?' | RECOVER':'')+(run?' | PLAY':' | STOP'));
+ text('playing','Step '+(core.index+1)+' | '+(core.rate<0?'-':'')+rateActual.toFixed(2)+'x'+(Math.abs(rateActual-rateGoal)>.01?' -> '+(core.rate<0?'-':'')+rateGoal+'x':'')+' | '+core.division+'/beat'+(core.repeatLimited?' | REPEAT LIMIT':'')+(core.safeRest>0?' | RECOVER':'')+(run?' | PLAY':' | STOP'));
 }
 function step(i,x){core.steps[clip(i,0,15)|0]=Number(x)>=14?0:clip(x,0,13)|0;notifyclients();}
 function holdpercent(x){core.holdPercent=clip(x,0,100);holdHint();notifyclients();}

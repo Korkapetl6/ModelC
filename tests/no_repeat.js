@@ -26,5 +26,17 @@ vm.createContext(ctx);vm.runInContext(fs.readFileSync('dist/no-repeat/compass.js
 ctx.lastConfig={lo:100,hi:500};ctx.activeHead=1;ctx.phase[1]=.25;assert.equal(ctx.stepCursor(),200);
 ctx.queued={seek:true,pos:350};assert.equal(ctx.stepCursor(),350);ctx.queued=null;
 ctx.configure(1,{lo:100,hi:500,pos:300,rate:1});assert.equal(ctx.phase[1],.5);assert.equal(ctx.stepCursor(),300);
-assert(fs.readFileSync('dist/no-repeat/compass.js','utf8').includes('h=core.advance(stepCursor());'));
+assert(fs.readFileSync('dist/no-repeat/compass.js','utf8').includes('h=core.advance(stepCursor(),tempo,rateActual);'));
 console.log('PASS: zone exclusion, natural continuation, short-loop length/range, 16000 repeated commands, Safe recovery and controller phase/cursor wiring');
+
+// Different start zones can still replay the same audio span: reject that overlap.
+c=new C();c.duration=1600;c.steps.fill(0);c.reset();c.advance(20,120,1);
+h=c.advance(220,120,1);assert(h&&h.seek);assert(h.pos>=550);assert(!c.repeatLimited);
+// Loop wrap and reverse spans count, not just a forward start position.
+c.reset();c.rate=-1;c.advance(100,120,1);h=c.advance(1500,120,1);assert(h&&h.seek);assert(!c.repeatLimited);
+// A sample shorter than a step cannot supply two disjoint passages; expose that limitation.
+c=new C();c.duration=100;c.steps.fill(0);c.reset();c.advance(0,120,1);c.advance(0,120,1);assert(c.repeatLimited);
+// Fast playback and slower clocks enlarge the excluded interval.
+c=new C();c.duration=16000;c.steps.fill(0);c.reset();c.advance(0,60,2);
+assert(c.previousSpan[0][1]>=2060);h=c.advance(1100,60,2);assert(h&&h.seek);assert(!c.repeatLimited);
+console.log('PASS: overlapping starts across zone boundaries, reverse/wrap coverage, tempo/rate-sized exclusion and short-source limitation');

@@ -210,23 +210,25 @@ Wszystkie presety startują przy 1/beat, slope 50 ms. RESET rozpoczyna nowe okno
 Przy 120 BPM: do 2 sekund efektu, następnie 1 sekunda regeneracji.
 Powrót pitcha trwa ustawiony slope; wysoki slope wydłuża słyszalne hamowanie.
 
-## Safe / No Fades / No Repeat (0.1.13)
+## Safe / No Fades / No Repeat (0.1.14)
 
-Plik: `dist/no-repeat/StepCompass-M4L-Safe-NoRepeat-v0.1.13.amxd`.
+Plik: `dist/no-repeat/StepCompass-M4L-Safe-NoRepeat-v0.1.14.amxd`.
 Budowa: `python3 tools/build.py --no-repeat`.
-Wariant zachowuje Safe (do 4 beatów zmian szybkości, potem 2 beaty odpoczynku),
-No Fades i domyślny slope 50 ms.
+Zachowuje Safe, No Fades i domyślny slope 50 ms.
 
-Wybrany zakres audio dzielony jest na 16 równych stref. Na każdym wykonanym kroku
-porównuje się jego początek z początkiem poprzedniego kroku, także dla Hold.
-Jeśli oba leżą w tej samej strefie, następny start trafia do środka jednej z pozostałych
-15 stref. Inaczej odtwarzanie trwa naturalnie. Przy wykroczeniu poza bieżącą pętlę
-pętla zostaje przeniesiona z zachowaniem długości. Kierunek, rate i zakres źródła zostają.
-Powtórzenia pętli wewnątrz kroku nie są blokowane. RESET/nowy preset czyści historię.
+Na każdym wykonanym kroku porównuje przewidywany odcinek audio z poprzednim krokiem.
+Długość wynika z tempa, clocka i większej z bieżącej oraz docelowej wartości rate;
+uwzględnia kierunek, zawijanie pętli oraz 30 ms zapasu na snapshot/crossfade.
+Blokuje też kolejne starty w tej samej z 16 stref wybranego zakresu.
+Przy kolizji szuka w 64 pozycjach innego odcinka bez nakładania. Jeśli żadnego nie
+znajdzie, wybiera najmniejsze nakładanie i wyświetla REPEAT LIMIT.
+Przeniesienie poza obecną pętlę zachowuje jej długość i granice wybranego zakresu.
+Powtórzenia wewnątrz kroku pozostają dozwolone. RESET czyści historię.
 
-To porównywanie miejsc pliku, nie analiza podobieństwa brzmienia. Powtórzone nagranie
-w różnych strefach może nadal brzmieć tak samo; różne początki nie gwarantują
-całkowicie rozłącznych odcinków audio. Dla długich sampli i krótkich kroków wariant
-może wywoływać częste skoki. Pozycja pochodzi ze snapshotów DSP co 10 ms;
-przy przeciążeniu lub krokach krótszych od crossfade mogą występować opóźnienia
-i pomijanie oczekujących przejść, jak w pozostałych wersjach.
+To porównywanie pozycji pliku, nie podobieństwa brzmienia. Powtórzone nagranie
+w różnych miejscach może nadal brzmieć tak samo. Przy krótkim zakresie lub długim
+kroku dwa rozłączne odcinki mogą nie istnieć. Pozycja jest odczytywana co 10 ms;
+przeciążenie, zmiany tempa w środku kroku i kolejka crossfade ograniczają dokładność.
+Dla długich sampli i krótkich kroków wariant może wykonywać częste skoki.
+Testy obejmują odcinki nakładające się mimo różnych stref startu, reverse, zawijanie,
+wpływ tempa/rate, małe pętle, zbyt krótkie źródło oraz zachowanie Safe.

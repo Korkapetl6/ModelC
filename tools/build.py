@@ -116,5 +116,5 @@ for n in ['compass.js','core.js','display.js']:
  if SAFE:source=transform_safe(n,source)
  if NO_REPEAT:source=transform_no_repeat(n,source)
  data=source.encode();entries.append(Entry(n,data));(dist/n).write_bytes(data)
-amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/('StepCompass-M4L-Safe-NoRepeat-v0.1.13.amxd' if NO_REPEAT else 'StepCompass-M4L-Safe-v0.1.12.amxd' if SAFE else 'StepCompass-M4L-NoFades-v0.1.11.amxd' if NO_FADES else 'StepCompass-M4L-v0.1.11.amxd')).write_bytes(amxd)
+amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/('StepCompass-M4L-Safe-NoRepeat-v0.1.14.amxd' if NO_REPEAT else 'StepCompass-M4L-Safe-v0.1.12.amxd' if SAFE else 'StepCompass-M4L-NoFades-v0.1.11.amxd' if NO_FADES else 'StepCompass-M4L-v0.1.11.amxd')).write_bytes(amxd)
 print('Built frozen AMXD:',len(amxd),'bytes')
