@@ -4,13 +4,17 @@ from pathlib import Path
 from patch import Patch,voice_patch,BG,INK,ACCENT,BUTTON
 from amxd_container import Entry,frozen_amxd,unpack_frozen
 ROOT=Path(__file__).resolve().parents[1]
+NO_FADES='--no-fades' in sys.argv
+from no_fades import transform
 NAMES=['Hold','Forward','Reverse','Rate +','Rate -','Rate random','Loop start','Position','Loop random','Clock +','Clock -','Clock fastest','Clock slowest','Step random','Fade out','Fade in']
 SHORT=['--','FWD','REV','R+','R-','R?','HOME','POS?','LOOP?','C+','C-','C16','C1','STEP?','FADE OUT','FADE IN']
 DEFAULT=[1, 14, 9, 2, 13, 14, 0, 10, 9, 14, 10, 15, 10, 14, 1, 10]
 WEIGHTS=[100, 100, 100, 0, 0, 100, 100, 100, 100, 100, 100, 0, 0, 100, 100, 100]
+if NO_FADES:
+ NAMES=NAMES[:14];DEFAULT=[0 if x>=14 else x for x in DEFAULT]
 p=Patch(1430,169,True)
 p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.11',autosave=0)
-p.label('title','STEP COMPASS / SIMPLER',[10.,4.,240.,20.],fontface=1)
+p.label('title','STEP COMPASS / NO FADES' if NO_FADES else 'STEP COMPASS / SIMPLER',[10.,4.,240.,20.],fontface=1)
 p.box('display','jsui',filename='display.js',rect=[10.,30.,240.,96.],presentation=1,presentation_rect=[10.,30.,240.,96.],numinlets=1,numoutlets=0)
 p.label('status','Place directly after Simpler. Drop a sample into Simpler.',[260.,5.,730.,20.],varname='status')
 p.label('playing','Step 0 | STOP',[1000.,5.,420.,20.],varname='playing')
@@ -36,14 +40,14 @@ for ident,label,delta,x in [('slope-minus','-10',-10,976.),('slope-plus','+10',1
 for i in range(16):
  x=260.+(i%8)*104;y=60.+(i//8)*35
  p.label('label'+str(i),str(i+1),[x,y,18.,20.])
- p.control('step'+str(i),'live.menu','Step '+str(i+1),[x+18,y,82.,22.],maximum=15,initial=DEFAULT[i],enum=NAMES);cmd('step'+str(i),'step '+str(i))
+ p.control('step'+str(i),'live.menu','Step '+str(i+1),[x+18,y,82.,22.],maximum=len(NAMES)-1,initial=DEFAULT[i],enum=NAMES);cmd('step'+str(i),'step '+str(i))
 for i,(id,label,lo,hi,val) in enumerate([('regionstart','Start %',0,99.9,0),('regionend','End %',.1,100,100),('smoothing','Fade ms',1,100,20),('volume','Out dB',-60,6,-6),('steps','Steps',1,16,16),('division','Clock 0-4',0,4,2),('seed','Seed',1,65535,1234)]):
  x=260.+i*118;p.label(id+'label',label,[x,130.,70.,17.]);p.control(id,'live.numbox',label,[x+64,130.,50.,22.],minimum=lo,maximum=hi,initial=val,unitstyle=4 if id=='volume' else 1);cmd(id,id)
 p.label('hold-label','HOLD %',[1110.,31.,48.,20.],fontface=1)
 p.control('holdpercent','live.numbox','Hold percent',[1159.,30.,48.,22.],minimum=0,maximum=100,initial=25,unitstyle=5);cmd('holdpercent','holdpercent')
 p.label('hold-count','NEXT 4/16',[1110.,55.,74.,18.],varname='hold-count',fontsize=9.)
 p.label('pool-label','COMMAND WEIGHTS',[1220.,30.,200.,20.],fontface=1)
-for i in range(1,16):
+for i in range(1,len(NAMES)):
  x=1110.+(i%4)*77;y=53.+(i//4)*25
  p.label('poolname'+str(i),SHORT[i],[x,y+2,37.,18.],fontsize=8.5)
  p.control('pool'+str(i),'live.numbox','Weight '+NAMES[i],[x+37,y,36.,21.],minimum=0,maximum=100,initial=WEIGHTS[i],unitstyle=1,fontsize=10.);cmd('pool'+str(i),'pool '+str(i))
@@ -100,9 +104,9 @@ for ch in range(2):
  p.connect(prev,0,'output',ch)
 p.data['parameters']={**p.params,'inherited_shortname':1}
 p.data['dependency_cache']=[{'name':n,'type':'TEXT','implicit':1} for n in ['compass.js','core.js','display.js']]
-dist=ROOT/'dist';dist.mkdir(exist_ok=True);blob=(json.dumps({'patcher':p.data},indent=2)+'\n').encode();(dist/'StepCompass.maxpat').write_bytes(blob)
+dist=ROOT/'dist'/('no-fades' if NO_FADES else '');dist.mkdir(parents=True,exist_ok=True);blob=(json.dumps({'patcher':p.data},indent=2)+'\n').encode();(dist/'StepCompass.maxpat').write_bytes(blob)
 entries=[Entry('StepCompass.amxd',blob+b'\0',b'JSON',17)]
 for n in ['compass.js','core.js','display.js']:
- data=(ROOT/'src'/n).read_bytes();entries.append(Entry(n,data));(dist/n).write_bytes(data)
-amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/'StepCompass-M4L-v0.1.11.amxd').write_bytes(amxd)
+ data=(transform(n,(ROOT/'src'/n).read_text()) if NO_FADES else (ROOT/'src'/n).read_text()).encode();entries.append(Entry(n,data));(dist/n).write_bytes(data)
+amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/('StepCompass-M4L-NoFades-v0.1.11.amxd' if NO_FADES else 'StepCompass-M4L-v0.1.11.amxd')).write_bytes(amxd)
 print('Built frozen AMXD:',len(amxd),'bytes')

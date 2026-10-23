@@ -1,0 +1,5 @@
+autowatch=0;inlets=1;outlets=0;mgraphics.init();mgraphics.relative_coords=0;mgraphics.autofill=0;
+var peaks=[],step=-1,count=16,start=0,end=1,div=4,rate=1,running=0;
+function wave(){peaks=arrayfromargs(arguments);mgraphics.redraw();}
+function state(a,b,c,d,e,f,g){step=a;count=b;start=c;end=d;div=e;rate=f;running=g;mgraphics.redraw();}
+function paint(){with(mgraphics){save();scale(1,.75);set_source_rgba(.04,.06,.07,1);rectangle(0,0,240,128);fill();set_line_width(1);set_source_rgba(.5,.65,.62,1);for(var i=0;i<peaks.length;i++){var x=8+i*224/peaks.length,y=Math.max(.5,peaks[i]*30);move_to(x,38-y);line_to(x,38+y);}stroke();set_source_rgba(.2,.85,.65,.18);rectangle(8+224*start,4,224*(end-start),68);fill();for(i=0;i<16;i++){set_source_rgba(i===step&&running?.2:.2,i===step&&running?.9:.28,i===step&&running?.65:.3,i<count?1:.25);rectangle(8+(i%8)*28,80+Math.floor(i/8)*21,24,17);fill();set_source_rgba(.95,.95,.95,1);select_font_face('Arial');set_font_size(10);move_to(12+(i%8)*28,92+Math.floor(i/8)*21);show_text(String(i+1));}restore();}}

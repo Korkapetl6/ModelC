@@ -187,3 +187,11 @@ Step random może pomijać lub powtarzać komendy, w tym Forward: liczby oznacza
 W 0.1.11 presety 2–10 startują przy Clock 0 (1 krok/beat); Clock fastest zastąpiono Hold.
 Clock + nadal może stopniowo przyspieszyć sekwencję, zwłaszcza przy Step random.
 Preset 1 zachowuje Clock 2 i seed 12340 ze zrzutu ekranu. Slope wszędzie: 50 ms.
+
+## Osobna wersja No Fades
+
+`dist/no-fades/StepCompass-M4L-NoFades-v0.1.11.amxd` nie ma komend Fade in/out
+w menu, presetach ani losowaniu. Wszystkie takie kroki zastępuje Hold.
+Pozostaje techniczne wygładzanie skoków i końców pętli (Fade ms), chroniące przed klikami.
+Slope nadal wynosi 50 ms. Wersja standardowa pozostaje dostępna.
+Budowanie wariantu: `python3 tools/build.py --no-fades`.

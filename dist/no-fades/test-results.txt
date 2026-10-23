@@ -1,0 +1,1 @@
+PASS: No Fades frozen scripts, menus, defaults, presets, legacy fade no-op and 1000 randomizations
