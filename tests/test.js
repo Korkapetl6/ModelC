@@ -99,3 +99,25 @@ ctx.rateslope(10001);assert.equal(ctx.rateSlope,10000);ctx.rateslope(-1);assert.
 ctx.rateslope(1234);const slopeSaved=ctx.getvalueof()[0];ctx.rateslope(0);ctx.setvalueof(slopeSaved);assert.equal(ctx.rateSlope,1234);
 ctx.setvalueof(JSON.stringify({version:4,steps:defaults.steps,pool:defaults.pool,holdPercent:25,seed:1234}));assert.equal(ctx.rateSlope,0);
 console.log('PASS: slope mid-ramp retarget continuity model, positive magnitude only, crossfaded direction changes, rate commands do not seek or wait, fine UI increments, position changes preserve ramp, zero time, limits and state migration');
+// Factory presets: exact requested quotas, paired direction returns and isolated copies.
+assert.equal(Core.presets.length,10);
+for(let i=0;i<10;i++){
+ const presetCore=new Core();presetCore.start=.2;presetCore.end=.8;presetCore.holdPercent=31;
+ const poolBefore=presetCore.pool.slice();const p=presetCore.applyPreset(i);
+ assert.equal(presetCore.count,16);assert.equal(presetCore.baseDivision,4);
+ assert.equal(p.steps.length,16);assert(p.steps.every(x=>Number.isInteger(x)&&x>=0&&x<=15));
+ assert.equal(presetCore.start,.2);assert.equal(presetCore.end,.8);assert.equal(presetCore.holdPercent,31);assert.deepEqual(presetCore.pool,poolBefore);
+ if(i<2){
+  const counts=p.steps.reduce((a,x)=>(a[x]=(a[x]||0)+1,a),{});
+  for(const [cmd,count] of [[1,3],[2,3],[3,1],[4,1],[9,2],[10,2],[13,i===1?2:0]])assert.equal(counts[cmd]||0,count);
+  for(let j=0;j<16;j++)if(p.steps[j]===2)assert.equal(p.steps[(j+1)%16],1);
+ }
+ presetCore.steps[0]=99;assert.notEqual(p.steps[0],99);
+ if(i)assert(p.slope<=Core.presets[i-1].slope);
+}
+assert.equal(new Core().applyPreset(-1),null);assert.equal(new Core().applyPreset(10),null);
+ctx.loadedOK=true;ctx.loadPhase='';ctx.presetselect(1);ctx.loadpreset();
+assert.deepEqual(Array.from(ctx.core.steps),Core.presets[1].steps);assert.equal(ctx.rateSlope,850);
+assert.deepEqual(controls.steps,['int',16]);assert.deepEqual(controls.division,['int',2]);
+const presetState=ctx.getvalueof()[0];ctx.core.steps[0]=0;ctx.setvalueof(presetState);assert.deepEqual(Array.from(ctx.core.steps),Core.presets[1].steps);
+console.log('PASS: 10 fixed factory patterns, exact first-two quotas, Reverse/Forward pairs, range/weights preservation, copy isolation, preset loading and saved step/slope restoration');

@@ -4,7 +4,9 @@ PASS: fade endpoints, Hold restores full gain, consecutive fades restart, unchan
 PASS: screenshot defaults, 160000 weighted draws (100:50), 0% exclusion, empty-pool no-op, clamping, fractional weight save/restore, legacy migration
 PASS: exact Hold quotas for all 16 lengths x 101 percentages, inactive-step preservation, shuffled placement, 100% with empty pool, HOLD state restore/migration and count label
 PASS: slope mid-ramp retarget continuity model, positive magnitude only, crossfaded direction changes, rate commands do not seek or wait, fine UI increments, position changes preserve ramp, zero time, limits and state migration
+PASS: 10 fixed factory patterns, exact first-two quotas, Reverse/Forward pairs, range/weights preservation, copy isolation, preset loading and saved step/slope restoration
 PASS: frozen AMXD roundtrip, embedded scripts, patch port references, 16 step menus, two DSP heads and startup gains
 PASS: fade command labels, resetting native line~ envelope and smoothed stereo output wiring
 PASS: separate HOLD % control, 15 unitless command weights, screenshot UI defaults and Free Play enabled
 PASS: one native audio-rate glide shared by both stereo heads, integer entry and fine adjustment buttons, rate feedback and no competing per-head rate sources
+PASS: 10-choice preset menu, explicit LOAD button and expanded panel

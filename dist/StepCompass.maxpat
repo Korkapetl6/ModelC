@@ -13,7 +13,7 @@
       0.0,
       0.0,
       1430.0,
-      169.0
+      201.0
     ],
     "openinpresentation": 1,
     "default_fontsize": 11.0,
@@ -509,6 +509,161 @@
           "text": "randomize",
           "numinlets": 2,
           "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "preset-label",
+          "maxclass": "comment",
+          "patching_rect": [
+            260.0,
+            169.0,
+            60.0,
+            22.0
+          ],
+          "text": "PRESET",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            260.0,
+            169.0,
+            60.0,
+            22.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 11.0,
+          "fontface": 1
+        }
+      },
+      {
+        "box": {
+          "id": "preset-menu",
+          "maxclass": "umenu",
+          "patching_rect": [
+            323.0,
+            169.0,
+            205.0,
+            22.0
+          ],
+          "presentation": 1,
+          "presentation_rect": [
+            323.0,
+            169.0,
+            205.0,
+            22.0
+          ],
+          "numinlets": 1,
+          "numoutlets": 3,
+          "items": [
+            "01 Soft drift",
+            ",",
+            "02 Small detours",
+            ",",
+            "03 Position drift",
+            ",",
+            "04 Loop wander",
+            ",",
+            "05 Broken motion",
+            ",",
+            "06 Tape turns",
+            ",",
+            "07 Loop shuffle",
+            ",",
+            "08 Clock fracture",
+            ",",
+            "09 Jump cuts",
+            ",",
+            "10 Full scatter"
+          ]
+        }
+      },
+      {
+        "box": {
+          "id": "preset-menucmd",
+          "maxclass": "newobj",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "prepend presetselect",
+          "numinlets": 1,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "preset-load",
+          "maxclass": "textbutton",
+          "patching_rect": [
+            539.0,
+            169.0,
+            90.0,
+            22.0
+          ],
+          "text": "LOAD PRESET",
+          "presentation": 1,
+          "presentation_rect": [
+            539.0,
+            169.0,
+            90.0,
+            22.0
+          ],
+          "numinlets": 1,
+          "numoutlets": 3
+        }
+      },
+      {
+        "box": {
+          "id": "preset-load-cmd",
+          "maxclass": "message",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "loadpreset",
+          "numinlets": 2,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "preset-help",
+          "maxclass": "comment",
+          "patching_rect": [
+            642.0,
+            170.0,
+            660.0,
+            20.0
+          ],
+          "text": "Choose preset, then LOAD. Replaces steps, clock, seed and slope.",
+          "numinlets": 1,
+          "numoutlets": 0,
+          "presentation": 1,
+          "presentation_rect": [
+            642.0,
+            170.0,
+            660.0,
+            20.0
+          ],
+          "textcolor": [
+            0.91,
+            0.93,
+            0.94,
+            1.0
+          ],
+          "fontname": "Arial",
+          "fontsize": 11.0
         }
       },
       {
@@ -7765,6 +7920,54 @@
       {
         "patchline": {
           "source": [
+            "preset-menu",
+            0
+          ],
+          "destination": [
+            "preset-menucmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "preset-menucmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "preset-load",
+            0
+          ],
+          "destination": [
+            "preset-load-cmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "preset-load-cmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
             "rateslope",
             0
           ],
@@ -9700,7 +9903,7 @@
       0.0,
       0.0,
       1430.0,
-      169.0
+      201.0
     ],
     "project": {
       "version": 1,
@@ -9713,7 +9916,7 @@
       "autolocalize": 0
     },
     "description": "StepCompass sample command sequencer. Independent sample-only device.",
-    "digest": "StepCompass M4L v0.1.7",
+    "digest": "StepCompass M4L v0.1.8",
     "autosave": 0,
     "parameters": {
       "enable": [

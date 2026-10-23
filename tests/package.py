@@ -3,7 +3,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from amxd_container import unpack_frozen
 root=Path(__file__).resolve().parents[1]
-type_,entries=unpack_frozen((root/'dist/StepCompass-M4L-v0.1.7.amxd').read_bytes());assert type_==b'aaaa';assert {e.name for e in entries}=={'StepCompass.amxd','compass.js','core.js','display.js'}
+type_,entries=unpack_frozen((root/'dist/StepCompass-M4L-v0.1.8.amxd').read_bytes());assert type_==b'aaaa';assert {e.name for e in entries}=={'StepCompass.amxd','compass.js','core.js','display.js'}
 p=json.loads(entries[0].data.rstrip(b'\0'))['patcher']
 def check(p):
  boxes={e['box']['id']:e['box'] for e in p['boxes']};assert len(boxes)==len(p['boxes'])
@@ -74,3 +74,9 @@ for i in range(2):
 assert 'rateroute' not in boxes
 assert any(l['source']==['rate-glide',0] and l['destination']==['rate-meter',0] for l in lines)
 print('PASS: one native audio-rate glide shared by both stereo heads, integer entry and fine adjustment buttons, rate feedback and no competing per-head rate sources')
+assert boxes['preset-menu']['maxclass']=='umenu'
+assert len([x for x in boxes['preset-menu']['items'] if x!=','])==10
+assert boxes['preset-load-cmd']['text']=='loadpreset'
+assert p['openrect'][3]==201
+assert any(l['source']==['preset-load',0] and l['destination']==['preset-load-cmd',0] for l in lines)
+print('PASS: 10-choice preset menu, explicit LOAD button and expanded panel')

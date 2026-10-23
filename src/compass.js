@@ -104,3 +104,13 @@ function getvalueof(){return [JSON.stringify({version:5,rateSlope:rateSlope,hold
 function setvalueof(){try{var s=JSON.parse(arrayfromargs(arguments).join(' '));if(s.version!==1&&s.version!==2&&s.version!==3&&s.version!==4&&s.version!==5)return;rateSlope=s.version>=5?clip(s.rateSlope,0,10000):0;core.holdPercent=s.version>=4?clip(s.holdPercent,0,100):25;
  for(var i=0;i<16;i++){if(s.steps&&s.steps.length===16)core.steps[i]=clip(s.steps[i],0,15)|0;if(s.pool&&s.pool.length===16)core.pool[i]=s.version<3?(s.pool[i]?100:0):clip(s.pool[i],0,100);}core.pool[0]=0;core.seed=clip(s.seed,1,65535)|0;syncUI();if(ready)reload();}catch(e){status('Could not restore saved sample state.');}}
 function notifydeleted(){if(task)task.cancel();if(scanTask)scanTask.cancel();if(loadTimeout)loadTimeout.cancel();}
+
+var selectedPreset=0;
+function presetselect(x){selectedPreset=clip(x,0,9)|0;}
+function loadpreset(){
+ var p=core.applyPreset(selectedPreset);if(!p)return;
+ rateslope(p.slope);ui('rateslope',rateSlope);
+ for(var i=0;i<16;i++)publish('step'+i,core.steps[i]);
+ publish('steps',16);publish('division',2);publish('seed',core.seed);
+ reset();notifyclients();status('Preset: '+p.name+' | 16 steps | weights unchanged');
+}

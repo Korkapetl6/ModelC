@@ -1,4 +1,4 @@
-# StepCompass M4L v0.1.7
+# StepCompass M4L v0.1.8
 
 Wersja 0.1.7 poprawia kolejność fizycznych wejść podpatcha odtwarzania,
 która w 0.1.6 mogła powodować ciszę. Zachowuje poprawiony slope i pole czasu z ±10 ms.
@@ -12,7 +12,7 @@ Nie zawiera kodu Compass ani silnika softcut.
 ## Pierwsze uruchomienie
 
 1. Na ścieżce MIDI umieść **Simpler** i wczytaj do niego sample.
-2. Pobierz **StepCompass-M4L-v0.1.7.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
+2. Pobierz **StepCompass-M4L-v0.1.8.amxd** i przeciągnij **bezpośrednio za Simpler**, jak Barcode.
    W racku oba urządzenia muszą znajdować się w tym samym łańcuchu.
 3. Ustaw początek i koniec sampla w Simplerze. StepCompass automatycznie pobierze ten zakres.
 4. Poczekaj, aż status pokaże nazwę pliku i zakres, np. `Simpler 1.00–4.00 s | ready`.
@@ -64,7 +64,7 @@ nadal służy do wygładzania pętli i skoków sampla. Przy nagłym powrocie gł
 krótkie wygładzenie 64 próbek (około 1,5 ms przy 44,1 kHz), aby ograniczyć kliknięcia.
 W zapisanych sekwencjach stare polecenia Pan left/right stają się Fade out/in.
 
-## Domyślne ustawienia i szanse losowania (v0.1.7)
+## Domyślne ustawienia i szanse losowania (v0.1.8)
 
 Sekwencja początkowa jest zapisana bezpośrednio, jak na przesłanym zrzucie:
 
@@ -94,7 +94,7 @@ Ustawienia zapisują się z projektem i obsługują automatyzację. Starsze zapi
 zachowywane (dawne przełączniki 0/1 zamieniają się na 0/100); stara waga Hold nie jest już używana.
 Przy odczycie starego stanu HOLD % zaczyna od 25%, bez zmieniania zapisanych kroków.
 
-## Rate slope ms (v0.1.7)
+## Rate slope ms (v0.1.8)
 
 Czas dojścia od bieżącej szybkości odtwarzania do nowej: 0–10000 ms, domyślnie 0.
 0 oznacza zmianę natychmiastową; 200 ms krótki ślizg; 1000 ms rozpędzanie/hamowanie taśmy.
@@ -154,3 +154,33 @@ Wymagane Python 3 i Node.js, bez dodatkowych bibliotek. Skrypty urządzenia uży
 Kontener AMXD oparto na formacie maxdevtools; nie oznacza to walidacji urządzenia przez Max.
 Własny kod MIT. Pomocnicze generowanie patchera i kontenera pochodzi z wcześniejszych projektów
 Barcode/OctaScenes w tym repozytorium. Brak zewnętrznych obiektów MSP i płatnych bibliotek.
+
+## 10 gotowych presetów (0.1.8)
+
+W dolnym wierszu wybierz PRESET i kliknij LOAD PRESET. Sam wybór nazwy nic nie zmienia.
+LOAD zastępuje 16 komend, ustawia 16 kroków, bazowy clock 4/beat (Clock 2), seed i slope;
+restartuje sekwencję. Zachowuje sample, zakres, głośność, Fade ms, HOLD % i wagi RANDOMIZE.
+Wzór po załadowaniu można edytować; zapis Setu zachowuje jego aktualne kroki.
+Nazwa w menu wskazuje wybór do załadowania, nie identyfikuje edytowanego wzoru.
+RANDOMIZE nadal używa wag; nie zachowuje dokładnych proporcji presetu.
+
+W pierwszych dwóch presetach są trzy pary Reverse → Forward. Po każdym Reverse
+następny krok przywraca kierunek do przodu. Nie ma Holdów: przy wymaganych liczbach
+komend pozostałe pola zajmują fade in/out.
+Rate +/− przesuwa cel o oktawę względem poprzedniej szybkości (0.5, 1, 2), z ograniczeniem
+na końcach zakresu. Para Rate +, Rate − daje 1→2→1, nie 1→2→0.5.
+Step random może pomijać lub powtarzać komendy, w tym Forward: liczby oznaczają obsadę
+16 pól, nie gwarantowaną liczbę zdarzeń przy każdym obiegu.
+
+| Preset | Charakter | Slope ms |
+|---|---|---|
+| 01 Soft drift | 3 pary Reverse/Forward, 1 Rate +, 1 Rate −, 2 Clock +, 2 Clock −, 2 Fade out, 2 Fade in | 900 |
+| 02 Small detours | Te same liczby kierunku, pitcha i clocka, 2 Step random, 1 Fade out, 1 Fade in | 850 |
+| 03 Position drift | Dodaje skoki pozycji | 800 |
+| 04 Loop wander | Dodaje losową pętlę oraz Loop start | 750 |
+| 05 Broken motion | Więcej skoków, mniej odpoczynku | 650 |
+| 06 Tape turns | Zmiany kierunku i losowy pitch | 550 |
+| 07 Loop shuffle | Gęstsze zmiany pętli | 450 |
+| 08 Clock fracture | Dochodzi Clock fastest/slowest | 350 |
+| 09 Jump cuts | Częstsze skoki pozycji i kroków | 250 |
+| 10 Full scatter | Bez Hold i fade; najwięcej skoków i zmian szybkości | 150 |
