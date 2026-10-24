@@ -45,7 +45,7 @@ for(let trial=0;trial<10000;trial++){assert(weighted.randomize());for(const comm
 assert(Math.abs(counts[0]/(counts[0]+counts[1])-2/3)<.01);
 weighted.pool.fill(0);let before=JSON.stringify(weighted);assert.equal(weighted.randomize(),false);assert.equal(JSON.stringify(weighted),before);
 ctx.pool(1,37.5);assert.equal(ctx.core.pool[1],37.5);ctx.pool(2,200);assert.equal(ctx.core.pool[2],100);ctx.pool(3,-5);assert.equal(ctx.core.pool[3],0);
-const weightedSaved=ctx.getvalueof()[0];assert.equal(JSON.parse(weightedSaved).version,5);ctx.pool(1,0);ctx.setvalueof(weightedSaved);assert.equal(ctx.core.pool[1],37.5);
+const weightedSaved=ctx.getvalueof()[0];assert.equal(JSON.parse(weightedSaved).version,6);ctx.pool(1,0);ctx.setvalueof(weightedSaved);assert.equal(ctx.core.pool[1],37.5);
 ctx.setvalueof(JSON.stringify({version:2,steps:defaults.steps,pool:[1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0],seed:1234}));assert.deepEqual(Array.from(ctx.core.pool),[0,0,100,0,100,0,100,0,100,0,100,0,100,0,100,0]);
 console.log('PASS: screenshot defaults, 160000 weighted draws (100:50), 0% exclusion, empty-pool no-op, clamping, fractional weight save/restore, legacy migration');
 // Every active length and integer percentage must have an exact quota, not a Bernoulli chance.

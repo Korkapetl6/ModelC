@@ -17,7 +17,7 @@ WEIGHTS=[100, 100, 100, 0, 0, 100, 100, 100, 100, 100, 100, 0, 0, 100, 100, 100]
 if NO_FADES:
  NAMES=NAMES[:14];DEFAULT=[0 if x>=14 else x for x in DEFAULT]
 p=Patch(1430,169,True)
-p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.11',autosave=0)
+p.data.update(devicewidth=1430.,openrect=[0.,0.,1430.,169.],project={'version':1,'amxdtype':1633771873,'hideprojectwindow':1,'contents':{'patchers':{}},'searchpath':{},'autolocalize':0},description='StepCompass sample command sequencer. Independent sample-only device.',digest='StepCompass M4L v0.1.15',autosave=0)
 p.label('title','COMPASS / SAFE NO REPEAT' if NO_REPEAT else 'STEP COMPASS / SAFE' if SAFE else 'STEP COMPASS / NO FADES' if NO_FADES else 'STEP COMPASS / SIMPLER',[10.,4.,240.,20.],fontface=1)
 p.box('display','jsui',filename='display.js',rect=[10.,30.,240.,96.],presentation=1,presentation_rect=[10.,30.,240.,96.],numinlets=1,numoutlets=0)
 p.label('status','Place directly after Simpler. Drop a sample into Simpler.',[260.,5.,730.,20.],varname='status')
@@ -32,9 +32,11 @@ for i,(id,label,initial) in enumerate([('enable','ON',1),('freeplay','FREE PLAY'
 for i,(id,label) in enumerate([('reload','RELOAD'),('reset','RESET'),('randomize','RANDOMIZE')]):
  p.box(id,'textbutton',rect=[455.+i*112,30.,106.,22.],presentation=1,presentation_rect=[455.+i*112,30.,106.,22.],text=label,numinlets=1,numoutlets=3)
  p.box(id+'cmd','message',id,numinlets=2,numoutlets=1);p.connect(id,0,id+'cmd');p.connect(id+'cmd',0,'defer')
-p.box('preset-menu','umenu',rect=[10.,134.,155.,22.],presentation=1,presentation_rect=[10.,134.,155.,22.],numinlets=1,numoutlets=3,items=['01 Soft drift', ',', '02 Small detours', ',', '03 Position drift', ',', '04 Loop wander', ',', '05 Broken motion', ',', '06 Tape turns', ',', '07 Loop shuffle', ',', '08 Clock fracture', ',', '09 Jump cuts', ',', '10 Full scatter']);cmd('preset-menu','presetselect')
-p.box('preset-load','textbutton',rect=[172.,134.,78.,22.],presentation=1,presentation_rect=[172.,134.,78.,22.],text='LOAD PRESET',numinlets=1,numoutlets=3)
+p.box('preset-menu','umenu',varname='preset-menu',rect=[10.,134.,120.,22.],presentation=1,presentation_rect=[10.,134.,120.,22.],numinlets=1,numoutlets=3,items=['01 Soft drift', ',', '02 Small detours', ',', '03 Position drift', ',', '04 Loop wander', ',', '05 Broken motion', ',', '06 Tape turns', ',', '07 Loop shuffle', ',', '08 Clock fracture', ',', '09 Jump cuts', ',', '10 Full scatter']+sum([[',','User '+str(i)+' - empty'] for i in range(1,11)],[]));cmd('preset-menu','presetselect')
+p.box('preset-load','textbutton',rect=[134.,134.,55.,22.],presentation=1,presentation_rect=[134.,134.,55.,22.],text='LOAD',numinlets=1,numoutlets=3)
 p.box('preset-load-cmd','message','loadpreset',numinlets=2,numoutlets=1);p.connect('preset-load',0,'preset-load-cmd');p.connect('preset-load-cmd',0,'defer')
+p.box('preset-save','textbutton',rect=[193.,134.,57.,22.],presentation=1,presentation_rect=[193.,134.,57.,22.],text='SAVE',numinlets=1,numoutlets=3)
+p.box('preset-save-cmd','message','savepreset',numinlets=2,numoutlets=1);p.connect('preset-save',0,'preset-save-cmd');p.connect('preset-save-cmd',0,'defer')
 p.label('rateslope-label','Rate slope ms',[800.,31.,100.,20.])
 # Native integer entry avoids normalized 0..10000 Live dragging; state lives in CompassData.
 p.box('rateslope','number',rect=[898.,30.,72.,22.],varname='rateslope',minimum=0,maximum=10000,numinlets=1,numoutlets=2,presentation=1,presentation_rect=[898.,30.,72.,22.]);cmd('rateslope','rateslope')
@@ -116,5 +118,5 @@ for n in ['compass.js','core.js','display.js']:
  if SAFE:source=transform_safe(n,source)
  if NO_REPEAT:source=transform_no_repeat(n,source)
  data=source.encode();entries.append(Entry(n,data));(dist/n).write_bytes(data)
-amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/('StepCompass-M4L-Safe-NoRepeat-v0.1.14.amxd' if NO_REPEAT else 'StepCompass-M4L-Safe-v0.1.12.amxd' if SAFE else 'StepCompass-M4L-NoFades-v0.1.11.amxd' if NO_FADES else 'StepCompass-M4L-v0.1.11.amxd')).write_bytes(amxd)
+amxd=frozen_amxd(entries);assert unpack_frozen(amxd)==(b'aaaa',entries);(dist/('StepCompass-M4L-Safe-NoRepeat-v0.1.15.amxd' if NO_REPEAT else 'StepCompass-M4L-Safe-v0.1.15.amxd' if SAFE else 'StepCompass-M4L-NoFades-v0.1.15.amxd' if NO_FADES else 'StepCompass-M4L-v0.1.15.amxd')).write_bytes(amxd)
 print('Built frozen AMXD:',len(amxd),'bytes')

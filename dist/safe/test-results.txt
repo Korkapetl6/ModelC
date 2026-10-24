@@ -1,1 +1,2 @@
 PASS: full-speed 4-beat window, 2-beat recovery, no timer extension, reverse-preserving rate reset without seek, held effects expire, 10000 random jumps, all preset starts
+PASS: dist/safe ten-slot bank persisted into fresh instance; full parameter recall, decimals, copy isolation, explicit overwrite, full-bank protection, empty slot and legacy restore

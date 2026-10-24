@@ -1,4 +1,4 @@
-# StepCompass M4L v0.1.11
+# StepCompass M4L v0.1.15
 
 Wersja 0.1.7 poprawia kolejność fizycznych wejść podpatcha odtwarzania,
 która w 0.1.6 mogła powodować ciszę. Zachowuje poprawiony slope i pole czasu z ±10 ms.
@@ -232,3 +232,27 @@ przeciążenie, zmiany tempa w środku kroku i kolejka crossfade ograniczają do
 Dla długich sampli i krótkich kroków wariant może wykonywać częste skoki.
 Testy obejmują odcinki nakładające się mimo różnych stref startu, reverse, zawijanie,
 wpływ tempa/rate, małe pętle, zbyt krótkie źródło oraz zachowanie Safe.
+
+## Własne presety zapisywane w projekcie (0.1.15)
+
+Dostępne we wszystkich czterech wariantach. Pod waveformem są lista, LOAD i SAVE.
+
+1. Ustaw kroki i parametry. Wybierz User 1–10, kliknij SAVE.
+2. Zapisz projekt Live przez Cmd+S. Po ponownym otwarciu wybierz ten slot i LOAD.
+3. SAVE na zajętym slocie nadpisuje go. Zmiana kontrolek nie nadpisuje slotu automatycznie.
+
+SAVE przy wybranym presecie fabrycznym zajmuje pierwszy pusty slot User. Gdy wszystkie
+są pełne, trzeba wskazać slot do nadpisania. Presetów fabrycznych SAVE nie zmienia.
+Lista oznacza sloty jako saved/empty. Sam wybór pozycji nie zmienia brzmienia.
+
+Slot zawiera: 16 komend, liczbę aktywnych kroków, bazowy clock, seed, slope, HOLD %,
+wagi losowania, Start/End %, wygładzanie i Out dB. Nie zapisuje chwilowego rate/clocka,
+pozycji transportu, ON/FREE PLAY ani pliku sampla; po LOAD sekwencja zaczyna od nowa.
+Sample pochodzi nadal z sąsiedniego Simplera. Zachowaj je razem z projektem Live.
+Bank jest częścią stanu pattr CompassData danej instancji urządzenia, nie biblioteką
+globalną ani plikiem na GitHubie. Zapis urządzenia jako presetu Live pozwala przenosić bank.
+Stare projekty zachowują wzory; dostają pusty bank User.
+
+Testowano serializację wszystkich 10 slotów i odtworzenie w nowej instancji JS,
+pełne ustawienia, ułamki, nadpisywanie, pusty/pełny bank i starszy format stanu.
+Rzeczywiste zamknięcie i otwarcie Setu wymaga sprawdzenia w Live.

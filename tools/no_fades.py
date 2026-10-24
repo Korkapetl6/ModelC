@@ -11,6 +11,7 @@ def transform(name,source):
         source=source[:a]+'Compass.prototype.fadeValue=function(){return 1;};'+source[b:]
         source=source.replace('this.pool=[0,100,100,0,0,100,100,100,100,100,100,0,0,100,100,100]','this.pool=[0,100,100,0,0,100,100,100,100,100,100,0,0,100,0,0]')
     elif name=='compass.js':
+        source=source.replace('commandLimit=15','commandLimit=13')
         source=source.replace("if(i>0)ui('pool'+i", "if(i>0&&i<14)ui('pool'+i")
         source=source.replace('core.steps[clip(i,0,15)|0]=clip(x,0,15)|0','core.steps[clip(i,0,15)|0]=Number(x)>=14?0:clip(x,0,13)|0')
         source=source.replace('core.steps[i]=clip(s.steps[i],0,15)|0','core.steps[i]=Number(s.steps[i])>=14?0:clip(s.steps[i],0,13)|0')

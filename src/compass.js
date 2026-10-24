@@ -13,7 +13,7 @@ function initialize(){if(ready)return;try{song=new LiveAPI(null,'live_set');own=
  ready=true;outlet(0,'bind',String(name));task=new Task(tick,this);task.interval=10;task.repeat();syncUI();
  scanTask=new Task(scan,this);scanTask.interval=500;scanTask.repeat();scan();}
 function holdHint(){text('hold-count','NEXT '+core.holdCount()+'/'+core.count);}
-function syncUI(){for(var i=0;i<16;i++){ui('step'+i,core.steps[i]);if(i>0)ui('pool'+i,core.pool[i]);}ui('rateslope',rateSlope);ui('holdpercent',core.holdPercent);ui('seed',core.seed);holdHint();}
+function syncUI(){for(var i=0;i<16;i++){ui('step'+i,core.steps[i]);if(i>0)ui('pool'+i,core.pool[i]);}ui('rateslope',rateSlope);ui('holdpercent',core.holdPercent);ui('seed',core.seed);holdHint();presetMenu();}
 function value(api,key){var a=api.get(key);return a instanceof Array?a[0]:a;}
 function objectId(a){for(var i=0;i<a.length-1;i++)if(a[i]==='id')return Number(a[i+1]);return Number(a[0])||0;}
 function ids(a){var r=[];for(var i=0;i<a.length-1;i++)if(a[i]==='id')r.push(Number(a[++i]));return r;}
@@ -100,17 +100,55 @@ function deviceactive(x){deviceOn=Number(x)?1:0;}
 function reset(){var h=core.reset();h.seek=true;playCommand(h);fadeReset();if(lastBeat!==null)nextBeat=lastBeat;}
 function publish(id,v){var o=this.patcher.getnamed(id);if(o)o.message('int',v);}
 function randomize(){if(!core.randomize()){status('No command weights. Enable a command or set HOLD to 100%.');return;}for(var i=0;i<16;i++)publish('step'+i,core.steps[i]);publish('seed',core.seed);notifyclients();reset();status('Randomized: '+core.holdCount()+' Hold / '+core.count+' steps.');}
-function getvalueof(){return [JSON.stringify({version:5,rateSlope:rateSlope,holdPercent:core.holdPercent,steps:core.steps,pool:core.pool,seed:core.seed})];}
-function setvalueof(){try{var s=JSON.parse(arrayfromargs(arguments).join(' '));if(s.version!==1&&s.version!==2&&s.version!==3&&s.version!==4&&s.version!==5)return;rateSlope=s.version>=5?clip(s.rateSlope,0,10000):0;core.holdPercent=s.version>=4?clip(s.holdPercent,0,100):25;
- for(var i=0;i<16;i++){if(s.steps&&s.steps.length===16)core.steps[i]=clip(s.steps[i],0,15)|0;if(s.pool&&s.pool.length===16)core.pool[i]=s.version<3?(s.pool[i]?100:0):clip(s.pool[i],0,100);}core.pool[0]=0;core.seed=clip(s.seed,1,65535)|0;syncUI();if(ready)reload();}catch(e){status('Could not restore saved sample state.');}}
+function getvalueof(){return [JSON.stringify({version:6,userPresets:userPresets,selectedPreset:selectedPreset,rateSlope:rateSlope,holdPercent:core.holdPercent,steps:core.steps,pool:core.pool,seed:core.seed})];}
+function setvalueof(){try{var s=JSON.parse(arrayfromargs(arguments).join(' '));if(s.version!==1&&s.version!==2&&s.version!==3&&s.version!==4&&s.version!==5&&s.version!==6)return;rateSlope=s.version>=5?clip(s.rateSlope,0,10000):0;core.holdPercent=s.version>=4?clip(s.holdPercent,0,100):25;
+ for(var i=0;i<16;i++){if(s.steps&&s.steps.length===16)core.steps[i]=clip(s.steps[i],0,15)|0;if(s.pool&&s.pool.length===16)core.pool[i]=s.version<3?(s.pool[i]?100:0):clip(s.pool[i],0,100);}core.pool[0]=0;core.seed=clip(s.seed,1,65535)|0;
+ userPresets=[];for(var slot=0;slot<10;slot++)userPresets[slot]=s.version>=6&&s.userPresets?cleanPreset(s.userPresets[slot]):null;
+ selectedPreset=s.version>=6?(clip(s.selectedPreset,0,19)|0):0;syncUI();if(ready)reload();}catch(e){status('Could not restore saved sample state.');}}
 function notifydeleted(){if(task)task.cancel();if(scanTask)scanTask.cancel();if(loadTimeout)loadTimeout.cancel();}
 
-var selectedPreset=0;
-function presetselect(x){selectedPreset=clip(x,0,9)|0;}
+var selectedPreset=0,userPresets=[],commandLimit=15;
+function presetselect(x){selectedPreset=clip(x,0,19)|0;notifyclients();}
 function loadpreset(){
+ if(selectedPreset>=10){loaduserpreset(selectedPreset-10);return;}
  var p=core.applyPreset(selectedPreset);if(!p)return;
  rateslope(p.slope);ui('rateslope',rateSlope);
  for(var i=0;i<16;i++)publish('step'+i,core.steps[i]);
  publish('steps',16);publish('division',p.clock);publish('seed',core.seed);
  reset();notifyclients();status('Preset: '+p.name+' | 16 steps | weights unchanged');
+}
+
+function cleanPreset(s){
+ if(!s||!s.steps||s.steps.length!==16||!s.pool||s.pool.length!==16)return null;
+ var p={steps:[],pool:[],count:clip(s.count,1,16)|0,clock:clip(s.clock,0,4)|0,
+ seed:clip(s.seed,1,65535)|0,slope:clip(s.slope,0,10000),hold:clip(s.hold,0,100),
+ start:clip(s.start,0,.999),end:clip(s.end,.001,1),smooth:clip(s.smooth,1,100),db:clip(s.db,-60,6)};
+ p.end=Math.max(p.start+.001,p.end);
+ for(var i=0;i<16;i++){p.steps[i]=Number(s.steps[i])>commandLimit?0:clip(s.steps[i],0,commandLimit)|0;p.pool[i]=i===0||i>commandLimit?0:clip(s.pool[i],0,100);}
+ return p;
+}
+function presetMenu(){
+ var menu=this.patcher.getnamed('preset-menu');if(!menu)return;
+ menu.message('clear');var i;
+ for(i=0;i<10;i++)menu.message('append',Compass.presets[i].name);
+ for(i=0;i<10;i++)menu.message('append','User '+(i+1)+(userPresets[i]?' - saved':' - empty'));
+ menu.message('set',selectedPreset);
+}
+function savepreset(){
+ var slot=selectedPreset-10;
+ if(slot<0){for(slot=0;slot<10;slot++)if(!userPresets[slot])break;}
+ if(slot>=10){status('All user slots full. Select a User slot to overwrite, then SAVE.');return;}
+ userPresets[slot]=cleanPreset({steps:core.steps,pool:core.pool,count:core.count,clock:Math.round(Math.log(core.baseDivision)/Math.LN2),
+ seed:core.seed,slope:rateSlope,hold:core.holdPercent,start:core.start,end:core.end,smooth:smooth,db:db});
+ selectedPreset=slot+10;presetMenu();notifyclients();status('Saved User '+(slot+1)+'. Save your Live Set (Cmd+S) to keep it.');
+}
+function publishfloat(id,v){var o=this.patcher.getnamed(id);if(o)o.message('float',v);}
+function loaduserpreset(slot){
+ var p=cleanPreset(userPresets[slot]);if(!p){status('User '+(slot+1)+' is empty. Set controls, then SAVE.');return;}
+ core.steps=p.steps.slice();core.pool=p.pool.slice();core.count=p.count;core.baseDivision=1<<p.clock;
+ core.seed=p.seed;core.holdPercent=p.hold;core.start=p.start;core.end=p.end;rateSlope=p.slope;smooth=p.smooth;db=p.db;
+ for(var i=0;i<16;i++){publish('step'+i,core.steps[i]);if(i>0&&i<=commandLimit)publishfloat('pool'+i,core.pool[i]);}
+ publish('steps',p.count);publish('division',p.clock);publish('seed',p.seed);publishfloat('holdpercent',p.hold);
+ publishfloat('regionstart',p.start*100);publishfloat('regionend',p.end*100);publishfloat('smoothing',p.smooth);publishfloat('volume',p.db);
+ ui('rateslope',rateSlope);holdHint();reset();notifyclients();status('Loaded User '+(slot+1));
 }

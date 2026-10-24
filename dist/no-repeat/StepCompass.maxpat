@@ -518,14 +518,15 @@
           "patching_rect": [
             10.0,
             134.0,
-            155.0,
+            120.0,
             22.0
           ],
+          "varname": "preset-menu",
           "presentation": 1,
           "presentation_rect": [
             10.0,
             134.0,
-            155.0,
+            120.0,
             22.0
           ],
           "numinlets": 1,
@@ -549,7 +550,27 @@
             ",",
             "09 Jump cuts",
             ",",
-            "10 Full scatter"
+            "10 Full scatter",
+            ",",
+            "User 1 - empty",
+            ",",
+            "User 2 - empty",
+            ",",
+            "User 3 - empty",
+            ",",
+            "User 4 - empty",
+            ",",
+            "User 5 - empty",
+            ",",
+            "User 6 - empty",
+            ",",
+            "User 7 - empty",
+            ",",
+            "User 8 - empty",
+            ",",
+            "User 9 - empty",
+            ",",
+            "User 10 - empty"
           ]
         }
       },
@@ -573,17 +594,17 @@
           "id": "preset-load",
           "maxclass": "textbutton",
           "patching_rect": [
-            172.0,
             134.0,
-            78.0,
+            134.0,
+            55.0,
             22.0
           ],
-          "text": "LOAD PRESET",
+          "text": "LOAD",
           "presentation": 1,
           "presentation_rect": [
-            172.0,
             134.0,
-            78.0,
+            134.0,
+            55.0,
             22.0
           ],
           "numinlets": 1,
@@ -601,6 +622,43 @@
             22.0
           ],
           "text": "loadpreset",
+          "numinlets": 2,
+          "numoutlets": 1
+        }
+      },
+      {
+        "box": {
+          "id": "preset-save",
+          "maxclass": "textbutton",
+          "patching_rect": [
+            193.0,
+            134.0,
+            57.0,
+            22.0
+          ],
+          "text": "SAVE",
+          "presentation": 1,
+          "presentation_rect": [
+            193.0,
+            134.0,
+            57.0,
+            22.0
+          ],
+          "numinlets": 1,
+          "numoutlets": 3
+        }
+      },
+      {
+        "box": {
+          "id": "preset-save-cmd",
+          "maxclass": "message",
+          "patching_rect": [
+            0.0,
+            200.0,
+            100.0,
+            22.0
+          ],
+          "text": "savepreset",
           "numinlets": 2,
           "numoutlets": 1
         }
@@ -7701,6 +7759,30 @@
       {
         "patchline": {
           "source": [
+            "preset-save",
+            0
+          ],
+          "destination": [
+            "preset-save-cmd",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
+            "preset-save-cmd",
+            0
+          ],
+          "destination": [
+            "defer",
+            0
+          ]
+        }
+      },
+      {
+        "patchline": {
+          "source": [
             "rateslope",
             0
           ],
@@ -9601,7 +9683,7 @@
       "autolocalize": 0
     },
     "description": "StepCompass sample command sequencer. Independent sample-only device.",
-    "digest": "StepCompass M4L v0.1.11",
+    "digest": "StepCompass M4L v0.1.15",
     "autosave": 0,
     "parameters": {
       "enable": [

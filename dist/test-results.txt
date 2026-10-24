@@ -10,3 +10,10 @@ PASS: fade command labels, resetting native line~ envelope and smoothed stereo o
 PASS: separate HOLD % control, 15 unitless command weights, screenshot UI defaults and Free Play enabled
 PASS: one native audio-rate glide shared by both stereo heads, integer entry and fine adjustment buttons, rate feedback and no competing per-head rate sources
 PASS: 10-choice preset menu, explicit LOAD button and all controls within standard Live panel
+PASS: dist ten-slot bank persisted into fresh instance; full parameter recall, decimals, copy isolation, explicit overwrite, full-bank protection, empty slot and legacy restore
+PASS: frozen AMXD roundtrip, embedded scripts, patch port references, 16 step menus, two DSP heads and startup gains
+PASS: fade command labels, resetting native line~ envelope and smoothed stereo output wiring
+PASS: separate HOLD % control, 15 unitless command weights, screenshot UI defaults and Free Play enabled
+PASS: one native audio-rate glide shared by both stereo heads, integer entry and fine adjustment buttons, rate feedback and no competing per-head rate sources
+PASS: 10-choice preset menu, explicit LOAD button and all controls within standard Live panel
+PASS: persistent user bank menu and non-overlapping SAVE/LOAD controls

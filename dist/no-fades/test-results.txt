@@ -1,1 +1,2 @@
 PASS: No Fades frozen scripts, menus, defaults, presets, legacy fade no-op and 1000 randomizations
+PASS: dist/no-fades ten-slot bank persisted into fresh instance; full parameter recall, decimals, copy isolation, explicit overwrite, full-bank protection, empty slot and legacy restore

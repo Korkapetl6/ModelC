@@ -3,7 +3,7 @@ from pathlib import Path
 root=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(root/'tools'))
 from amxd_container import unpack_frozen
-_,entries=unpack_frozen((root/'dist/no-fades/StepCompass-M4L-NoFades-v0.1.11.amxd').read_bytes())
+_,entries=unpack_frozen((root/'dist/no-fades/StepCompass-M4L-NoFades-v0.1.15.amxd').read_bytes())
 p=json.loads(entries[0].data.rstrip(b'\0'))['patcher']
 b={e['box']['id']:e['box'] for e in p['boxes']}
 assert 'pool14' not in b and 'pool15' not in b
