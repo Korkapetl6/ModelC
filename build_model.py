@@ -8,7 +8,8 @@ N=257
 HALF=73.0
 CORNER=4.0
 LIP=2.0
-HEIGHT=65.0
+HEIGHT=65.0/3.0
+RELIEF=13.0
 FOOT=1.2
 
 def rounded_grid(x,y,half,radius):
@@ -19,15 +20,34 @@ def rounded_grid(x,y,half,radius):
     factor=np.maximum(u,v)/np.maximum(1e-12,np.sqrt(u*u+v*v))
     return np.where(corner,np.sign(x)*(half-radius+u*factor*radius),x),np.where(corner,np.sign(y)*(half-radius+v*factor*radius),y)
 
+def raw_water(x,y):
+    # Smoothly warped coordinates avoid repeated parallel crests and circular dimples.
+    u=x+6.0*np.sin(y/29.0)+3.0*np.sin((x+y)/47.0)
+    v=y+7.0*np.sin(x/36.0)-3.0*np.cos((x-2*y)/63.0)
+    h=.8*np.sin(.045*u+.025*v)+.45*np.sin(-.018*u+.060*v)
+    # Broad asymmetric depressions join into wandering troughs and rounded saddles.
+    pools=[(-35,-30,22,15,.40,3.5),(26,-10,27,14,-.60,4.2),
+           (-7,40,29,16,.20,3.7),(60,53,22,12,-.90,2.5),
+           (-65,20,20,30,.35,2.6)]
+    for cx,cy,rx,ry,angle,depth in pools:
+        dx=u-cx;dy=v-cy
+        a=np.cos(angle)*dx+np.sin(angle)*dy
+        b=-np.sin(angle)*dx+np.cos(angle)*dy
+        # Different axial exponents stay smooth while avoiding a repeated oval stamp.
+        h-=depth*np.exp(-((a/rx)**2+.85*(b/ry)**2))
+    h-=1.15*np.exp(-((v+13*np.sin(u/40.0)+12)/15.0)**2)
+    h+=1.30*np.exp(-((u+12)**2/900+(v+10)**2/600))
+    h+=.85*np.exp(-((u-43)**2/1000+(v-30)**2/750))
+    return h
+
+# Fixed normalization on the full top so edge derivative samples use the same amplitude.
+ref=np.linspace(-HALF,HALF,N)
+refx,refy=np.meshgrid(ref,ref)
+refx,refy=rounded_grid(refx,refy,HALF,CORNER)
+reference=raw_water(refx,refy)
+RAW_RANGE=float(np.ptp(reference));RAW_MAX=float(reference.max())
 def water(x,y):
-    # Warped long crests, varied wavelengths, no concentric/radial ripple stamp.
-    p=(.78*x+.62*y)/50.0
-    q=(-.62*x+.78*y)/76.0
-    return (2.30*np.sin(2*np.pi*p+.65*np.sin(2*np.pi*q))
-        +1.05*np.sin(2*np.pi*(.28*x-.96*y)/83+.5)
-        +.50*np.cos(2*np.pi*(.94*x+.34*y)/34+.8*np.sin(y/44))
-        +.80*np.exp(-((x+22)**2/1700+(y-17)**2/1000))
-        -.60*np.exp(-((x-41)**2/1100+(y+29)**2/1300)))
+    return RELIEF*(raw_water(x,y)-RAW_MAX)/RAW_RANGE
 
 g=np.linspace(-HALF,HALF,N)
 x,y=np.meshgrid(g,g)
@@ -71,15 +91,16 @@ centre=len(vertices);vertices.append([0,0,0])
 for i in range(len(ring)):faces.append((centre,ring[(i+1)%len(ring)],ring[i]))
 mesh=trimesh.Trimesh(np.asarray(vertices),np.asarray(faces),process=True)
 # Include possible lip crest in precise overall height while retaining the flat base.
-mesh.vertices[:,2]*=HEIGHT/mesh.bounds[1,2]
+height_scale=HEIGHT/mesh.bounds[1,2]
+mesh.vertices[:,2]*=height_scale
 mesh.vertices=mesh.vertices.astype(np.float32).astype(np.float64)
 mesh.fix_normals()
 assert mesh.is_watertight and mesh.is_winding_consistent and mesh.volume>0
-assert np.allclose(mesh.extents,[150,150,65],atol=.0001)
+assert np.allclose(mesh.extents,[150,150,HEIGHT],atol=.0001)
 assert len(mesh.split())==1
 out=ROOT/'dist';out.mkdir(exist_ok=True)
-mesh.export(out/'water-block-150mm.stl')
-mesh.export(out/'water-block-150mm.glb')
-info={'dimensions_mm':mesh.extents.tolist(),'triangles':len(mesh.faces),'volume_mm3':float(mesh.volume),'top_relief_mm':float(np.ptp(z)),'top_lip_radius_mm':LIP,'vertical_corner_radius_mm':CORNER+LIP,'bottom_fillet_mm':FOOT,'watertight':bool(mesh.is_watertight),'components':1,'grid_resolution':N,'units':'mm'}
-(out/'model-info.json').write_text(json.dumps(info,indent=2)+'\n')
+mesh.export(out/'water-slab-150mm-v2.stl')
+mesh.export(out/'water-slab-150mm-v2.glb')
+info={'dimensions_mm':mesh.extents.tolist(),'triangles':len(mesh.faces),'volume_mm3':float(mesh.volume),'top_relief_mm':float(np.ptp(z)*height_scale),'top_lip_radius_mm':LIP,'vertical_corner_radius_mm':CORNER+LIP,'bottom_fillet_mm':FOOT,'watertight':bool(mesh.is_watertight),'components':1,'grid_resolution':N,'minimum_top_height_mm':float(z.min()*height_scale),'units':'mm'}
+(out/'model-info-v2.json').write_text(json.dumps(info,indent=2)+'\n')
 print(json.dumps(info))

@@ -65,6 +65,15 @@ def validate(path: Path):
     top_faces = mesh.face_normals[:, 2] > .01
     top_vertices = vertices[np.unique(faces[top_faces])]
     top_relief = float(np.ptp(top_vertices[:, 2])) if len(top_vertices) else 0.0
+    interior_top_vertices = top_vertices[
+        (np.abs(top_vertices[:, 0]) < 70) &
+        (np.abs(top_vertices[:, 1]) < 70)
+    ]
+    interior_relief = float(np.ptp(interior_top_vertices[:, 2])) if len(interior_top_vertices) else 0.0
+    report['interior_top_relief_mm'] = interior_relief
+    report['interior_top_min_z_mm'] = float(interior_top_vertices[:, 2].min()) if len(interior_top_vertices) else None
+    report['interior_top_max_z_mm'] = float(interior_top_vertices[:, 2].max()) if len(interior_top_vertices) else None
+    report['interior_top_vertex_count'] = int(len(interior_top_vertices))
     report['base_area_mm2'] = base_area
     report['base_triangles'] = int(np.count_nonzero(base_faces))
     report['top_surface_relief_mm'] = top_relief
@@ -77,12 +86,13 @@ def validate(path: Path):
         'no_degenerate_triangles': bool(np.all(areas > 0)),
         'width_150mm': bool(abs(float(extents[0]) - 150) <= 1e-4),
         'depth_150mm': bool(abs(float(extents[1]) - 150) <= 1e-4),
-        'height_about_65mm': bool(abs(float(extents[2]) - 65) <= 2),
+        'height_65_over_3_mm': bool(abs(float(extents[2]) - 65 / 3) <= .001),
         'base_at_z_zero': abs(minimum_z) <= 1e-6,
         'base_has_substantial_area': base_area > 21000,
         'base_is_one_connected_patch': base_component_count == 1,
         'base_faces_point_down': bool(len(bottom_normals) and np.all(bottom_normals[:, 2] < -.999999)),
         'top_is_nonflat': top_relief > .5,
+        'interior_top_relief_above_10mm': interior_relief > 10,
         'nonzero_thickness': bool(float(extents.min()) > .1),
     }
     report['checks'] = checks
@@ -93,7 +103,7 @@ def validate(path: Path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('path', nargs='?', type=Path,
-                        default=Path(__file__).parent / 'dist/water-block-150mm.stl')
+                        default=Path(__file__).parent / 'dist/water-slab-150mm-v2.stl')
     parser.add_argument('--report', type=Path)
     args = parser.parse_args()
     result = validate(args.path)

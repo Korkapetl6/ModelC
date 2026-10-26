@@ -1,43 +1,45 @@
-# Water block — pofalowana tafla, 150 mm
+# Water slab v2 — niższa bryła z głębszą taflą wody
 
-Model STL inspirowany bryłą ze zdjęcia: niski blok o kwadratowej podstawie,
-z gładkimi ścianami, zaokrąglonymi krawędziami i falującą powierzchnią wody na górze.
-To model proceduralny o podobnym charakterze, nie skan ani dokładna rekonstrukcja fotografii.
+Druga wersja modelu inspirowanego zdjęciem. Wymiary: **150 × 150 × 21,667 mm**.
+Całkowita wysokość jest dokładnie trzykrotnie mniejsza niż 65 mm w pierwszej wersji.
 
-## Pliki
+## Pliki v2
 
-- [STL — water-block-150mm.stl](dist/water-block-150mm.stl)
-- [Podgląd rzeczywistej geometrii](dist/preview.png)
-- [Podgląd z materiałem szkła](dist/preview-glass.png)
-- [GLB](dist/water-block-150mm.glb)
-- [Walidacja](dist/validation.json)
+- [STL — water-slab-150mm-v2.stl](dist/water-slab-150mm-v2.stl)
+- [Podgląd rzeczywistego kształtu](dist/preview-v2.png)
+- [Wizualizacja ze szkłem](dist/preview-glass-v2.png)
+- [GLB](dist/water-slab-150mm-v2.glb)
+- [ZIP ze źródłami i podglądami](dist/water-slab-150mm-v2-complete.zip)
+- [Walidacja](dist/validation-v2.json)
 
-## Wymiary
+## Zmiana tafli
 
-**150 × 150 × 65 mm.** Importuj STL w milimetrach. Wysokość 65 mm obejmuje najwyższy
-punkt fal. Różnica wysokości fal wynosi około 8 mm. Pionowe narożniki mają promień
-6 mm, górna krawędź 2 mm, dolna 1,2 mm. Podstawa jest płaska; maksymalna szerokość
-150 mm wypada na ścianach powyżej dolnego zaokrąglenia.
+Górna powierzchnia została wymodelowana od nowa. Zamiast powtarzalnych pasm fal
+ma płynne, asymetryczne zagłębienia o różnych długościach i szerokościach,
+przechodzące w meandrujące obniżenia i zaokrąglone grzbiety.
+Różnica wysokości tafli wynosi **13 mm**, wobec około 8 mm w wersji pierwszej.
+Najniższy punkt tafli znajduje się około **8,667 mm ponad płaskim spodem**.
+Fale są geometrią STL, nie teksturą czy displacementem w materiale podglądu.
 
-Fale stanowią rzeczywistą geometrię siatki, nie teksturę ani efekt materiału.
-Przezroczystość, zielonkawy kolor i refleksy ze zdjęcia nie są zapisywane w STL.
-Wizualizacja ze szkłem służy prezentacji; nie gwarantuje takiego wyglądu wydruku.
+Zachowano zaokrąglone narożniki i płaską podstawę. Jest to pojedyncza, zamknięta
+bryła bez pustego wnętrza. Nie wykonano fizycznego wydruku. Importuj w **milimetrach**.
+Wypełnienie lub ewentualne wydrążenie dobierz w slicerze.
 
-Model jest zamkniętą pojedynczą bryłą bez pustego wnętrza. Wypełnienie, ewentualne
-wydrążenie i parametry druku dobiera się w slicerze. Nie przeprowadzono fizycznego
-wydruku. Geometria ma płaską podstawę i nie zawiera osobnych luźnych elementów.
+STL nie zawiera koloru, przezroczystości ani odbić; podgląd szkła jest wizualizacją
+materiału i nie gwarantuje takiego wyglądu wydruku. Model jest interpretacją
+rzeźbiarską referencji, nie skanem fotografowanego przedmiotu.
 
-## Odtwarzanie
+## Generowanie
 
 Python 3: `numpy`, `trimesh`, `scipy`; Blender 4.3 do podglądu.
 
 ```sh
 python build_model.py
-python validate_mesh.py --report dist/validation.json
+python validate_mesh.py --report dist/validation-v2.json
 blender -b -t 4 --python render_preview.py
 blender -b -t 4 --python render_preview.py -- --glass
+python package.py
 ```
 
-Topologia powstaje bezpośrednio z regularnej siatki powierzchni i połączonych pierścieni
-boków. Nie wymaga składania przecinających się skorup. `build_model.py` zawiera jawne
-parametry wymiarów, fal, zaokrągleń i rozdzielczości.
+Starsze pliki w `dist/` mają w nazwie `water-block` i dotyczą wyższej wersji v1.
+ZIP v2 zawiera tylko aktualną wersję.
