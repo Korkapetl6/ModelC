@@ -1,0 +1,59 @@
+{
+  "path": "/workspace/water-block-stl/dist/water-block-150mm.stl",
+  "sha256": "9fac9ff0d40874a4a81acba37d3803c0e6c860dd2e792dcc3a4641d9a4f84acd",
+  "format": "binary STL",
+  "file_bytes": 9574484,
+  "vertices": 95746,
+  "triangles": 191488,
+  "dimensions_mm": [
+    150.0,
+    150.0,
+    65.0
+  ],
+  "bounds_mm": [
+    [
+      -75.0,
+      -75.0,
+      0.0
+    ],
+    [
+      75.0,
+      75.0,
+      65.0
+    ]
+  ],
+  "surface_area_mm2": 80718.96802768452,
+  "signed_volume_mm3": 1371174.939681033,
+  "watertight": true,
+  "consistent_winding": true,
+  "connected_components": 1,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "degenerate_triangles": 0,
+  "tiny_nonzero_triangles_below_1e_12_mm2": 0,
+  "minimum_triangle_area_mm2": 0.0036911493170324575,
+  "euler_number": 2,
+  "self_intersections_checked": false,
+  "base_connected_components": 1,
+  "base_area_mm2": 21765.81497711013,
+  "base_triangles": 1024,
+  "top_surface_relief_mm": 9.899726867675781,
+  "checks": {
+    "watertight": true,
+    "winding_consistent": true,
+    "single_component": true,
+    "each_edge_has_two_faces": true,
+    "positive_volume": true,
+    "no_degenerate_triangles": true,
+    "width_150mm": true,
+    "depth_150mm": true,
+    "height_about_65mm": true,
+    "base_at_z_zero": true,
+    "base_has_substantial_area": true,
+    "base_is_one_connected_patch": true,
+    "base_faces_point_down": true,
+    "top_is_nonflat": true,
+    "nonzero_thickness": true
+  },
+  "passed": true
+}
