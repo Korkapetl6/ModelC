@@ -1,0 +1,14 @@
+{
+  "dimensions_mm": [
+    60.0,
+    13.474080085754395,
+    27.900165557861328
+  ],
+  "capsules": 481,
+  "triangles": 593458,
+  "volume_mm3": 9144.303440506557,
+  "watertight": true,
+  "connected_components": 1,
+  "voxel_mm": 0.14,
+  "seed": 8173
+}

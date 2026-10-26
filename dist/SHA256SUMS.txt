@@ -1,0 +1,2 @@
+bc6ed5bfd25aff437db7157f26ed09bc01a2eacc85b30a6528c0810c8aadaa88  mandarin-segment-60mm.stl
+8d014a1d1979313c05fff88b57b000c2dee371ead38c19da7082691d334515cc  mandarin-stl-complete.zip

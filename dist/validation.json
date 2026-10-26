@@ -1,0 +1,48 @@
+{
+  "path": "/workspace/mandarin-stl/dist/mandarin-segment-60mm.stl",
+  "sha256": "bc6ed5bfd25aff437db7157f26ed09bc01a2eacc85b30a6528c0810c8aadaa88",
+  "format": "binary STL",
+  "file_bytes": 29672984,
+  "vertices": 296723,
+  "triangles": 593458,
+  "dimensions_mm": [
+    60.0,
+    13.474080085754395,
+    27.900165557861328
+  ],
+  "bounds_mm": [
+    [
+      -30.0,
+      -6.737040042877197,
+      0.0
+    ],
+    [
+      30.0,
+      6.737040042877197,
+      27.900165557861328
+    ]
+  ],
+  "surface_area_mm2": 4200.368559135822,
+  "signed_volume_mm3": 9144.303440506557,
+  "watertight": true,
+  "consistent_winding": true,
+  "connected_components": 1,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "degenerate_triangles": 0,
+  "tiny_nonzero_triangles_below_1e_12_mm2": 0,
+  "minimum_triangle_area_mm2": 6.229012517232455e-11,
+  "euler_number": -6,
+  "self_intersections_checked": false,
+  "checks": {
+    "watertight": true,
+    "winding_consistent": true,
+    "single_component": true,
+    "each_edge_has_two_faces": true,
+    "positive_volume": true,
+    "no_degenerate_triangles": true,
+    "width_about_60mm": true,
+    "nonzero_thickness": true
+  },
+  "passed": true
+}
