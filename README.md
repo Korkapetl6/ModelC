@@ -1,33 +1,37 @@
-# Water slab v2 — niższa bryła z głębszą taflą wody
+# Water slab v3 — gęstsza tafla i mocniej zaokrąglone krawędzie
 
-Druga wersja modelu inspirowanego zdjęciem. Wymiary: **150 × 150 × 21,667 mm**.
-Całkowita wysokość jest dokładnie trzykrotnie mniejsza niż 65 mm w pierwszej wersji.
+Model ma **150 × 150 × 21,667 mm**. Zachowuje wysokość trzykrotnie mniejszą niż
+pierwsza bryła oraz płaski spód. W tej wersji dodano trzy zagłębienia między
+istniejącymi: tafla ma osiem wyraźnych obniżeń zamiast pięciu.
 
-## Pliki v2
+## Pliki v3
 
-- [STL — water-slab-150mm-v2.stl](dist/water-slab-150mm-v2.stl)
-- [Podgląd rzeczywistego kształtu](dist/preview-v2.png)
-- [Wizualizacja ze szkłem](dist/preview-glass-v2.png)
-- [GLB](dist/water-slab-150mm-v2.glb)
-- [ZIP ze źródłami i podglądami](dist/water-slab-150mm-v2-complete.zip)
-- [Walidacja](dist/validation-v2.json)
+- [STL — water-slab-150mm-v3.stl](dist/water-slab-150mm-v3.stl)
+- [Podgląd rzeczywistego kształtu](dist/preview-v3.png)
+- [Wizualizacja ze szkłem](dist/preview-glass-v3.png)
+- [GLB](dist/water-slab-150mm-v3.glb)
+- [ZIP ze źródłami i podglądami](dist/water-slab-150mm-v3-complete.zip)
+- [Walidacja siatki](dist/validation-v3.json)
 
-## Zmiana tafli
+## Zmiany względem v2
 
-Górna powierzchnia została wymodelowana od nowa. Zamiast powtarzalnych pasm fal
-ma płynne, asymetryczne zagłębienia o różnych długościach i szerokościach,
-przechodzące w meandrujące obniżenia i zaokrąglone grzbiety.
-Różnica wysokości tafli wynosi **13 mm**, wobec około 8 mm w wersji pierwszej.
-Najniższy punkt tafli znajduje się około **8,667 mm ponad płaskim spodem**.
-Fale są geometrią STL, nie teksturą czy displacementem w materiale podglądu.
+| Cecha | v2 | v3 |
+|---|---:|---:|
+| Zagłębienia | 5 | 8 |
+| Zaokrąglenie górnej krawędzi | 2 mm | 3,5 mm |
+| Promień pionowych narożników | 6 mm | 10 mm |
+| Zaokrąglenie przy spodzie | 1,2 mm | 2 mm |
 
-Zachowano zaokrąglone narożniki i płaską podstawę. Jest to pojedyncza, zamknięta
-bryła bez pustego wnętrza. Nie wykonano fizycznego wydruku. Importuj w **milimetrach**.
-Wypełnienie lub ewentualne wydrążenie dobierz w slicerze.
+Nowe zagłębienia są mniejsze i asymetryczne, z płynnymi przejściami do istniejących
+fal. Różnica wysokości tafli nadal wynosi **13 mm**, a jej najniższy punkt jest około
+**8,667 mm nad spodem**. Nie dodano drobnej faktury ani shaderowego displacementu:
+cała tafla i zaokrąglenia stanowią rzeczywistą geometrię STL.
 
-STL nie zawiera koloru, przezroczystości ani odbić; podgląd szkła jest wizualizacją
-materiału i nie gwarantuje takiego wyglądu wydruku. Model jest interpretacją
-rzeźbiarską referencji, nie skanem fotografowanego przedmiotu.
+STL jest pojedynczą zamkniętą bryłą bez pustego wnętrza. Importuj w **milimetrach**.
+Nie wykonano fizycznego wydruku. Wypełnienie/wydrążenie dobierz w slicerze.
+
+Kolor, przezroczystość i odbicia z podglądu szkła nie są zapisane w STL i nie
+stanowią obietnicy wyglądu wydruku. To rzeźbiarska interpretacja referencji.
 
 ## Generowanie
 
@@ -35,11 +39,10 @@ Python 3: `numpy`, `trimesh`, `scipy`; Blender 4.3 do podglądu.
 
 ```sh
 python build_model.py
-python validate_mesh.py --report dist/validation-v2.json
+python validate_mesh.py --report dist/validation-v3.json
 blender -b -t 4 --python render_preview.py
 blender -b -t 4 --python render_preview.py -- --glass
 python package.py
 ```
 
-Starsze pliki w `dist/` mają w nazwie `water-block` i dotyczą wyższej wersji v1.
-ZIP v2 zawiera tylko aktualną wersję.
+Starsze pliki w `dist/` zachowano. ZIP v3 zawiera tylko bieżącą wersję.

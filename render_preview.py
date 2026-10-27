@@ -8,9 +8,9 @@ ROOT=Path(__file__).resolve().parent
 GLASS='--glass' in sys.argv
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
-bpy.ops.wm.stl_import(filepath=str(ROOT/'dist/water-slab-150mm-v2.stl'))
+bpy.ops.wm.stl_import(filepath=str(ROOT/'dist/water-slab-150mm-v3.stl'))
 block=bpy.context.object
-block.name='Water slab v2 — actual printable STL'
+block.name='Water slab v3 — actual printable STL'
 block.scale=(.01,)*3
 bpy.ops.object.transform_apply(location=False,rotation=False,scale=True)
 # Allow centred or positive-coordinate STL conventions without changing the saved STL.
@@ -62,7 +62,7 @@ scene=bpy.context.scene;scene.camera=cam;scene.render.engine='CYCLES';scene.cycl
 scene.cycles.use_denoising=False;scene.cycles.max_bounces=12;scene.cycles.transmission_bounces=8
 scene.render.threads_mode='FIXED';scene.render.threads=4
 scene.render.resolution_x=1200;scene.render.resolution_y=1000;scene.render.resolution_percentage=100
-scene.render.image_settings.file_format='PNG';scene.render.filepath=str(ROOT/'dist'/('preview-glass-v2.png' if GLASS else 'preview-v2.png'))
+scene.render.image_settings.file_format='PNG';scene.render.filepath=str(ROOT/'dist'/('preview-glass-v3.png' if GLASS else 'preview-v3.png'))
 scene.view_settings.view_transform='AgX'
-if not GLASS:bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'dist/water-slab-preview-v2.blend'))
+if not GLASS:bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'dist/water-slab-preview-v3.blend'))
 bpy.ops.render.render(write_still=True)

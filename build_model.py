@@ -5,12 +5,12 @@ import numpy as np
 import trimesh
 ROOT=Path(__file__).resolve().parent
 N=257
-HALF=73.0
-CORNER=4.0
-LIP=2.0
+HALF=71.5
+CORNER=6.5
+LIP=3.5
 HEIGHT=65.0/3.0
 RELIEF=13.0
-FOOT=1.2
+FOOT=2.0
 
 def rounded_grid(x,y,half,radius):
     ax,ay=np.abs(x),np.abs(y)
@@ -28,7 +28,10 @@ def raw_water(x,y):
     # Broad asymmetric depressions join into wandering troughs and rounded saddles.
     pools=[(-35,-30,22,15,.40,3.5),(26,-10,27,14,-.60,4.2),
            (-7,40,29,16,.20,3.7),(60,53,22,12,-.90,2.5),
-           (-65,20,20,30,.35,2.6)]
+           (-65,20,20,30,.35,2.6),
+           # Three smaller basins between the existing broad swells.
+           (-27,5,11,8,-.30,3.2),(5,-56,13,9,.55,3.6),
+           (38,30,12,9,-.50,3.4)]
     for cx,cy,rx,ry,angle,depth in pools:
         dx=u-cx;dy=v-cy
         a=np.cos(angle)*dx+np.sin(angle)*dy
@@ -99,8 +102,8 @@ assert mesh.is_watertight and mesh.is_winding_consistent and mesh.volume>0
 assert np.allclose(mesh.extents,[150,150,HEIGHT],atol=.0001)
 assert len(mesh.split())==1
 out=ROOT/'dist';out.mkdir(exist_ok=True)
-mesh.export(out/'water-slab-150mm-v2.stl')
-mesh.export(out/'water-slab-150mm-v2.glb')
-info={'dimensions_mm':mesh.extents.tolist(),'triangles':len(mesh.faces),'volume_mm3':float(mesh.volume),'top_relief_mm':float(np.ptp(z)*height_scale),'top_lip_radius_mm':LIP,'vertical_corner_radius_mm':CORNER+LIP,'bottom_fillet_mm':FOOT,'watertight':bool(mesh.is_watertight),'components':1,'grid_resolution':N,'minimum_top_height_mm':float(z.min()*height_scale),'units':'mm'}
-(out/'model-info-v2.json').write_text(json.dumps(info,indent=2)+'\n')
+mesh.export(out/'water-slab-150mm-v3.stl')
+mesh.export(out/'water-slab-150mm-v3.glb')
+info={'dimensions_mm':mesh.extents.tolist(),'triangles':len(mesh.faces),'volume_mm3':float(mesh.volume),'top_relief_mm':float(np.ptp(z)*height_scale),'top_lip_radius_mm':LIP,'vertical_corner_radius_mm':CORNER+LIP,'bottom_fillet_mm':FOOT,'watertight':bool(mesh.is_watertight),'components':1,'grid_resolution':N,'minimum_top_height_mm':float(z.min()*height_scale),'depression_sources':8,'additional_depressions':3,'units':'mm'}
+(out/'model-info-v3.json').write_text(json.dumps(info,indent=2)+'\n')
 print(json.dumps(info))

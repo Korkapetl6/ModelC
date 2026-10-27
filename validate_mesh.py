@@ -103,7 +103,7 @@ def validate(path: Path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('path', nargs='?', type=Path,
-                        default=Path(__file__).parent / 'dist/water-slab-150mm-v2.stl')
+                        default=Path(__file__).parent / 'dist/water-slab-150mm-v3.stl')
     parser.add_argument('--report', type=Path)
     args = parser.parse_args()
     result = validate(args.path)
