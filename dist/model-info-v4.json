@@ -1,0 +1,19 @@
+{
+  "dimensions_mm": [
+    150.0,
+    150.0,
+    21.66666603088379
+  ],
+  "triangles": 191488,
+  "volume_mm3": 349310.3460034201,
+  "top_relief_mm": 13.0,
+  "top_lip_radius_mm": 5.5,
+  "vertical_corner_radius_mm": 18.0,
+  "bottom_fillet_mm": 3.0,
+  "watertight": true,
+  "components": 1,
+  "grid_resolution": 257,
+  "minimum_top_height_mm": 8.666666666666668,
+  "continuous_troughs": 5,
+  "units": "mm"
+}

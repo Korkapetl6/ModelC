@@ -1,0 +1,220 @@
+{
+  "path": "/workspace/water-block-stl-v4/dist/water-slab-150mm-v4.stl",
+  "sha256": "ab87d66280df0c3e22d26c35a72636f5fcbbca0a4a20fb9fa40a76b4e27d0a14",
+  "format": "binary STL",
+  "file_bytes": 9574484,
+  "vertices": 95746,
+  "triangles": 191488,
+  "dimensions_mm": [
+    150.0,
+    150.0,
+    21.66666603088379
+  ],
+  "bounds_mm": [
+    [
+      -75.0,
+      -75.0,
+      0.0
+    ],
+    [
+      75.0,
+      75.0,
+      21.66666603088379
+    ]
+  ],
+  "surface_area_mm2": 56335.89186848978,
+  "signed_volume_mm3": 349310.3460034201,
+  "watertight": true,
+  "consistent_winding": true,
+  "connected_components": 1,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "degenerate_triangles": 0,
+  "tiny_nonzero_triangles_below_1e_12_mm2": 0,
+  "minimum_triangle_area_mm2": 0.0008561420254409313,
+  "euler_number": 2,
+  "self_intersections_checked": false,
+  "base_connected_components": 1,
+  "interior_top_relief_mm": 12.999999046325684,
+  "interior_top_min_z_mm": 8.666666984558105,
+  "interior_top_max_z_mm": 21.66666603088379,
+  "interior_top_vertex_count": 66929,
+  "expected_base_area_mm2": 20542.858347057703,
+  "base_area_mm2": 20542.704505932285,
+  "base_triangles": 1024,
+  "top_surface_relief_mm": 12.999999046325684,
+  "top_long_trough_measurements": {
+    "sample_region_xy_mm": [
+      -65,
+      65
+    ],
+    "grid_spacing_mm": 0.5,
+    "low_height_connected_bands_by_percentile": {
+      "25": {
+        "threshold_z_mm": 12.159435649569943,
+        "components": [
+          {
+            "x_span_mm": 125.0,
+            "y_span_mm": 67.5,
+            "projected_area_mm2": 2975.0
+          },
+          {
+            "x_span_mm": 122.5,
+            "y_span_mm": 44.0,
+            "projected_area_mm2": 1065.5
+          },
+          {
+            "x_span_mm": 48.5,
+            "y_span_mm": 8.5,
+            "projected_area_mm2": 189.5
+          },
+          {
+            "x_span_mm": 14.0,
+            "y_span_mm": 2.0,
+            "projected_area_mm2": 27.5
+          }
+        ]
+      },
+      "35": {
+        "threshold_z_mm": 12.88647373803228,
+        "components": [
+          {
+            "x_span_mm": 127.0,
+            "y_span_mm": 81.0,
+            "projected_area_mm2": 4107.25
+          },
+          {
+            "x_span_mm": 125.5,
+            "y_span_mm": 47.0,
+            "projected_area_mm2": 1368.75
+          },
+          {
+            "x_span_mm": 81.0,
+            "y_span_mm": 24.5,
+            "projected_area_mm2": 484.5
+          }
+        ]
+      },
+      "45": {
+        "threshold_z_mm": 13.779752525494253,
+        "components": [
+          {
+            "x_span_mm": 128.5,
+            "y_span_mm": 103.0,
+            "projected_area_mm2": 6800.0
+          },
+          {
+            "x_span_mm": 123.0,
+            "y_span_mm": 34.0,
+            "projected_area_mm2": 863.5
+          }
+        ]
+      }
+    },
+    "y_section_minima": [
+      {
+        "x_mm": -60.0,
+        "trough_y_mm": [
+          -59.5,
+          -41.0,
+          -20.0,
+          10.0,
+          41.0
+        ],
+        "trough_prominence_mm": [
+          4.933957227373796,
+          7.2487056444017135,
+          8.496630510837912,
+          9.73291359359412,
+          8.369859517049449
+        ]
+      },
+      {
+        "x_mm": -30.0,
+        "trough_y_mm": [
+          -57.5,
+          -34.0,
+          -9.5,
+          21.0,
+          50.0
+        ],
+        "trough_prominence_mm": [
+          6.233825999198199,
+          6.4063443108428295,
+          9.853425828673,
+          7.887173460541867,
+          5.52320875538339
+        ]
+      },
+      {
+        "x_mm": 0.0,
+        "trough_y_mm": [
+          -44.5,
+          -16.0,
+          10.5,
+          33.5,
+          54.5
+        ],
+        "trough_prominence_mm": [
+          5.975429788767862,
+          3.852755354462765,
+          9.068633141277505,
+          2.1943600675184936,
+          1.20123658763419
+        ]
+      },
+      {
+        "x_mm": 30.0,
+        "trough_y_mm": [
+          -33.5,
+          -4.5,
+          36.0,
+          53.5
+        ],
+        "trough_prominence_mm": [
+          4.792720012527575,
+          3.4273135164658797,
+          11.413103364354413,
+          0.9198621708712125
+        ]
+      },
+      {
+        "x_mm": 60.0,
+        "trough_y_mm": [
+          -36.0,
+          -9.0,
+          16.0,
+          34.0,
+          52.0
+        ],
+        "trough_prominence_mm": [
+          6.067319979770579,
+          10.809738153581808,
+          7.0997649199671,
+          4.073722770745805,
+          5.440052197133895
+        ]
+      }
+    ],
+    "interpretation": "Descriptive mesh-derived metrics, not a photo similarity test."
+  },
+  "checks": {
+    "watertight": true,
+    "winding_consistent": true,
+    "single_component": true,
+    "each_edge_has_two_faces": true,
+    "positive_volume": true,
+    "no_degenerate_triangles": true,
+    "width_150mm": true,
+    "depth_150mm": true,
+    "height_65_over_3_mm": true,
+    "base_at_z_zero": true,
+    "base_matches_rounded_footprint": true,
+    "base_is_one_connected_patch": true,
+    "base_faces_point_down": true,
+    "top_is_nonflat": true,
+    "interior_top_relief_above_10mm": true,
+    "nonzero_thickness": true
+  },
+  "passed": true
+}

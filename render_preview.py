@@ -8,9 +8,9 @@ ROOT=Path(__file__).resolve().parent
 GLASS='--glass' in sys.argv
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
-bpy.ops.wm.stl_import(filepath=str(ROOT/'dist/water-slab-150mm-v3.stl'))
+bpy.ops.wm.stl_import(filepath=str(ROOT/'dist/water-slab-150mm-v4.stl'))
 block=bpy.context.object
-block.name='Water slab v3 — actual printable STL'
+block.name='Water slab v4 — actual printable STL'
 block.scale=(.01,)*3
 bpy.ops.object.transform_apply(location=False,rotation=False,scale=True)
 # Allow centred or positive-coordinate STL conventions without changing the saved STL.
@@ -58,11 +58,11 @@ for name,pos,scale in [('Left contrast card',(-2.4,.4,1.1),(1.3,2.0,1)),('Back n
  obj.visible_camera=False
 camdata=bpy.data.cameras.new('Camera');cam=bpy.data.objects.new('Camera',camdata);bpy.context.collection.objects.link(cam)
 cam.location=(2.0,-2.7,3.1);point_at(cam,(0,0,.10));camdata.type='ORTHO';camdata.ortho_scale=2.65
-scene=bpy.context.scene;scene.camera=cam;scene.render.engine='CYCLES';scene.cycles.device='CPU';scene.cycles.samples=32 if GLASS else 64
+scene=bpy.context.scene;scene.camera=cam;scene.render.engine='CYCLES';scene.cycles.device='CPU';scene.cycles.samples=24 if GLASS else 32
 scene.cycles.use_denoising=False;scene.cycles.max_bounces=12;scene.cycles.transmission_bounces=8
 scene.render.threads_mode='FIXED';scene.render.threads=4
 scene.render.resolution_x=1200;scene.render.resolution_y=1000;scene.render.resolution_percentage=100
-scene.render.image_settings.file_format='PNG';scene.render.filepath=str(ROOT/'dist'/('preview-glass-v3.png' if GLASS else 'preview-v3.png'))
+scene.render.image_settings.file_format='PNG';scene.render.filepath=str(ROOT/'dist'/('preview-glass-v4.png' if GLASS else 'preview-v4.png'))
 scene.view_settings.view_transform='AgX'
-if not GLASS:bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'dist/water-slab-preview-v3.blend'))
+if not GLASS:bpy.ops.wm.save_as_mainfile(filepath=str(ROOT/'dist/water-slab-preview-v4.blend'))
 bpy.ops.render.render(write_still=True)

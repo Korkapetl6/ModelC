@@ -1,37 +1,36 @@
-# Water slab v3 — gęstsza tafla i mocniej zaokrąglone krawędzie
+# Water slab v4 — długie fale i miękkie obrzeże
 
-Model ma **150 × 150 × 21,667 mm**. Zachowuje wysokość trzykrotnie mniejszą niż
-pierwsza bryła oraz płaski spód. W tej wersji dodano trzy zagłębienia między
-istniejącymi: tafla ma osiem wyraźnych obniżeń zamiast pięciu.
+Wymiary **150 × 150 × 21,667 mm**. Płaski spód, pojedyncza zamknięta bryła.
+Ta wersja zastępuje punktowe zagłębienia v3 pięcioma długimi, płynnie wijącymi się
+obniżeniami przechodzącymi przez większość powierzchni.
 
-## Pliki v3
+## Pliki v4
 
-- [STL — water-slab-150mm-v3.stl](dist/water-slab-150mm-v3.stl)
-- [Podgląd rzeczywistego kształtu](dist/preview-v3.png)
-- [Wizualizacja ze szkłem](dist/preview-glass-v3.png)
-- [GLB](dist/water-slab-150mm-v3.glb)
-- [ZIP ze źródłami i podglądami](dist/water-slab-150mm-v3-complete.zip)
-- [Walidacja siatki](dist/validation-v3.json)
+- [STL](dist/water-slab-150mm-v4.stl)
+- [Podgląd rzeczywistego kształtu](dist/preview-v4.png)
+- [Podgląd z materiałem szkła](dist/preview-glass-v4.png)
+- [GLB](dist/water-slab-150mm-v4.glb)
+- [ZIP ze źródłami i podglądami](dist/water-slab-150mm-v4-complete.zip)
+- [Walidacja i pomiary ciągłości fal](dist/validation-v4.json)
 
-## Zmiany względem v2
+## Kształt tafli
 
-| Cecha | v2 | v3 |
-|---|---:|---:|
-| Zagłębienia | 5 | 8 |
-| Zaokrąglenie górnej krawędzi | 2 mm | 3,5 mm |
-| Promień pionowych narożników | 6 mm | 10 mm |
-| Zaokrąglenie przy spodzie | 1,2 mm | 2 mm |
+Nie ma osobnych okrągłych dołków. Każde z pięciu zagłębień przebiega wzdłuż formy,
+ze zmienną szerokością i wyraźnym meandrem; miejscami zagłębienia łączą się.
+Ostatnie kilka milimetrów przechodzi łagodnie w mocniej zaokrąglone obrzeże.
+Pomiar siatki wykazał główne ciągłe obniżone obszary o rozpiętości w osi X
+około **123–129 mm** (przy progu wysokości 13,78 mm).
 
-Nowe zagłębienia są mniejsze i asymetryczne, z płynnymi przejściami do istniejących
-fal. Różnica wysokości tafli nadal wynosi **13 mm**, a jej najniższy punkt jest około
-**8,667 mm nad spodem**. Nie dodano drobnej faktury ani shaderowego displacementu:
-cała tafla i zaokrąglenia stanowią rzeczywistą geometrię STL.
+Relief nadal wynosi **13 mm**. Najniższa część tafli znajduje się około **8,667 mm**
+nad spodem. Górne obrzeże ma zaokrąglenie **5,5 mm** (wcześniej 3,5), pionowe
+narożniki **18 mm** (wcześniej 10), a dolna krawędź **3 mm** (wcześniej 2).
 
-STL jest pojedynczą zamkniętą bryłą bez pustego wnętrza. Importuj w **milimetrach**.
-Nie wykonano fizycznego wydruku. Wypełnienie/wydrążenie dobierz w slicerze.
+Wszystkie fale i zaokrąglenia są rzeczywistą geometrią STL. Nie dodano tekstury
+ani shaderowego displacementu. Wizualizacja szkła ilustruje tylko materiał:
+STL nie zawiera przezroczystości, koloru ani odbić.
 
-Kolor, przezroczystość i odbicia z podglądu szkła nie są zapisane w STL i nie
-stanowią obietnicy wyglądu wydruku. To rzeźbiarska interpretacja referencji.
+Importuj w **milimetrach**. Model nie był fizycznie drukowany. Wypełnienie lub
+wydrążenie dobierz w slicerze; plik opisuje pełną zewnętrzną bryłę.
 
 ## Generowanie
 
@@ -39,10 +38,10 @@ Python 3: `numpy`, `trimesh`, `scipy`; Blender 4.3 do podglądu.
 
 ```sh
 python build_model.py
-python validate_mesh.py --report dist/validation-v3.json
+python validate_mesh.py --report dist/validation-v4.json
 blender -b -t 4 --python render_preview.py
 blender -b -t 4 --python render_preview.py -- --glass
 python package.py
 ```
 
-Starsze pliki w `dist/` zachowano. ZIP v3 zawiera tylko bieżącą wersję.
+Starsze pliki w `dist/` pozostają dostępne. ZIP v4 zawiera tylko bieżącą wersję.

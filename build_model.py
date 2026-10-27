@@ -5,12 +5,12 @@ import numpy as np
 import trimesh
 ROOT=Path(__file__).resolve().parent
 N=257
-HALF=71.5
-CORNER=6.5
-LIP=3.5
+HALF=69.5
+CORNER=12.5
+LIP=5.5
 HEIGHT=65.0/3.0
 RELIEF=13.0
-FOOT=2.0
+FOOT=3.0
 
 def rounded_grid(x,y,half,radius):
     ax,ay=np.abs(x),np.abs(y)
@@ -21,27 +21,24 @@ def rounded_grid(x,y,half,radius):
     return np.where(corner,np.sign(x)*(half-radius+u*factor*radius),x),np.where(corner,np.sign(y)*(half-radius+v*factor*radius),y)
 
 def raw_water(x,y):
-    # Smoothly warped coordinates avoid repeated parallel crests and circular dimples.
-    u=x+6.0*np.sin(y/29.0)+3.0*np.sin((x+y)/47.0)
-    v=y+7.0*np.sin(x/36.0)-3.0*np.cos((x-2*y)/63.0)
-    h=.8*np.sin(.045*u+.025*v)+.45*np.sin(-.018*u+.060*v)
-    # Broad asymmetric depressions join into wandering troughs and rounded saddles.
-    pools=[(-35,-30,22,15,.40,3.5),(26,-10,27,14,-.60,4.2),
-           (-7,40,29,16,.20,3.7),(60,53,22,12,-.90,2.5),
-           (-65,20,20,30,.35,2.6),
-           # Three smaller basins between the existing broad swells.
-           (-27,5,11,8,-.30,3.2),(5,-56,13,9,.55,3.6),
-           (38,30,12,9,-.50,3.4)]
-    for cx,cy,rx,ry,angle,depth in pools:
-        dx=u-cx;dy=v-cy
-        a=np.cos(angle)*dx+np.sin(angle)*dy
-        b=-np.sin(angle)*dx+np.cos(angle)*dy
-        # Different axial exponents stay smooth while avoiding a repeated oval stamp.
-        h-=depth*np.exp(-((a/rx)**2+.85*(b/ry)**2))
-    h-=1.15*np.exp(-((v+13*np.sin(u/40.0)+12)/15.0)**2)
-    h+=1.30*np.exp(-((u+12)**2/900+(v+10)**2/600))
-    h+=.85*np.exp(-((u-43)**2/1000+(v-30)**2/750))
-    return h
+    # Five continuous flowing troughs: no localized pools or circular depressions.
+    # Each channel runs across almost the full width, with gently varying width/curvature.
+    flow=13.0*np.sin(x/32.0)+7.0*np.sin(x/60.0+.7)
+    h=.18*np.sin(x/75.0)+.12*np.sin(y/65.0)
+    for centre,width,depth,phase in [(-48,8.5,3.3,.2),(-24,9.3,3.8,.7),
+                                   (0,10.5,4.0,1.2),(25,9.0,3.7,1.8),
+                                   (49,8.5,3.1,2.3)]:
+        path=centre+flow*(1-.60*(abs(centre)/55.0)**1.2)+6.0*np.sin(x/24.0+phase)
+        w=width*(1+.35*np.sin(x/27.0+phase))
+        strength=depth*(1+.15*np.sin(x/43.0+phase))
+        h-=strength*np.exp(-((y-path)/w)**2)
+    # Ease only the final few millimetres into the larger rolled edge.
+    # This prevents a deep wave trough intersecting the bottom fillet at the perimeter.
+    qx=np.abs(x)-(HALF-CORNER);qy=np.abs(y)-(HALF-CORNER)
+    signed=np.sqrt(np.maximum(qx,0)**2+np.maximum(qy,0)**2)+np.minimum(np.maximum(qx,qy),0)-CORNER
+    distance=np.maximum(0,-signed)
+    blend=1-np.exp(-(distance/4.8)**2)
+    return -.80*(1-blend)+h*blend
 
 # Fixed normalization on the full top so edge derivative samples use the same amplitude.
 ref=np.linspace(-HALF,HALF,N)
@@ -83,6 +80,7 @@ for theta in np.linspace(0,np.pi/2,17)[1:]:
     rxy=xy+normal*(LIP*np.sin(theta))
     rz=topz+slope*LIP*np.sin(theta)-LIP*(1-np.cos(theta))
     add_ring(np.column_stack([rxy,rz]))
+assert np.min(rz)>FOOT+.5, 'Top and bottom fillets intersect'
 outer=xy+normal*LIP
 # Straight, smooth walls; an eased bottom edge meets a genuinely planar base.
 add_ring(np.column_stack([outer,np.full(len(outer),FOOT)]))
@@ -102,8 +100,8 @@ assert mesh.is_watertight and mesh.is_winding_consistent and mesh.volume>0
 assert np.allclose(mesh.extents,[150,150,HEIGHT],atol=.0001)
 assert len(mesh.split())==1
 out=ROOT/'dist';out.mkdir(exist_ok=True)
-mesh.export(out/'water-slab-150mm-v3.stl')
-mesh.export(out/'water-slab-150mm-v3.glb')
-info={'dimensions_mm':mesh.extents.tolist(),'triangles':len(mesh.faces),'volume_mm3':float(mesh.volume),'top_relief_mm':float(np.ptp(z)*height_scale),'top_lip_radius_mm':LIP,'vertical_corner_radius_mm':CORNER+LIP,'bottom_fillet_mm':FOOT,'watertight':bool(mesh.is_watertight),'components':1,'grid_resolution':N,'minimum_top_height_mm':float(z.min()*height_scale),'depression_sources':8,'additional_depressions':3,'units':'mm'}
-(out/'model-info-v3.json').write_text(json.dumps(info,indent=2)+'\n')
+mesh.export(out/'water-slab-150mm-v4.stl')
+mesh.export(out/'water-slab-150mm-v4.glb')
+info={'dimensions_mm':mesh.extents.tolist(),'triangles':len(mesh.faces),'volume_mm3':float(mesh.volume),'top_relief_mm':float(np.ptp(z)*height_scale),'top_lip_radius_mm':LIP,'vertical_corner_radius_mm':CORNER+LIP,'bottom_fillet_mm':FOOT,'watertight':bool(mesh.is_watertight),'components':1,'grid_resolution':N,'minimum_top_height_mm':float(z.min()*height_scale),'continuous_troughs':5,'units':'mm'}
+(out/'model-info-v4.json').write_text(json.dumps(info,indent=2)+'\n')
 print(json.dumps(info))

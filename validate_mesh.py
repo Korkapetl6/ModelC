@@ -8,6 +8,9 @@ from pathlib import Path
 
 import numpy as np
 import trimesh
+from scipy.interpolate import LinearNDInterpolator
+from scipy.ndimage import label
+from scipy.signal import find_peaks
 
 
 def validate(path: Path):
@@ -74,9 +77,49 @@ def validate(path: Path):
     report['interior_top_min_z_mm'] = float(interior_top_vertices[:, 2].min()) if len(interior_top_vertices) else None
     report['interior_top_max_z_mm'] = float(interior_top_vertices[:, 2].max()) if len(interior_top_vertices) else None
     report['interior_top_vertex_count'] = int(len(interior_top_vertices))
+    expected_base_area = 144 ** 2 - (4 - np.pi) * 15 ** 2
+    report['expected_base_area_mm2'] = float(expected_base_area)
     report['base_area_mm2'] = base_area
     report['base_triangles'] = int(np.count_nonzero(base_faces))
     report['top_surface_relief_mm'] = top_relief
+    # Independent descriptive measurements: interpolate the actual top triangles' vertices,
+    # excluding the curved outer rim; do not inspect or reuse generator height functions.
+    if len(top_vertices):
+        xy, unique_index = np.unique(top_vertices[:, :2], axis=0, return_index=True)
+        interpolator = LinearNDInterpolator(xy, top_vertices[unique_index, 2])
+        axis = np.linspace(-65., 65., 261)
+        xx, yy = np.meshgrid(axis, axis)
+        zz = interpolator(xx, yy)
+        valid = np.isfinite(zz)
+        bands = {}
+        for percentile in (25, 35, 45):
+            threshold = float(np.nanpercentile(zz, percentile))
+            components, count = label(valid & (zz < threshold))
+            spans = []
+            for component in range(1, count + 1):
+                rows, cols = np.nonzero(components == component)
+                if len(rows) < 50:
+                    continue
+                x_span = float(axis[cols.max()] - axis[cols.min()])
+                y_span = float(axis[rows.max()] - axis[rows.min()])
+                spans.append({'x_span_mm': x_span, 'y_span_mm': y_span,
+                              'projected_area_mm2': float(len(rows) * .25)})
+            bands[str(percentile)] = {'threshold_z_mm': threshold,
+                                     'components': sorted(spans, key=lambda x: -x['x_span_mm'])}
+        sections = []
+        for x_value in (-60, -30, 0, 30, 60):
+            column = int(np.argmin(np.abs(axis - x_value)))
+            profile = zz[:, column]
+            minima, props = find_peaks(-profile, prominence=.7, distance=12)
+            sections.append({'x_mm': float(axis[column]),
+                             'trough_y_mm': axis[minima].tolist(),
+                             'trough_prominence_mm': props['prominences'].tolist()})
+        report['top_long_trough_measurements'] = {
+            'sample_region_xy_mm': [-65, 65], 'grid_spacing_mm': .5,
+            'low_height_connected_bands_by_percentile': bands,
+            'y_section_minima': sections,
+            'interpretation': 'Descriptive mesh-derived metrics, not a photo similarity test.'}
+
     checks = {
         'watertight': watertight,
         'winding_consistent': winding,
@@ -88,7 +131,7 @@ def validate(path: Path):
         'depth_150mm': bool(abs(float(extents[1]) - 150) <= 1e-4),
         'height_65_over_3_mm': bool(abs(float(extents[2]) - 65 / 3) <= .001),
         'base_at_z_zero': abs(minimum_z) <= 1e-6,
-        'base_has_substantial_area': base_area > 21000,
+        'base_matches_rounded_footprint': bool(abs(base_area - expected_base_area) < 5),
         'base_is_one_connected_patch': base_component_count == 1,
         'base_faces_point_down': bool(len(bottom_normals) and np.all(bottom_normals[:, 2] < -.999999)),
         'top_is_nonflat': top_relief > .5,
@@ -103,7 +146,7 @@ def validate(path: Path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('path', nargs='?', type=Path,
-                        default=Path(__file__).parent / 'dist/water-slab-150mm-v3.stl')
+                        default=Path(__file__).parent / 'dist/water-slab-150mm-v4.stl')
     parser.add_argument('--report', type=Path)
     args = parser.parse_args()
     result = validate(args.path)
