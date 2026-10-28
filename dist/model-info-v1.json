@@ -1,0 +1,22 @@
+{
+  "units": "mm",
+  "dimensions_mm": [
+    180.0,
+    76.0,
+    5.395966053009033
+  ],
+  "nominal_thickness_mm": 4,
+  "minimum_local_thickness_mm": 2.440060183626438,
+  "maximum_local_thickness_mm": 5.1325070910542765,
+  "yellow_oil_gland_pits": 4400,
+  "pith_fibre_features": 1700,
+  "triangles": 916480,
+  "vertices": 458242,
+  "volume_mm3": 48525.26676430109,
+  "watertight": true,
+  "components": 1,
+  "texture_is_geometry": true,
+  "curled": false,
+  "seed": 20261028,
+  "sha256": "ec193d18d2669c0b0d624d64f71c6cf9602bc3f205e40af980a068dc69b47a7f"
+}

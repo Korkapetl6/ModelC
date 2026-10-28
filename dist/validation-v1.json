@@ -1,0 +1,87 @@
+{
+  "path": "/workspace/lemon-peel-stl/dist/lemon-peel-180x76mm-v1.stl",
+  "sha256": "ec193d18d2669c0b0d624d64f71c6cf9602bc3f205e40af980a068dc69b47a7f",
+  "file_bytes": 45824084,
+  "format": "binary STL",
+  "units_assumed": "mm",
+  "vertices": 458242,
+  "triangles": 916480,
+  "dimensions_mm": [
+    180.0,
+    76.0,
+    5.395966053009033
+  ],
+  "bounds_mm": [
+    [
+      -90.0,
+      -38.0,
+      0.0
+    ],
+    [
+      90.0,
+      38.0,
+      5.395966053009033
+    ]
+  ],
+  "surface_area_mm2": 27853.468431611534,
+  "signed_volume_mm3": 48525.26676430109,
+  "watertight": true,
+  "consistent_winding": true,
+  "connected_components": 1,
+  "boundary_edges": 0,
+  "nonmanifold_edges": 0,
+  "degenerate_triangles": 0,
+  "minimum_triangle_area_mm2": 0.0006331259558829258,
+  "euler_number": 2,
+  "self_intersections_checked": false,
+  "surface_measurements": {
+    "yellow_top": {
+      "sampled_z_range_mm": [
+        4.608025074005127,
+        5.3735001881917315
+      ],
+      "rms_relief_below_approx_1mm_scale_mm": 0.06677482942612445,
+      "max_projected_distance_to_triangle_centre_mm": 0.1275281074134123
+    },
+    "pith_bottom": {
+      "sampled_z_range_mm": [
+        0.2929178675015767,
+        2.000822067260742
+      ],
+      "rms_relief_below_approx_1mm_scale_mm": 0.10222320278556364,
+      "max_projected_distance_to_triangle_centre_mm": 0.19579440646235652
+    },
+    "approx_local_thickness_mm": {
+      "min": 3.0224318901697798,
+      "median": 3.925837914148966,
+      "max": 4.825568377971649
+    },
+    "sample_region_mm": {
+      "x": [
+        -60,
+        60
+      ],
+      "y": [
+        -22,
+        22
+      ]
+    },
+    "sample_spacing_mm": 0.5,
+    "method": "Nearest projected triangle centres on upward/downward faces; descriptive estimates within the central region, not an exact global minimum wall-thickness or self-intersection test."
+  },
+  "checks": {
+    "finite_coordinates": true,
+    "binary_stl_size_valid": true,
+    "watertight": true,
+    "consistent_winding": true,
+    "single_component": true,
+    "each_edge_has_two_faces": true,
+    "positive_volume": true,
+    "no_degenerate_triangles": true,
+    "length_180_mm": true,
+    "width_76_mm": true,
+    "low_flat_form_under_10_mm": true,
+    "lowest_point_at_z_zero": true
+  },
+  "passed": true
+}
